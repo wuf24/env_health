@@ -1,0 +1,16 @@
+{
+  "label": "Latest Exhaustive Dashboard",
+  "slug": "latest",
+  "description": "全空间 exhaustive 搜索结果，包含首页、Lancet 子页和横向矩阵。",
+  "scope_note": "当前主线发布版本，直接读取 exhaustive_* 结果。",
+  "generated_at": "2026-04-17 22:18:03",
+  "release_tag": "20260417-221803",
+  "source_dir": "2 固定效应模型",
+  "builder_script": "tools/build_results_dashboard.py",
+  "files": {
+    "home": "results_dashboard.html",
+    "directory_index": "index.html",
+    "lancet": "results_dashboard_lancet.html",
+    "matrix": "results_dashboard_matrix.html"
+  }
+}

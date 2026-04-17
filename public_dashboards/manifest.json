@@ -1,0 +1,47 @@
+{
+  "generated_at": "2026-04-17 22:18:03",
+  "release_tag": "20260417-221803",
+  "public_dir": "public_dashboards",
+  "bundles": [
+    {
+      "label": "Latest Exhaustive Dashboard",
+      "slug": "latest",
+      "description": "全空间 exhaustive 搜索结果，包含首页、Lancet 子页和横向矩阵。",
+      "scope_note": "当前主线发布版本，直接读取 exhaustive_* 结果。",
+      "generated_at": "2026-04-17 22:18:03",
+      "release_tag": "20260417-221803",
+      "source_dir": "2 固定效应模型",
+      "builder_script": "tools/build_results_dashboard.py",
+      "files": {
+        "home": "results_dashboard.html",
+        "directory_index": "index.html",
+        "lancet": "results_dashboard_lancet.html",
+        "matrix": "results_dashboard_matrix.html"
+      },
+      "stable_dir": "public_dashboards/latest",
+      "release_dir": "public_dashboards/releases/20260417-221803/latest",
+      "stable_home": "latest/index.html",
+      "release_home": "releases/20260417-221803/latest/index.html"
+    },
+    {
+      "label": "Legacy 12-Model Dashboard",
+      "slug": "legacy-12models",
+      "description": "旧版 4 套人工方案 × 3 种固定效应，共 12 个模型的三页式备份。",
+      "scope_note": "用于和当前 exhaustive 版并排对照的历史快照。",
+      "generated_at": "2026-04-17 22:18:03",
+      "release_tag": "20260417-221803",
+      "source_dir": "2 固定效应模型/backups/legacy_12models_dashboard_20260417",
+      "builder_script": "2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py",
+      "files": {
+        "home": "results_dashboard_legacy_12models.html",
+        "directory_index": "index.html",
+        "lancet": "results_dashboard_legacy_12models_lancet.html",
+        "matrix": "results_dashboard_legacy_12models_matrix.html"
+      },
+      "stable_dir": "public_dashboards/legacy-12models",
+      "release_dir": "public_dashboards/releases/20260417-221803/legacy-12models",
+      "stable_home": "legacy-12models/index.html",
+      "release_home": "releases/20260417-221803/legacy-12models/index.html"
+    }
+  ]
+}

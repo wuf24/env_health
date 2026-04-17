@@ -1,0 +1,18 @@
+.codex_http*.log
+.edge-headless/
+.DS_Store
+Thumbs.db
+
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+.venv/
+venv/
+
+public_dashboards/releases/
+
+# Raw inputs: keep local only, never publish to GitHub
+amr_rate.csv
+climate_social_eco.csv
+bakeup/*/dashboard_backup_20260417_170211/raw_inputs/

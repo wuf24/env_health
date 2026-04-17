@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMR Dashboard Deployment</title>
+  <style>
+    :root {
+      --bg: #f6efe7;
+      --panel: rgba(255, 250, 244, 0.94);
+      --ink: #20363c;
+      --muted: #667b80;
+      --accent: #b45735;
+      --accent-2: #2f6f74;
+      --line: rgba(32, 54, 60, 0.12);
+      --shadow: 0 16px 44px rgba(39, 35, 31, 0.10);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(180, 87, 53, 0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(47, 111, 116, 0.10), transparent 26%),
+        linear-gradient(180deg, #faf4eb 0%, #eef3f1 100%);
+    }
+    .page {
+      width: min(1120px, calc(100vw - 24px));
+      margin: 20px auto 28px;
+      display: grid;
+      gap: 18px;
+    }
+    .card, .panel {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .card {
+      border-radius: 30px;
+      padding: 28px;
+    }
+    .hero {
+      background: linear-gradient(135deg, rgba(25, 47, 53, 0.98), rgba(42, 96, 97, 0.94));
+      color: #fbf7f1;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -44px;
+      top: -44px;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 66%);
+    }
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: inherit;
+      opacity: 0.76;
+      margin-bottom: 12px;
+    }
+    h1, h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: -0.02em;
+    }
+    h1 {
+      font-size: clamp(34px, 4vw, 54px);
+      line-height: 1.04;
+    }
+    h2 {
+      font-size: 28px;
+      line-height: 1.12;
+    }
+    p {
+      margin: 12px 0 0;
+      line-height: 1.72;
+      color: var(--muted);
+    }
+    .hero p {
+      color: rgba(251, 247, 241, 0.86);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .stat {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .stat .k {
+      font-size: 12px;
+      text-transform: uppercase;
+      opacity: 0.76;
+      margin-bottom: 8px;
+    }
+    .stat .v {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat .h {
+      font-size: 12px;
+      line-height: 1.55;
+      color: rgba(251, 247, 241, 0.84);
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .panel {
+      border-radius: 24px;
+      padding: 22px;
+    }
+    .meta {
+      display: grid;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(32, 54, 60, 0.04);
+      border: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 15px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.76);
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), #984327);
+      color: #fff8f2;
+      border-color: transparent;
+    }
+    .btn.ghost {
+      color: var(--accent-2);
+      border-color: rgba(47, 111, 116, 0.16);
+      background: rgba(47, 111, 116, 0.08);
+    }
+    .ops {
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+    code {
+      font-family: Consolas, "SFMono-Regular", monospace;
+      background: rgba(32, 54, 60, 0.06);
+      border: 1px solid rgba(32, 54, 60, 0.08);
+      border-radius: 10px;
+      padding: 1px 7px;
+      color: var(--ink);
+    }
+    @media (max-width: 940px) {
+      .grid.two, .stats {
+        grid-template-columns: 1fr;
+      }
+      .page {
+        width: calc(100vw - 12px);
+        margin: 8px auto 16px;
+      }
+      .card, .panel {
+        padding: 20px;
+        border-radius: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="card hero">
+      <div class="eyebrow">Public Deployment</div>
+      <h1>AMR Dashboard 发布入口</h1>
+      <p>这里是长期维护用的静态发布目录。研究目录继续保存原始分析结果，<code>public_dashboards/</code> 负责对外访问、稳定链接和版本归档。</p>
+      <div class="stats">
+        <div class="stat"><div class="k">生成时间</div><div class="v">2026-04-17 22:18:03</div><div class="h">这次部署完成的时间戳</div></div>
+        <div class="stat"><div class="k">发布版本</div><div class="v">20260417-221803</div><div class="h">归档快照目录名</div></div>
+        <div class="stat"><div class="k">稳定入口</div><div class="v">2</div><div class="h">当前维护中的 dashboard 套数</div></div>
+        <div class="stat"><div class="k">发布根目录</div><div class="v">public</div><div class="h"><code>public_dashboards</code></div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Stable Paths</div>
+          <h2>稳定发布入口</h2>
+          <p>这两个目录始终指向当前最新一次部署后的首页和子页面，适合长期收藏或挂到静态服务器。</p>
+        </div>
+      </div>
+      <div class="grid two">
+        
+      <section class="panel">
+        <div class="eyebrow">latest</div>
+        <h2>Latest Exhaustive Dashboard</h2>
+        <p>全空间 exhaustive 搜索结果，包含首页、Lancet 子页和横向矩阵。</p>
+        <div class="meta">
+          <span>Scope: 当前主线发布版本，直接读取 exhaustive_* 结果。</span>
+          <span>Builder: <code>tools/build_results_dashboard.py</code></span>
+        </div>
+        <div class="links">
+          <a class="btn primary" href="./latest/index.html">打开首页</a>
+          <a class="btn" href="./latest/results_dashboard_lancet.html">Lancet 子页</a>
+          <a class="btn" href="./latest/results_dashboard_matrix.html">横向矩阵</a>
+          <a class="btn ghost" href="./latest/metadata.json">metadata.json</a>
+        </div>
+      </section>
+    
+      <section class="panel">
+        <div class="eyebrow">legacy-12models</div>
+        <h2>Legacy 12-Model Dashboard</h2>
+        <p>旧版 4 套人工方案 × 3 种固定效应，共 12 个模型的三页式备份。</p>
+        <div class="meta">
+          <span>Scope: 用于和当前 exhaustive 版并排对照的历史快照。</span>
+          <span>Builder: <code>2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py</code></span>
+        </div>
+        <div class="links">
+          <a class="btn primary" href="./legacy-12models/index.html">打开首页</a>
+          <a class="btn" href="./legacy-12models/results_dashboard_legacy_12models_lancet.html">Lancet 子页</a>
+          <a class="btn" href="./legacy-12models/results_dashboard_legacy_12models_matrix.html">横向矩阵</a>
+          <a class="btn ghost" href="./legacy-12models/metadata.json">metadata.json</a>
+        </div>
+      </section>
+    
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Release Snapshot</div>
+          <h2>本次归档快照</h2>
+          <p>每次部署都会把当前版本复制到 <code>releases/20260417-221803</code>，方便以后回看或回滚。</p>
+        </div>
+        <div class="links">
+          <a class="btn primary" href="./releases/20260417-221803/index.html">打开本次快照</a>
+          <a class="btn ghost" href="./manifest.json">manifest.json</a>
+        </div>
+      </div>
+      <div class="grid two">
+        
+      <section class="panel">
+        <div class="eyebrow">latest</div>
+        <h2>Latest Exhaustive Dashboard</h2>
+        <p>全空间 exhaustive 搜索结果，包含首页、Lancet 子页和横向矩阵。</p>
+        <div class="meta">
+          <span>Scope: 当前主线发布版本，直接读取 exhaustive_* 结果。</span>
+          <span>Builder: <code>tools/build_results_dashboard.py</code></span>
+        </div>
+        <div class="links">
+          <a class="btn primary" href="./releases/20260417-221803/latest/index.html">打开首页</a>
+          <a class="btn" href="./releases/20260417-221803/latest/results_dashboard_lancet.html">Lancet 子页</a>
+          <a class="btn" href="./releases/20260417-221803/latest/results_dashboard_matrix.html">横向矩阵</a>
+          <a class="btn ghost" href="./releases/20260417-221803/latest/metadata.json">metadata.json</a>
+        </div>
+      </section>
+    
+      <section class="panel">
+        <div class="eyebrow">legacy-12models</div>
+        <h2>Legacy 12-Model Dashboard</h2>
+        <p>旧版 4 套人工方案 × 3 种固定效应，共 12 个模型的三页式备份。</p>
+        <div class="meta">
+          <span>Scope: 用于和当前 exhaustive 版并排对照的历史快照。</span>
+          <span>Builder: <code>2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py</code></span>
+        </div>
+        <div class="links">
+          <a class="btn primary" href="./releases/20260417-221803/legacy-12models/index.html">打开首页</a>
+          <a class="btn" href="./releases/20260417-221803/legacy-12models/results_dashboard_legacy_12models_lancet.html">Lancet 子页</a>
+          <a class="btn" href="./releases/20260417-221803/legacy-12models/results_dashboard_legacy_12models_matrix.html">横向矩阵</a>
+          <a class="btn ghost" href="./releases/20260417-221803/legacy-12models/metadata.json">metadata.json</a>
+        </div>
+      </section>
+    
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Maintenance</div>
+          <h2>维护约定</h2>
+        </div>
+      </div>
+      <div class="ops">
+        <div>重新构建并发布：<code>python -X utf8 tools/deploy_public_dashboards.py</code></div>
+        <div>只发布当前已有 HTML，不重跑上游 builder：<code>python -X utf8 tools/deploy_public_dashboards.py --skip-build</code></div>
+        <div>最新版本布局维护入口：<code>tools/build_results_dashboard.py</code></div>
+        <div>旧版 12 模型布局维护入口：<code>2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py</code></div>
+        <div>本发布目录说明见：<code>public_dashboards/README.md</code></div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
