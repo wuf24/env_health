@@ -69,6 +69,23 @@ DOWNLOAD_FILES = {
     "focus_variant_bridge_summary.csv": BRIDGE_SUMMARY,
     "combined_diagnostics.csv": DIAGNOSTICS,
 }
+CONTROL_BEGINNER_COPY = {
+    "year_only": "先把每一年全国共同变化的背景扣掉，但不额外扣除省份之间长期固定差异",
+    "province_only": "先把省与省之间长期不同的底子扣掉，但不单独控制每一年的共同冲击",
+    "province_year": "同时把省份长期差异和年份共同冲击都控制住",
+}
+VARIANT_BEGINNER_ROLES = {
+    "year_only_additive": "这是最像原始 Year FE 主线的主效应复现版，重点是看 R1xday 和 AMC 是否还能稳定地指向更高的 AMR。",
+    "year_only_amplification": "这是 Year FE 主线上的交互探索版，在复现主效应的同时，继续追问“天气会不会放大抗菌药物使用的风险”。",
+    "province_only_additive": "这条线专门用来看：一旦把省份固有差异拿掉，原本看到的主效应还剩多少。",
+    "province_only_amplification": "这是本轮最值得盯的交互信号线，因为最强的放大效应证据就出现在这一组模型里。",
+    "province_year_additive": "这是最严格口径下的主效应检查，用来判断主效应在双重控制后还剩下多少。",
+    "province_year_amplification": "这是最严格口径下的放大效应检查，方向如果还能保持，就更有说服力；但它也最容易把信号压弱。",
+}
+SCHEME_SOURCE_COPY = {
+    "curated": "人工主线变量组",
+    "systematic": "系统筛选变量组",
+}
 
 
 def read_csv(path: Path) -> pd.DataFrame:
@@ -107,6 +124,12 @@ def fmt_range(values: pd.Series, digits: int = 3) -> str:
     if cleaned.empty:
         return "—"
     return f"{cleaned.min():.{digits}f}–{cleaned.max():.{digits}f}"
+
+
+def clean_label(value: Any) -> str:
+    if value is None or pd.isna(value):
+        return ""
+    return str(value).replace("\r\n", "\n").replace("\n", " / ").strip()
 
 
 def effect_status(mean: Any, low: Any, high: Any, prob_gt_0: Any) -> tuple[str, str, str]:
@@ -158,6 +181,259 @@ def render_metric(mean: Any, low: Any, high: Any, prob_gt_0: Any) -> str:
         f'<div class="metric-note">{escape(detail)}</div>'
         f"</div>"
     )
+
+
+def model_dom_id(scheme_id: str, variant_id: str) -> str:
+    return f"model-{variant_sort_key(variant_id)}-{scheme_sort_key(scheme_id)}"
+
+
+def build_explain_button(scheme_id: str, variant_id: str, label: str = "小白解释") -> str:
+    dom_id = model_dom_id(scheme_id, variant_id)
+    return (
+        f'<button type="button" class="explain-btn" data-detail-target="{escape(dom_id)}">'
+        f"{escape(label)}"
+        f"</button>"
+    )
+
+
+def load_model_metadata_map() -> dict[tuple[str, str], dict[str, Any]]:
+    metadata_map: dict[tuple[str, str], dict[str, Any]] = {}
+    for path in sorted(SUMMARY_DIR.glob("*_metadata.json")):
+        data = read_json(path)
+        metadata_map[(data["scheme_id"], data["variant_id"])] = data
+    return metadata_map
+
+
+def build_diagnostics_map(diagnostics: pd.DataFrame) -> dict[tuple[str, str], dict[str, Any]]:
+    grouped = (
+        diagnostics.groupby(["scheme_id", "variant_id"], as_index=False)
+        .agg(r_hat=("r_hat", "max"), ess_bulk=("ess_bulk", "min"), ess_tail=("ess_tail", "min"))
+        .copy()
+    )
+    out: dict[tuple[str, str], dict[str, Any]] = {}
+    for _, row in grouped.iterrows():
+        out[(row["scheme_id"], row["variant_id"])] = {
+            "r_hat": float(row["r_hat"]),
+            "ess_bulk": int(row["ess_bulk"]),
+            "ess_tail": int(row["ess_tail"]),
+        }
+    return out
+
+
+def main_effect_beginner_sentence(variable: str, mean: Any, low: Any, high: Any, prob_gt_0: Any) -> str:
+    label, _, _ = effect_status(mean, low, high, prob_gt_0)
+    if label == "稳健正向":
+        return f"对小白来说，这意味着在这个模型里，{variable} 越高，AMR 越高的说法比较站得住。"
+    if label == "稳健负向":
+        return f"这说明在这个模型里，{variable} 越高，AMR 反而越低，而且这个方向比较稳。"
+    if label == "方向性正向":
+        return f"{variable} 看起来偏正向，但证据还没有稳到可以直接下硬结论。"
+    if label == "方向性负向":
+        return f"{variable} 看起来偏负向，但这更像是一个方向信号，还不算特别硬。"
+    return f"这个模型里暂时看不出 {variable} 与 AMR 有足够清晰、足够稳定的方向。"
+
+
+def interaction_beginner_sentence(mean: Any, low: Any, high: Any, prob_gt_0: Any) -> str:
+    label, _, _ = effect_status(mean, low, high, prob_gt_0)
+    if label == "稳健正向":
+        return "对小白来说，这最接近“天气越极端时，抗菌药物使用带来的 AMR 风险会被放大”这句话，而且证据在这个模型里算比较硬。"
+    if label == "稳健负向":
+        return "这代表交互方向是稳定负向，含义更接近“天气越高时，AMC 的作用没有被放大，甚至被削弱”。"
+    if label == "方向性正向":
+        return "交互项方向偏正，说明“放大效应”有苗头，但现在更像线索，还不适合写成已经被完全证明。"
+    if label == "方向性负向":
+        return "交互项方向偏负，但证据还不够强，暂时不宜下明确反向结论。"
+    return "这条模型本身不能为“放大效应”提供强证据，至少还需要别的模型来补强。"
+
+
+def can_say_sentence(row: pd.Series) -> str:
+    variant_id = row["variant_id"]
+    r1_status, _, _ = effect_status(
+        row["main_R1xday_posterior_mean"],
+        row["main_R1xday_crI_2_5"],
+        row["main_R1xday_crI_97_5"],
+        row["main_R1xday_prob_gt_0"],
+    )
+    amc_status, _, _ = effect_status(
+        row["main_AMC_posterior_mean"],
+        row["main_AMC_crI_2_5"],
+        row["main_AMC_crI_97_5"],
+        row["main_AMC_prob_gt_0"],
+    )
+    if variant_id.endswith("additive"):
+        if r1_status == "稳健正向" and amc_status == "稳健正向":
+            return "可以把它当成“主效应在这个控制口径下被成功复现”的证据。"
+        return "可以把它理解成：一旦换成这个控制口径，原来的主效应明显变弱了。"
+
+    interaction_status, _, _ = effect_status(
+        row["interaction_R1xday_x_AMC_posterior_mean"],
+        row["interaction_R1xday_x_AMC_crI_2_5"],
+        row["interaction_R1xday_x_AMC_crI_97_5"],
+        row["interaction_R1xday_x_AMC_prob_gt_0"],
+    )
+    if interaction_status == "稳健正向":
+        return "可以说：在这个特定控制口径和变量组合下，交互项支持“放大效应”。"
+    if interaction_status == "方向性正向":
+        return "可以说：这个模型对“放大效应”提供了方向性支持，但还属于偏正线索。"
+    return "可以说：这条模型至少没有给出强的反向交互证据，但它本身不能作为放大效应的主证据。"
+
+
+def cannot_say_sentence(row: pd.Series) -> str:
+    variant_id = row["variant_id"]
+    if variant_id.endswith("additive"):
+        return "不能把这条模型直接解读成“已经证明放大效应”，因为它根本没有估计交互项。"
+    interaction_status, _, _ = effect_status(
+        row["interaction_R1xday_x_AMC_posterior_mean"],
+        row["interaction_R1xday_x_AMC_crI_2_5"],
+        row["interaction_R1xday_x_AMC_crI_97_5"],
+        row["interaction_R1xday_x_AMC_prob_gt_0"],
+    )
+    if interaction_status == "稳健正向":
+        return "也不能把它扩大成“所有模型、所有控制口径下都稳健证明了放大效应”，因为更严格口径里交互项还会变弱。"
+    return "不能直接写成“放大效应已经被稳健证明”，因为当前区间还没有在这个模型里完全站到 0 的同一侧。"
+
+
+def build_metric_explainer_card(title: str, variable: str, mean: Any, low: Any, high: Any, prob_gt_0: Any) -> str:
+    label, tone, _ = effect_status(mean, low, high, prob_gt_0)
+    explainer = (
+        interaction_beginner_sentence(mean, low, high, prob_gt_0)
+        if "×" in variable
+        else main_effect_beginner_sentence(variable, mean, low, high, prob_gt_0)
+    )
+    return f"""
+      <article class="detail-metric-card {escape(tone)}">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">{escape(title)}</div>
+          {render_badge(label, tone)}
+        </div>
+        <div class="detail-metric-number">β = {escape(fmt_num(mean))}</div>
+        <div class="detail-metric-copy">95% CrI {escape(fmt_interval(low, high))} · P(β &gt; 0) = {escape(fmt_prob(prob_gt_0))}</div>
+        <p>{escape(explainer)}</p>
+      </article>
+    """
+
+
+def build_model_explanation_templates(
+    bridge: pd.DataFrame,
+    diagnostics: pd.DataFrame,
+    metadata_map: dict[tuple[str, str], dict[str, Any]],
+) -> str:
+    diagnostics_map = build_diagnostics_map(diagnostics)
+    rows = bridge.copy()
+    rows.sort_values(
+        ["variant_id", "scheme_id"],
+        key=lambda s: s.map(variant_sort_key) if s.name == "variant_id" else s.map(scheme_sort_key),
+        inplace=True,
+    )
+    templates: list[str] = []
+    for _, row in rows.iterrows():
+        key = (row["scheme_id"], row["variant_id"])
+        meta = metadata_map.get(key, {})
+        diag = diagnostics_map.get(key, {})
+        dom_id = model_dom_id(row["scheme_id"], row["variant_id"])
+        control_key = control_from_variant(row["variant_id"])
+        control_copy = CONTROL_BEGINNER_COPY[control_key]
+        role_copy = VARIANT_BEGINNER_ROLES[row["variant_id"]]
+        source_copy = SCHEME_SOURCE_COPY.get(meta.get("scheme_source", ""), "变量组")
+        variables = [clean_label(item) for item in meta.get("variables", []) if clean_label(item)]
+        variable_tags = "".join(f'<span class="var-chip">{escape(item)}</span>' for item in variables)
+        variant_question = (
+            f"这个模型 {control_copy}，然后只问两个问题：R1xday 和抗菌药物使用强度是否还会和 AMR 同向变化。"
+            if row["variant_id"].endswith("additive")
+            else f"这个模型 {control_copy}，除了看 R1xday 和抗菌药物使用强度的主效应，还进一步问：当 R1xday 更高时，AMC 的影响会不会更强。"
+        )
+        one_liner = role_copy
+        diagnostics_copy = (
+            f"采样质量上，R-hat 最大值为 {diag.get('r_hat', float('nan')):.2f}，最小 bulk ESS 为 {diag.get('ess_bulk', 0)}，"
+            f"最小 tail ESS 为 {diag.get('ess_tail', 0)}。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。"
+        )
+        metric_cards = [
+            build_metric_explainer_card(
+                "主效应 1",
+                "R1xday",
+                row["main_R1xday_posterior_mean"],
+                row["main_R1xday_crI_2_5"],
+                row["main_R1xday_crI_97_5"],
+                row["main_R1xday_prob_gt_0"],
+            ),
+            build_metric_explainer_card(
+                "主效应 2",
+                "抗菌药物使用强度",
+                row["main_AMC_posterior_mean"],
+                row["main_AMC_crI_2_5"],
+                row["main_AMC_crI_97_5"],
+                row["main_AMC_prob_gt_0"],
+            ),
+        ]
+        if row["variant_id"].endswith("amplification"):
+            metric_cards.append(
+                build_metric_explainer_card(
+                    "交互项",
+                    "R1xday × 抗菌药物使用强度",
+                    row["interaction_R1xday_x_AMC_posterior_mean"],
+                    row["interaction_R1xday_x_AMC_crI_2_5"],
+                    row["interaction_R1xday_x_AMC_crI_97_5"],
+                    row["interaction_R1xday_x_AMC_prob_gt_0"],
+                )
+            )
+        metrics_html = "".join(metric_cards)
+
+        templates.append(
+            f"""
+            <template id="{escape(dom_id)}">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>{escape(VARIANT_LABELS[row['variant_id']])} · {escape(SCHEME_LABELS.get(row['scheme_id'], row['scheme_id']))}</h2>
+                  <p>{escape(one_liner)}</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>{escape(variant_question)}</p>
+                    <p>这条模型来自“{escape(source_copy)}”中的 <strong>{escape(SCHEME_LABELS.get(row['scheme_id'], row['scheme_id']))}</strong>。它的定位是：{escape(SCHEME_DESCRIPTIONS.get(row['scheme_id'], row['scheme_id']))}</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>{int(meta.get('n_obs', 0))}</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>{int(meta.get('n_provinces', 0))}</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>{int(meta.get('n_years', 0))}</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>{"有" if row['variant_id'].endswith('amplification') else "无"}</strong></div>
+                    </div>
+                    <div class="chip-belt">{variable_tags}</div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    {metrics_html}
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>{escape(can_say_sentence(row))}</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>{escape(cannot_say_sentence(row))}</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>{escape(diagnostics_copy)}</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            """
+        )
+    return "".join(templates)
 
 
 def build_overview_cards(primary: pd.DataFrame, diagnostics: pd.DataFrame) -> str:
@@ -367,6 +643,7 @@ def build_forest_plot(bridge: pd.DataFrame) -> str:
                 <div class="forest-kicker">{escape(CONTROL_LABELS[row['control_key']])}</div>
                 <div class="forest-title">{escape(SCHEME_LABELS.get(row['scheme_id'], row['scheme_id']))}</div>
                 <div class="forest-copy">β = {escape(fmt_num(mean))} · 95% CrI {escape(fmt_interval(low, high))}</div>
+                <div class="forest-actions">{build_explain_button(row['scheme_id'], row['variant_id'])}</div>
               </div>
               <div class="forest-track" style="--zero:{zero_pct:.2f}%; --start:{start:.2f}%; --end:{end:.2f}%; --point:{point:.2f}%;">
                 <div class="forest-zero"></div>
@@ -409,7 +686,12 @@ def build_additive_table(bridge: pd.DataFrame) -> str:
             f"""
             <tr>
               <td>{escape(VARIANT_LABELS[row['variant_id']])}</td>
-              <td>{escape(SCHEME_LABELS.get(row['scheme_id'], row['scheme_id']))}</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>{escape(SCHEME_LABELS.get(row['scheme_id'], row['scheme_id']))}</span>
+                  {build_explain_button(row['scheme_id'], row['variant_id'])}
+                </div>
+              </td>
               <td>{render_metric(row['main_R1xday_posterior_mean'], row['main_R1xday_crI_2_5'], row['main_R1xday_crI_97_5'], row['main_R1xday_prob_gt_0'])}</td>
               <td>{render_metric(row['main_AMC_posterior_mean'], row['main_AMC_crI_2_5'], row['main_AMC_crI_97_5'], row['main_AMC_prob_gt_0'])}</td>
               <td><div class="stacked-badges">{render_badge(verdict_label, verdict_tone)}{render_badge(amc_label, amc_tone)}</div></td>
@@ -438,7 +720,12 @@ def build_amplification_table(bridge: pd.DataFrame) -> str:
             f"""
             <tr>
               <td>{escape(VARIANT_LABELS[row['variant_id']])}</td>
-              <td>{escape(SCHEME_LABELS.get(row['scheme_id'], row['scheme_id']))}</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>{escape(SCHEME_LABELS.get(row['scheme_id'], row['scheme_id']))}</span>
+                  {build_explain_button(row['scheme_id'], row['variant_id'])}
+                </div>
+              </td>
               <td>{render_metric(row['main_R1xday_posterior_mean'], row['main_R1xday_crI_2_5'], row['main_R1xday_crI_97_5'], row['main_R1xday_prob_gt_0'])}</td>
               <td>{render_metric(row['main_AMC_posterior_mean'], row['main_AMC_crI_2_5'], row['main_AMC_crI_97_5'], row['main_AMC_prob_gt_0'])}</td>
               <td>{render_metric(row['interaction_R1xday_x_AMC_posterior_mean'], row['interaction_R1xday_x_AMC_crI_2_5'], row['interaction_R1xday_x_AMC_crI_97_5'], row['interaction_R1xday_x_AMC_prob_gt_0'])}</td>
@@ -467,7 +754,12 @@ def build_diagnostics_table(diagnostics: pd.DataFrame) -> str:
             f"""
             <tr>
               <td>{escape(VARIANT_LABELS[row['variant_id']])}</td>
-              <td>{escape(SCHEME_LABELS.get(row['scheme_id'], row['scheme_id']))}</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>{escape(SCHEME_LABELS.get(row['scheme_id'], row['scheme_id']))}</span>
+                  {build_explain_button(row['scheme_id'], row['variant_id'])}
+                </div>
+              </td>
               <td>{row['r_hat']:.2f}</td>
               <td>{int(row['ess_bulk'])}</td>
               <td>{int(row['ess_tail'])}</td>
@@ -505,6 +797,7 @@ def build_html(
     bridge: pd.DataFrame,
     diagnostics: pd.DataFrame,
     metadata: dict[str, Any],
+    metadata_map: dict[tuple[str, str], dict[str, Any]],
     generated_at: str,
 ) -> str:
     run_config = metadata.get("run_config", {})
@@ -526,6 +819,7 @@ def build_html(
         f"{VARIANT_LABELS[strongest_row['variant_id']]} · "
         f"{SCHEME_LABELS.get(strongest_row['scheme_id'], strongest_row['scheme_id'])}"
     )
+    explanation_templates = build_model_explanation_templates(bridge, diagnostics, metadata_map)
 
     metadata_payload = {
         "generated_at": generated_at,
@@ -683,6 +977,26 @@ def build_html(
       border: 1px solid rgba(255, 255, 255, 0.14);
       font-weight: 700;
       color: rgba(251, 248, 242, 0.94);
+    }}
+    .explain-btn {{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 107, 115, 0.14);
+      background: rgba(31, 107, 115, 0.08);
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }}
+    .explain-btn:hover {{
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(23, 49, 59, 0.10);
+      background: rgba(31, 107, 115, 0.14);
     }}
     .stats-grid {{
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -847,6 +1161,9 @@ def build_html(
       color: var(--muted);
       line-height: 1.7;
     }}
+    .forest-actions {{
+      margin-top: 10px;
+    }}
     .forest-track {{
       position: relative;
       height: 42px;
@@ -929,6 +1246,12 @@ def build_html(
       position: sticky;
       top: 0;
       z-index: 1;
+    }}
+    .table-model-cell {{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 160px;
     }}
     .metric-block {{
       display: grid;
@@ -1017,6 +1340,187 @@ def build_html(
       color: var(--muted);
       line-height: 1.7;
     }}
+    .modal-shell {{
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }}
+    .modal-shell[hidden] {{
+      display: none;
+    }}
+    .modal-backdrop {{
+      position: absolute;
+      inset: 0;
+      background: rgba(16, 28, 32, 0.52);
+      backdrop-filter: blur(5px);
+    }}
+    .modal-card {{
+      position: relative;
+      width: min(1040px, calc(100vw - 24px));
+      max-height: calc(100vh - 24px);
+      overflow: auto;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(251,248,242,0.98), rgba(240,244,241,0.98));
+      border: 1px solid rgba(255,255,255,0.72);
+      box-shadow: 0 32px 80px rgba(9, 18, 22, 0.20);
+      padding: 24px;
+    }}
+    .modal-close {{
+      position: sticky;
+      top: 0;
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.92);
+      color: var(--ink);
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 2;
+    }}
+    .explain-sheet {{
+      display: grid;
+      gap: 18px;
+      margin-top: 4px;
+    }}
+    .explain-hero {{
+      padding: 20px 22px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(15,37,48,0.96), rgba(29,94,96,0.92));
+      color: #fbf8f2;
+    }}
+    .explain-hero p {{
+      color: rgba(251,248,242,0.88);
+      margin-top: 12px;
+    }}
+    .explain-hero h2 {{
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.08;
+    }}
+    .explain-layout {{
+      display: grid;
+      gap: 16px;
+    }}
+    .explain-layout.two {{
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }}
+    .explain-section {{
+      padding: 20px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.70);
+    }}
+    .explain-section h3 {{
+      font-size: 24px;
+      line-height: 1.2;
+    }}
+    .explain-section p {{
+      margin-top: 12px;
+    }}
+    .explain-section.emphasis.ok {{
+      background: linear-gradient(180deg, rgba(18,111,82,0.10), rgba(255,255,255,0.78));
+    }}
+    .explain-section.emphasis.caution {{
+      background: linear-gradient(180deg, rgba(180,90,51,0.10), rgba(255,255,255,0.78));
+    }}
+    .mini-stat-grid {{
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }}
+    .mini-stat {{
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(31,107,115,0.06);
+      border: 1px solid rgba(31,107,115,0.10);
+    }}
+    .mini-stat span {{
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }}
+    .mini-stat strong {{
+      font-size: 20px;
+      line-height: 1;
+    }}
+    .chip-belt {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }}
+    .var-chip {{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(23,49,59,0.06);
+      border: 1px solid rgba(23,49,59,0.08);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+    }}
+    .detail-metric-grid {{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }}
+    .detail-metric-card {{
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.86);
+    }}
+    .detail-metric-card.strong {{
+      background: linear-gradient(180deg, rgba(18,111,82,0.10), rgba(255,255,255,0.90));
+    }}
+    .detail-metric-card.directional {{
+      background: linear-gradient(180deg, rgba(199,156,69,0.14), rgba(255,255,255,0.90));
+    }}
+    .detail-metric-card.negative {{
+      background: linear-gradient(180deg, rgba(159,63,53,0.12), rgba(255,255,255,0.90));
+    }}
+    .detail-metric-head {{
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 10px;
+    }}
+    .detail-metric-title {{
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }}
+    .detail-metric-number {{
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 8px;
+    }}
+    .detail-metric-copy {{
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }}
+    .detail-metric-card p {{
+      margin-top: 10px;
+    }}
     footer {{
       text-align: center;
       color: var(--muted);
@@ -1029,7 +1533,10 @@ def build_html(
       .grid-3,
       .grid-2,
       .reporting-grid,
-      .downloads {{
+      .downloads,
+      .explain-layout.two,
+      .detail-metric-grid,
+      .mini-stat-grid {{
         grid-template-columns: 1fr;
       }}
       .nav-pills {{
@@ -1048,6 +1555,11 @@ def build_html(
       }}
       .panel {{
         border-radius: 20px;
+        padding: 18px;
+      }}
+      .modal-card {{
+        width: calc(100vw - 12px);
+        max-height: calc(100vh - 12px);
         padding: 18px;
       }}
     }}
@@ -1152,7 +1664,7 @@ def build_html(
         <div>
           <div class="eyebrow" style="color: var(--muted);">Interaction Signal</div>
           <h2>交互项森林图</h2>
-          <p>下面只看放大效应模型里的 <code>R1xday × 抗菌药物使用强度</code>。如果整段区间都在 0 右侧，说明“放大效应”不只是方向偏正，而是达到更稳健的支持。</p>
+          <p>下面只看放大效应模型里的 <code>R1xday × 抗菌药物使用强度</code>。如果整段区间都在 0 右侧，说明“放大效应”不只是方向偏正，而是达到更稳健的支持。每一行后面都可以点 <code>小白解释</code> 看这条模型到底在说什么。</p>
         </div>
       </div>
       {build_forest_plot(bridge)}
@@ -1163,7 +1675,7 @@ def build_html(
         <div>
           <div class="eyebrow" style="color: var(--muted);">Evidence Matrix</div>
           <h2>主效应矩阵</h2>
-          <p>这张表只看 additive 变体，目的是把主效应本身单独拎出来。year-only 线非常稳定，而一旦把省份差异控制进去，R1xday 主效应会明显收缩到 0 附近。</p>
+          <p>这张表只看 additive 变体，目的是把主效应本身单独拎出来。year-only 线非常稳定，而一旦把省份差异控制进去，R1xday 主效应会明显收缩到 0 附近。每个模型右侧都带有 <code>小白解释</code> 按钮。</p>
         </div>
       </div>
       <div class="table-wrap">
@@ -1189,7 +1701,7 @@ def build_html(
         <div>
           <div class="eyebrow" style="color: var(--muted);">Amplification Matrix</div>
           <h2>放大效应矩阵</h2>
-          <p>这张表把 amplification 变体放在一起。关键不只看交互项本身，也要同时看加入交互以后两条主效应是否仍然站得住。</p>
+          <p>这张表把 amplification 变体放在一起。关键不只看交互项本身，也要同时看加入交互以后两条主效应是否仍然站得住。每个模型都可以点开专门解释。</p>
         </div>
       </div>
       <div class="table-wrap">
@@ -1216,7 +1728,7 @@ def build_html(
         <div>
           <div class="eyebrow" style="color: var(--muted);">Diagnostics & Data</div>
           <h2>采样诊断与数据处理</h2>
-          <p>这部分回答两个问题：一是 MCMC 有没有明显不稳定；二是缺失值和样本筛选是怎么处理的。只有这两步站住脚，前面的解释才可信。</p>
+          <p>这部分回答两个问题：一是 MCMC 有没有明显不稳定；二是缺失值和样本筛选是怎么处理的。只有这两步站住脚，前面的解释才可信。这里同样保留了每个模型的解释按钮，方便把“结果”和“质量”一起看。</p>
         </div>
       </div>
       <div class="highlights-grid">
@@ -1312,8 +1824,58 @@ def build_html(
       </div>
     </section>
 
+    <div class="modal-shell" data-explain-shell hidden>
+      <div class="modal-backdrop" data-explain-close></div>
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-explain-close aria-label="关闭解释">×</button>
+        <div data-explain-body></div>
+      </div>
+    </div>
+
+    <div hidden>
+      {explanation_templates}
+    </div>
+
     <footer>Generated from <code>{escape(str(SUMMARY_DIR.relative_to(ROOT)).replace("\\\\", "/"))}</code> on {escape(generated_at)}.</footer>
   </div>
+  <script>
+    (() => {{
+      const shell = document.querySelector('[data-explain-shell]');
+      const body = document.querySelector('[data-explain-body]');
+      if (!shell || !body) return;
+
+      const close = () => {{
+        shell.hidden = true;
+        body.innerHTML = '';
+        document.body.style.overflow = '';
+      }};
+
+      const open = (targetId) => {{
+        const template = document.getElementById(targetId);
+        if (!template) return;
+        body.innerHTML = template.innerHTML;
+        shell.hidden = false;
+        document.body.style.overflow = 'hidden';
+      }};
+
+      document.addEventListener('click', (event) => {{
+        const trigger = event.target.closest('[data-detail-target]');
+        if (trigger) {{
+          open(trigger.dataset.detailTarget);
+          return;
+        }}
+        if (event.target.closest('[data-explain-close]')) {{
+          close();
+        }}
+      }});
+
+      document.addEventListener('keydown', (event) => {{
+        if (event.key === 'Escape' && !shell.hidden) {{
+          close();
+        }}
+      }});
+    }})();
+  </script>
 </body>
 </html>
 """
@@ -1327,12 +1889,13 @@ def main() -> None:
     bridge = read_csv(BRIDGE_SUMMARY)
     diagnostics = read_csv(DIAGNOSTICS)
     metadata = read_json(METADATA_SAMPLE)
+    metadata_map = load_model_metadata_map()
 
     for name, source in DOWNLOAD_FILES.items():
         shutil.copy2(source, DATA_DIR / name)
 
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    html = build_html(primary, bridge, diagnostics, metadata, generated_at)
+    html = build_html(primary, bridge, diagnostics, metadata, metadata_map, generated_at)
     (OUTPUT_DIR / "index.html").write_text(html, encoding="utf-8")
 
 

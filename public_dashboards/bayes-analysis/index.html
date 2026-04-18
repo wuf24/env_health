@@ -135,6 +135,26 @@
       font-weight: 700;
       color: rgba(251, 248, 242, 0.94);
     }
+    .explain-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 107, 115, 0.14);
+      background: rgba(31, 107, 115, 0.08);
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+    .explain-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(23, 49, 59, 0.10);
+      background: rgba(31, 107, 115, 0.14);
+    }
     .stats-grid {
       grid-template-columns: repeat(5, minmax(0, 1fr));
       margin-top: 22px;
@@ -298,6 +318,9 @@
       color: var(--muted);
       line-height: 1.7;
     }
+    .forest-actions {
+      margin-top: 10px;
+    }
     .forest-track {
       position: relative;
       height: 42px;
@@ -380,6 +403,12 @@
       position: sticky;
       top: 0;
       z-index: 1;
+    }
+    .table-model-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 160px;
     }
     .metric-block {
       display: grid;
@@ -468,6 +497,187 @@
       color: var(--muted);
       line-height: 1.7;
     }
+    .modal-shell {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+    .modal-shell[hidden] {
+      display: none;
+    }
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(16, 28, 32, 0.52);
+      backdrop-filter: blur(5px);
+    }
+    .modal-card {
+      position: relative;
+      width: min(1040px, calc(100vw - 24px));
+      max-height: calc(100vh - 24px);
+      overflow: auto;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(251,248,242,0.98), rgba(240,244,241,0.98));
+      border: 1px solid rgba(255,255,255,0.72);
+      box-shadow: 0 32px 80px rgba(9, 18, 22, 0.20);
+      padding: 24px;
+    }
+    .modal-close {
+      position: sticky;
+      top: 0;
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.92);
+      color: var(--ink);
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .explain-sheet {
+      display: grid;
+      gap: 18px;
+      margin-top: 4px;
+    }
+    .explain-hero {
+      padding: 20px 22px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(15,37,48,0.96), rgba(29,94,96,0.92));
+      color: #fbf8f2;
+    }
+    .explain-hero p {
+      color: rgba(251,248,242,0.88);
+      margin-top: 12px;
+    }
+    .explain-hero h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.08;
+    }
+    .explain-layout {
+      display: grid;
+      gap: 16px;
+    }
+    .explain-layout.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .explain-section {
+      padding: 20px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.70);
+    }
+    .explain-section h3 {
+      font-size: 24px;
+      line-height: 1.2;
+    }
+    .explain-section p {
+      margin-top: 12px;
+    }
+    .explain-section.emphasis.ok {
+      background: linear-gradient(180deg, rgba(18,111,82,0.10), rgba(255,255,255,0.78));
+    }
+    .explain-section.emphasis.caution {
+      background: linear-gradient(180deg, rgba(180,90,51,0.10), rgba(255,255,255,0.78));
+    }
+    .mini-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .mini-stat {
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(31,107,115,0.06);
+      border: 1px solid rgba(31,107,115,0.10);
+    }
+    .mini-stat span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .mini-stat strong {
+      font-size: 20px;
+      line-height: 1;
+    }
+    .chip-belt {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .var-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(23,49,59,0.06);
+      border: 1px solid rgba(23,49,59,0.08);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .detail-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .detail-metric-card {
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.86);
+    }
+    .detail-metric-card.strong {
+      background: linear-gradient(180deg, rgba(18,111,82,0.10), rgba(255,255,255,0.90));
+    }
+    .detail-metric-card.directional {
+      background: linear-gradient(180deg, rgba(199,156,69,0.14), rgba(255,255,255,0.90));
+    }
+    .detail-metric-card.negative {
+      background: linear-gradient(180deg, rgba(159,63,53,0.12), rgba(255,255,255,0.90));
+    }
+    .detail-metric-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+    .detail-metric-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .detail-metric-number {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 8px;
+    }
+    .detail-metric-copy {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .detail-metric-card p {
+      margin-top: 10px;
+    }
     footer {
       text-align: center;
       color: var(--muted);
@@ -480,7 +690,10 @@
       .grid-3,
       .grid-2,
       .reporting-grid,
-      .downloads {
+      .downloads,
+      .explain-layout.two,
+      .detail-metric-grid,
+      .mini-stat-grid {
         grid-template-columns: 1fr;
       }
       .nav-pills {
@@ -499,6 +712,11 @@
       }
       .panel {
         border-radius: 20px;
+        padding: 18px;
+      }
+      .modal-card {
+        width: calc(100vw - 12px);
+        max-height: calc(100vh - 12px);
         padding: 18px;
       }
     }
@@ -540,7 +758,7 @@
         </div>
         <div class="stat">
           <div class="k">生成时间</div>
-          <div class="v">2026-04-18 21:59</div>
+          <div class="v">2026-04-18 23:02</div>
           <div class="h">静态网页已写入 <code>public_dashboards/bayes-analysis/</code>，可以直接打开浏览。</div>
         </div>
       </div>
@@ -704,7 +922,7 @@
         <div>
           <div class="eyebrow" style="color: var(--muted);">Interaction Signal</div>
           <h2>交互项森林图</h2>
-          <p>下面只看放大效应模型里的 <code>R1xday × 抗菌药物使用强度</code>。如果整段区间都在 0 右侧，说明“放大效应”不只是方向偏正，而是达到更稳健的支持。</p>
+          <p>下面只看放大效应模型里的 <code>R1xday × 抗菌药物使用强度</code>。如果整段区间都在 0 右侧，说明“放大效应”不只是方向偏正，而是达到更稳健的支持。每一行后面都可以点 <code>小白解释</code> 看这条模型到底在说什么。</p>
         </div>
       </div>
       <div class="forest-axis-note">横轴范围 -0.06 到 0.10，竖线表示 0；只有整段可信区间完全位于 0 右侧，才算“稳健正向”。</div>
@@ -713,6 +931,7 @@
                 <div class="forest-kicker">Year-only</div>
                 <div class="forest-title">方案A 平衡主线组</div>
                 <div class="forest-copy">β = 0.030 · 95% CrI [-0.025, 0.087]</div>
+                <div class="forest-actions"><button type="button" class="explain-btn" data-detail-target="model-1-0">小白解释</button></div>
               </div>
               <div class="forest-track" style="--zero:37.50%; --start:21.60%; --end:91.65%; --point:56.47%;">
                 <div class="forest-zero"></div>
@@ -727,6 +946,7 @@
                 <div class="forest-kicker">Year-only</div>
                 <div class="forest-title">系统筛选方案 SYS_09556</div>
                 <div class="forest-copy">β = 0.005 · 95% CrI [-0.050, 0.062]</div>
+                <div class="forest-actions"><button type="button" class="explain-btn" data-detail-target="model-1-1">小白解释</button></div>
               </div>
               <div class="forest-track" style="--zero:37.50%; --start:6.40%; --end:76.12%; --point:40.68%;">
                 <div class="forest-zero"></div>
@@ -741,6 +961,7 @@
                 <div class="forest-kicker">Year-only</div>
                 <div class="forest-title">系统筛选方案 SYS_09557</div>
                 <div class="forest-copy">β = 0.016 · 95% CrI [-0.040, 0.073]</div>
+                <div class="forest-actions"><button type="button" class="explain-btn" data-detail-target="model-1-2">小白解释</button></div>
               </div>
               <div class="forest-track" style="--zero:37.50%; --start:12.50%; --end:83.38%; --point:47.71%;">
                 <div class="forest-zero"></div>
@@ -755,6 +976,7 @@
                 <div class="forest-kicker">Province-only</div>
                 <div class="forest-title">方案A 平衡主线组</div>
                 <div class="forest-copy">β = 0.037 · 95% CrI [0.002, 0.074]</div>
+                <div class="forest-actions"><button type="button" class="explain-btn" data-detail-target="model-3-0">小白解释</button></div>
               </div>
               <div class="forest-track" style="--zero:37.50%; --start:38.58%; --end:83.46%; --point:60.40%;">
                 <div class="forest-zero"></div>
@@ -769,6 +991,7 @@
                 <div class="forest-kicker">Province-only</div>
                 <div class="forest-title">系统筛选方案 SYS_09556</div>
                 <div class="forest-copy">β = 0.038 · 95% CrI [0.001, 0.077]</div>
+                <div class="forest-actions"><button type="button" class="explain-btn" data-detail-target="model-3-1">小白解释</button></div>
               </div>
               <div class="forest-track" style="--zero:37.50%; --start:37.91%; --end:85.54%; --point:61.47%;">
                 <div class="forest-zero"></div>
@@ -783,6 +1006,7 @@
                 <div class="forest-kicker">Province-only</div>
                 <div class="forest-title">系统筛选方案 SYS_09557</div>
                 <div class="forest-copy">β = 0.037 · 95% CrI [0.001, 0.074]</div>
+                <div class="forest-actions"><button type="button" class="explain-btn" data-detail-target="model-3-2">小白解释</button></div>
               </div>
               <div class="forest-track" style="--zero:37.50%; --start:38.32%; --end:83.95%; --point:60.86%;">
                 <div class="forest-zero"></div>
@@ -797,6 +1021,7 @@
                 <div class="forest-kicker">Province + year</div>
                 <div class="forest-title">方案A 平衡主线组</div>
                 <div class="forest-copy">β = 0.020 · 95% CrI [-0.008, 0.049]</div>
+                <div class="forest-actions"><button type="button" class="explain-btn" data-detail-target="model-5-0">小白解释</button></div>
               </div>
               <div class="forest-track" style="--zero:37.50%; --start:32.34%; --end:67.92%; --point:50.22%;">
                 <div class="forest-zero"></div>
@@ -811,6 +1036,7 @@
                 <div class="forest-kicker">Province + year</div>
                 <div class="forest-title">系统筛选方案 SYS_09556</div>
                 <div class="forest-copy">β = 0.017 · 95% CrI [-0.012, 0.045]</div>
+                <div class="forest-actions"><button type="button" class="explain-btn" data-detail-target="model-5-1">小白解释</button></div>
               </div>
               <div class="forest-track" style="--zero:37.50%; --start:30.23%; --end:65.36%; --point:48.17%;">
                 <div class="forest-zero"></div>
@@ -825,6 +1051,7 @@
                 <div class="forest-kicker">Province + year</div>
                 <div class="forest-title">系统筛选方案 SYS_09557</div>
                 <div class="forest-copy">β = 0.018 · 95% CrI [-0.011, 0.047]</div>
+                <div class="forest-actions"><button type="button" class="explain-btn" data-detail-target="model-5-2">小白解释</button></div>
               </div>
               <div class="forest-track" style="--zero:37.50%; --start:30.73%; --end:67.03%; --point:48.79%;">
                 <div class="forest-zero"></div>
@@ -841,7 +1068,7 @@
         <div>
           <div class="eyebrow" style="color: var(--muted);">Evidence Matrix</div>
           <h2>主效应矩阵</h2>
-          <p>这张表只看 additive 变体，目的是把主效应本身单独拎出来。year-only 线非常稳定，而一旦把省份差异控制进去，R1xday 主效应会明显收缩到 0 附近。</p>
+          <p>这张表只看 additive 变体，目的是把主效应本身单独拎出来。year-only 线非常稳定，而一旦把省份差异控制进去，R1xday 主效应会明显收缩到 0 附近。每个模型右侧都带有 <code>小白解释</code> 按钮。</p>
         </div>
       </div>
       <div class="table-wrap">
@@ -859,7 +1086,12 @@
             
             <tr>
               <td>仅控制年份 · 主效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-0-0">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.119</div><div class="metric-sub">95% CrI [0.044, 0.192]</div><div class="metric-sub">P(β &gt; 0) = 99.9%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.106</div><div class="metric-sub">95% CrI [0.050, 0.164]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="stacked-badges"><span class="badge strong">稳健正向</span><span class="badge strong">稳健正向</span></div></td>
@@ -867,7 +1099,12 @@
             
             <tr>
               <td>仅控制年份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-0-1">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.174</div><div class="metric-sub">95% CrI [0.103, 0.245]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.115</div><div class="metric-sub">95% CrI [0.058, 0.171]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="stacked-badges"><span class="badge strong">稳健正向</span><span class="badge strong">稳健正向</span></div></td>
@@ -875,7 +1112,12 @@
             
             <tr>
               <td>仅控制年份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-0-2">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.158</div><div class="metric-sub">95% CrI [0.086, 0.229]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.102</div><div class="metric-sub">95% CrI [0.045, 0.158]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="stacked-badges"><span class="badge strong">稳健正向</span><span class="badge strong">稳健正向</span></div></td>
@@ -883,7 +1125,12 @@
             
             <tr>
               <td>仅控制省份 · 主效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-2-0">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.010</div><div class="metric-sub">95% CrI [-0.056, 0.036]</div><div class="metric-sub">P(β &gt; 0) = 33.7%</div><div class="metric-note">P(β&gt;0)=33.7%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.017</div><div class="metric-sub">95% CrI [-0.025, 0.056]</div><div class="metric-sub">P(β &gt; 0) = 79.1%</div><div class="metric-note">P(β&gt;0)=79.1%，方向性不够集中。</div></div></td>
               <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge muted">证据不足</span></div></td>
@@ -891,7 +1138,12 @@
             
             <tr>
               <td>仅控制省份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-2-1">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.002</div><div class="metric-sub">95% CrI [-0.046, 0.050]</div><div class="metric-sub">P(β &gt; 0) = 53.4%</div><div class="metric-note">P(β&gt;0)=53.4%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.017</div><div class="metric-sub">95% CrI [-0.025, 0.061]</div><div class="metric-sub">P(β &gt; 0) = 79.4%</div><div class="metric-note">P(β&gt;0)=79.4%，方向性不够集中。</div></div></td>
               <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge muted">证据不足</span></div></td>
@@ -899,7 +1151,12 @@
             
             <tr>
               <td>仅控制省份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-2-2">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.005</div><div class="metric-sub">95% CrI [-0.054, 0.043]</div><div class="metric-sub">P(β &gt; 0) = 42.5%</div><div class="metric-note">P(β&gt;0)=42.5%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.019</div><div class="metric-sub">95% CrI [-0.022, 0.059]</div><div class="metric-sub">P(β &gt; 0) = 82.0%</div><div class="metric-note">P(β&gt;0)=82.0%，但区间仍跨 0。</div></div></td>
               <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge directional">方向性正向</span></div></td>
@@ -907,7 +1164,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 主效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-4-0">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.001</div><div class="metric-sub">95% CrI [-0.038, 0.036]</div><div class="metric-sub">P(β &gt; 0) = 48.1%</div><div class="metric-note">P(β&gt;0)=48.1%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.009</div><div class="metric-sub">95% CrI [-0.023, 0.042]</div><div class="metric-sub">P(β &gt; 0) = 71.9%</div><div class="metric-note">P(β&gt;0)=71.9%，方向性不够集中。</div></div></td>
               <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge muted">证据不足</span></div></td>
@@ -915,7 +1177,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-4-1">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.005</div><div class="metric-sub">95% CrI [-0.033, 0.043]</div><div class="metric-sub">P(β &gt; 0) = 60.1%</div><div class="metric-note">P(β&gt;0)=60.1%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.009</div><div class="metric-sub">95% CrI [-0.022, 0.040]</div><div class="metric-sub">P(β &gt; 0) = 71.1%</div><div class="metric-note">P(β&gt;0)=71.1%，方向性不够集中。</div></div></td>
               <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge muted">证据不足</span></div></td>
@@ -923,7 +1190,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-4-2">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.005</div><div class="metric-sub">95% CrI [-0.032, 0.043]</div><div class="metric-sub">P(β &gt; 0) = 60.2%</div><div class="metric-note">P(β&gt;0)=60.2%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.010</div><div class="metric-sub">95% CrI [-0.020, 0.041]</div><div class="metric-sub">P(β &gt; 0) = 74.2%</div><div class="metric-note">P(β&gt;0)=74.2%，方向性不够集中。</div></div></td>
               <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge muted">证据不足</span></div></td>
@@ -939,7 +1211,7 @@
         <div>
           <div class="eyebrow" style="color: var(--muted);">Amplification Matrix</div>
           <h2>放大效应矩阵</h2>
-          <p>这张表把 amplification 变体放在一起。关键不只看交互项本身，也要同时看加入交互以后两条主效应是否仍然站得住。</p>
+          <p>这张表把 amplification 变体放在一起。关键不只看交互项本身，也要同时看加入交互以后两条主效应是否仍然站得住。每个模型都可以点开专门解释。</p>
         </div>
       </div>
       <div class="table-wrap">
@@ -958,7 +1230,12 @@
             
             <tr>
               <td>仅控制年份 · 放大效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-1-0">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.106</div><div class="metric-sub">95% CrI [0.029, 0.184]</div><div class="metric-sub">P(β &gt; 0) = 99.6%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.112</div><div class="metric-sub">95% CrI [0.055, 0.168]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.030</div><div class="metric-sub">95% CrI [-0.025, 0.087]</div><div class="metric-sub">P(β &gt; 0) = 84.8%</div><div class="metric-note">P(β&gt;0)=84.8%，但区间仍跨 0。</div></div></td>
@@ -967,7 +1244,12 @@
             
             <tr>
               <td>仅控制年份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-1-1">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.174</div><div class="metric-sub">95% CrI [0.106, 0.244]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.115</div><div class="metric-sub">95% CrI [0.059, 0.173]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.005</div><div class="metric-sub">95% CrI [-0.050, 0.062]</div><div class="metric-sub">P(β &gt; 0) = 56.5%</div><div class="metric-note">P(β&gt;0)=56.5%，方向性不够集中。</div></div></td>
@@ -976,7 +1258,12 @@
             
             <tr>
               <td>仅控制年份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-1-2">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.154</div><div class="metric-sub">95% CrI [0.083, 0.225]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.105</div><div class="metric-sub">95% CrI [0.047, 0.164]</div><div class="metric-sub">P(β &gt; 0) = 99.9%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.016</div><div class="metric-sub">95% CrI [-0.040, 0.073]</div><div class="metric-sub">P(β &gt; 0) = 71.3%</div><div class="metric-note">P(β&gt;0)=71.3%，方向性不够集中。</div></div></td>
@@ -985,7 +1272,12 @@
             
             <tr>
               <td>仅控制省份 · 放大效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-3-0">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge negative">方向性负向</span></div><div class="metric-value">β = -0.028</div><div class="metric-sub">95% CrI [-0.077, 0.023]</div><div class="metric-sub">P(β &gt; 0) = 13.7%</div><div class="metric-note">P(β&gt;0)=13.7%，但区间仍跨 0。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.024</div><div class="metric-sub">95% CrI [-0.018, 0.065]</div><div class="metric-sub">P(β &gt; 0) = 87.4%</div><div class="metric-note">P(β&gt;0)=87.4%，但区间仍跨 0。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.037</div><div class="metric-sub">95% CrI [0.002, 0.074]</div><div class="metric-sub">P(β &gt; 0) = 98.1%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
@@ -994,7 +1286,12 @@
             
             <tr>
               <td>仅控制省份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-3-1">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.017</div><div class="metric-sub">95% CrI [-0.069, 0.035]</div><div class="metric-sub">P(β &gt; 0) = 26.8%</div><div class="metric-note">P(β&gt;0)=26.8%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.023</div><div class="metric-sub">95% CrI [-0.019, 0.066]</div><div class="metric-sub">P(β &gt; 0) = 86.4%</div><div class="metric-note">P(β&gt;0)=86.4%，但区间仍跨 0。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.038</div><div class="metric-sub">95% CrI [0.001, 0.077]</div><div class="metric-sub">P(β &gt; 0) = 97.8%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
@@ -1003,7 +1300,12 @@
             
             <tr>
               <td>仅控制省份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-3-2">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge negative">方向性负向</span></div><div class="metric-value">β = -0.024</div><div class="metric-sub">95% CrI [-0.076, 0.026]</div><div class="metric-sub">P(β &gt; 0) = 18.6%</div><div class="metric-note">P(β&gt;0)=18.6%，但区间仍跨 0。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.025</div><div class="metric-sub">95% CrI [-0.014, 0.066]</div><div class="metric-sub">P(β &gt; 0) = 89.0%</div><div class="metric-note">P(β&gt;0)=89.0%，但区间仍跨 0。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.037</div><div class="metric-sub">95% CrI [0.001, 0.074]</div><div class="metric-sub">P(β &gt; 0) = 98.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
@@ -1012,7 +1314,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 放大效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-5-0">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.011</div><div class="metric-sub">95% CrI [-0.049, 0.027]</div><div class="metric-sub">P(β &gt; 0) = 29.4%</div><div class="metric-note">P(β&gt;0)=29.4%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.013</div><div class="metric-sub">95% CrI [-0.019, 0.046]</div><div class="metric-sub">P(β &gt; 0) = 79.4%</div><div class="metric-note">P(β&gt;0)=79.4%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.020</div><div class="metric-sub">95% CrI [-0.008, 0.049]</div><div class="metric-sub">P(β &gt; 0) = 92.0%</div><div class="metric-note">P(β&gt;0)=92.0%，但区间仍跨 0。</div></div></td>
@@ -1021,7 +1328,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-5-1">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.003</div><div class="metric-sub">95% CrI [-0.042, 0.038]</div><div class="metric-sub">P(β &gt; 0) = 45.2%</div><div class="metric-note">P(β&gt;0)=45.2%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.013</div><div class="metric-sub">95% CrI [-0.019, 0.046]</div><div class="metric-sub">P(β &gt; 0) = 77.8%</div><div class="metric-note">P(β&gt;0)=77.8%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.017</div><div class="metric-sub">95% CrI [-0.012, 0.045]</div><div class="metric-sub">P(β &gt; 0) = 87.8%</div><div class="metric-note">P(β&gt;0)=87.8%，但区间仍跨 0。</div></div></td>
@@ -1030,7 +1342,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-5-2">小白解释</button>
+                </div>
+              </td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.005</div><div class="metric-sub">95% CrI [-0.044, 0.036]</div><div class="metric-sub">P(β &gt; 0) = 40.8%</div><div class="metric-note">P(β&gt;0)=40.8%，方向性不够集中。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.014</div><div class="metric-sub">95% CrI [-0.018, 0.047]</div><div class="metric-sub">P(β &gt; 0) = 80.8%</div><div class="metric-note">P(β&gt;0)=80.8%，但区间仍跨 0。</div></div></td>
               <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.018</div><div class="metric-sub">95% CrI [-0.011, 0.047]</div><div class="metric-sub">P(β &gt; 0) = 88.5%</div><div class="metric-note">P(β&gt;0)=88.5%，但区间仍跨 0。</div></div></td>
@@ -1047,7 +1364,7 @@
         <div>
           <div class="eyebrow" style="color: var(--muted);">Diagnostics & Data</div>
           <h2>采样诊断与数据处理</h2>
-          <p>这部分回答两个问题：一是 MCMC 有没有明显不稳定；二是缺失值和样本筛选是怎么处理的。只有这两步站住脚，前面的解释才可信。</p>
+          <p>这部分回答两个问题：一是 MCMC 有没有明显不稳定；二是缺失值和样本筛选是怎么处理的。只有这两步站住脚，前面的解释才可信。这里同样保留了每个模型的解释按钮，方便把“结果”和“质量”一起看。</p>
         </div>
       </div>
       <div class="highlights-grid">
@@ -1091,7 +1408,12 @@
             
             <tr>
               <td>仅控制年份 · 主效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-0-0">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>2705</td>
               <td>2575</td>
@@ -1100,7 +1422,12 @@
             
             <tr>
               <td>仅控制年份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-0-1">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>3538</td>
               <td>2499</td>
@@ -1109,7 +1436,12 @@
             
             <tr>
               <td>仅控制年份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-0-2">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>3183</td>
               <td>2690</td>
@@ -1118,7 +1450,12 @@
             
             <tr>
               <td>仅控制年份 · 放大效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-1-0">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>2735</td>
               <td>2536</td>
@@ -1127,7 +1464,12 @@
             
             <tr>
               <td>仅控制年份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-1-1">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>3730</td>
               <td>2672</td>
@@ -1136,7 +1478,12 @@
             
             <tr>
               <td>仅控制年份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-1-2">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>3757</td>
               <td>2545</td>
@@ -1145,7 +1492,12 @@
             
             <tr>
               <td>仅控制省份 · 主效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-2-0">小白解释</button>
+                </div>
+              </td>
               <td>1.01</td>
               <td>918</td>
               <td>1215</td>
@@ -1154,7 +1506,12 @@
             
             <tr>
               <td>仅控制省份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-2-1">小白解释</button>
+                </div>
+              </td>
               <td>1.01</td>
               <td>703</td>
               <td>968</td>
@@ -1163,7 +1520,12 @@
             
             <tr>
               <td>仅控制省份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-2-2">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>621</td>
               <td>1081</td>
@@ -1172,7 +1534,12 @@
             
             <tr>
               <td>仅控制省份 · 放大效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-3-0">小白解释</button>
+                </div>
+              </td>
               <td>1.01</td>
               <td>998</td>
               <td>1682</td>
@@ -1181,7 +1548,12 @@
             
             <tr>
               <td>仅控制省份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-3-1">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>784</td>
               <td>1254</td>
@@ -1190,7 +1562,12 @@
             
             <tr>
               <td>仅控制省份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-3-2">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>847</td>
               <td>1200</td>
@@ -1199,7 +1576,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 主效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-4-0">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>1215</td>
               <td>1644</td>
@@ -1208,7 +1590,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-4-1">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>1322</td>
               <td>1876</td>
@@ -1217,7 +1604,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 主效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-4-2">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>1257</td>
               <td>1953</td>
@@ -1226,7 +1618,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 放大效应模型</td>
-              <td>方案A 平衡主线组</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>方案A 平衡主线组</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-5-0">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>1157</td>
               <td>1497</td>
@@ -1235,7 +1632,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09556</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09556</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-5-1">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>1085</td>
               <td>1567</td>
@@ -1244,7 +1646,12 @@
             
             <tr>
               <td>同时控制省份和年份 · 放大效应模型</td>
-              <td>系统筛选方案 SYS_09557</td>
+              <td>
+                <div class="table-model-cell">
+                  <span>系统筛选方案 SYS_09557</span>
+                  <button type="button" class="explain-btn" data-detail-target="model-5-2">小白解释</button>
+                </div>
+              </td>
               <td>1.00</td>
               <td>1205</td>
               <td>1859</td>
@@ -1319,13 +1726,1449 @@
             
         <a class="download-card" href="./metadata.json">
           <div class="download-title">metadata.json</div>
-          <div class="download-copy">页面生成时间：2026-04-18 21:59:09，包含来源文件与汇总统计。</div>
+          <div class="download-copy">页面生成时间：2026-04-18 23:02:33，包含来源文件与汇总统计。</div>
         </a>
         
       </div>
     </section>
 
-    <footer>Generated from <code>4 贝叶斯分析\results\model_summaries</code> on 2026-04-18 21:59:09.</footer>
+    <div class="modal-shell" data-explain-shell hidden>
+      <div class="modal-backdrop" data-explain-close></div>
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-explain-close aria-label="关闭解释">×</button>
+        <div data-explain-body></div>
+      </div>
+    </div>
+
+    <div hidden>
+      
+            <template id="model-0-0">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制年份 · 主效应模型 · 方案A 平衡主线组</h2>
+                  <p>这是最像原始 Year FE 主线的主效应复现版，重点是看 R1xday 和 AMC 是否还能稳定地指向更高的 AMR。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把每一年全国共同变化的背景扣掉，但不额外扣除省份之间长期固定差异，然后只问两个问题：R1xday 和抗菌药物使用强度是否还会和 AMR 同向变化。</p>
+                    <p>这条模型来自“人工主线变量组”中的 <strong>方案A 平衡主线组</strong>。它的定位是：人工整理的主线变量组，最适合承接论文叙事和结果展示。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>无</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">省平均气温</span><span class="var-chip">R1xday</span><span class="var-chip">PM2.5</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">GDP</span><span class="var-chip">文盲比例</span><span class="var-chip">人均日生活用水量(升)</span><span class="var-chip">牲畜饲养 / -猪年底头数</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.119</div>
+        <div class="detail-metric-copy">95% CrI [0.044, 0.192] · P(β &gt; 0) = 99.9%</div>
+        <p>对小白来说，这意味着在这个模型里，R1xday 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.106</div>
+        <div class="detail-metric-copy">95% CrI [0.050, 0.164] · P(β &gt; 0) = 100.0%</div>
+        <p>对小白来说，这意味着在这个模型里，抗菌药物使用强度 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以把它当成“主效应在这个控制口径下被成功复现”的证据。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能把这条模型直接解读成“已经证明放大效应”，因为它根本没有估计交互项。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 2705，最小 tail ESS 为 2575。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-0-1">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制年份 · 主效应模型 · 系统筛选方案 SYS_09556</h2>
+                  <p>这是最像原始 Year FE 主线的主效应复现版，重点是看 R1xday 和 AMC 是否还能稳定地指向更高的 AMR。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把每一年全国共同变化的背景扣掉，但不额外扣除省份之间长期固定差异，然后只问两个问题：R1xday 和抗菌药物使用强度是否还会和 AMR 同向变化。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09556</strong>。它的定位是：系统筛选后保留下来的候选组，前期 FE 结果里 R1xday 与 AMC 信号较强。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>无</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">食品消费量</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.174</div>
+        <div class="detail-metric-copy">95% CrI [0.103, 0.245] · P(β &gt; 0) = 100.0%</div>
+        <p>对小白来说，这意味着在这个模型里，R1xday 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.115</div>
+        <div class="detail-metric-copy">95% CrI [0.058, 0.171] · P(β &gt; 0) = 100.0%</div>
+        <p>对小白来说，这意味着在这个模型里，抗菌药物使用强度 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以把它当成“主效应在这个控制口径下被成功复现”的证据。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能把这条模型直接解读成“已经证明放大效应”，因为它根本没有估计交互项。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 3538，最小 tail ESS 为 2499。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-0-2">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制年份 · 主效应模型 · 系统筛选方案 SYS_09557</h2>
+                  <p>这是最像原始 Year FE 主线的主效应复现版，重点是看 R1xday 和 AMC 是否还能稳定地指向更高的 AMR。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把每一年全国共同变化的背景扣掉，但不额外扣除省份之间长期固定差异，然后只问两个问题：R1xday 和抗菌药物使用强度是否还会和 AMR 同向变化。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09557</strong>。它的定位是：另一组系统筛选候选，用来检验结论是否对变量组合具有稳健性。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>无</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">文盲比例</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.158</div>
+        <div class="detail-metric-copy">95% CrI [0.086, 0.229] · P(β &gt; 0) = 100.0%</div>
+        <p>对小白来说，这意味着在这个模型里，R1xday 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.102</div>
+        <div class="detail-metric-copy">95% CrI [0.045, 0.158] · P(β &gt; 0) = 100.0%</div>
+        <p>对小白来说，这意味着在这个模型里，抗菌药物使用强度 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以把它当成“主效应在这个控制口径下被成功复现”的证据。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能把这条模型直接解读成“已经证明放大效应”，因为它根本没有估计交互项。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 3183，最小 tail ESS 为 2690。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-1-0">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制年份 · 放大效应模型 · 方案A 平衡主线组</h2>
+                  <p>这是 Year FE 主线上的交互探索版，在复现主效应的同时，继续追问“天气会不会放大抗菌药物使用的风险”。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把每一年全国共同变化的背景扣掉，但不额外扣除省份之间长期固定差异，除了看 R1xday 和抗菌药物使用强度的主效应，还进一步问：当 R1xday 更高时，AMC 的影响会不会更强。</p>
+                    <p>这条模型来自“人工主线变量组”中的 <strong>方案A 平衡主线组</strong>。它的定位是：人工整理的主线变量组，最适合承接论文叙事和结果展示。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>有</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">省平均气温</span><span class="var-chip">R1xday</span><span class="var-chip">PM2.5</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">GDP</span><span class="var-chip">文盲比例</span><span class="var-chip">人均日生活用水量(升)</span><span class="var-chip">牲畜饲养 / -猪年底头数</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.106</div>
+        <div class="detail-metric-copy">95% CrI [0.029, 0.184] · P(β &gt; 0) = 99.6%</div>
+        <p>对小白来说，这意味着在这个模型里，R1xday 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.112</div>
+        <div class="detail-metric-copy">95% CrI [0.055, 0.168] · P(β &gt; 0) = 100.0%</div>
+        <p>对小白来说，这意味着在这个模型里，抗菌药物使用强度 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+      <article class="detail-metric-card directional">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">交互项</div>
+          <span class="badge directional">方向性正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.030</div>
+        <div class="detail-metric-copy">95% CrI [-0.025, 0.087] · P(β &gt; 0) = 84.8%</div>
+        <p>交互项方向偏正，说明“放大效应”有苗头，但现在更像线索，还不适合写成已经被完全证明。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以说：这个模型对“放大效应”提供了方向性支持，但还属于偏正线索。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能直接写成“放大效应已经被稳健证明”，因为当前区间还没有在这个模型里完全站到 0 的同一侧。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 2735，最小 tail ESS 为 2536。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-1-1">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制年份 · 放大效应模型 · 系统筛选方案 SYS_09556</h2>
+                  <p>这是 Year FE 主线上的交互探索版，在复现主效应的同时，继续追问“天气会不会放大抗菌药物使用的风险”。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把每一年全国共同变化的背景扣掉，但不额外扣除省份之间长期固定差异，除了看 R1xday 和抗菌药物使用强度的主效应，还进一步问：当 R1xday 更高时，AMC 的影响会不会更强。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09556</strong>。它的定位是：系统筛选后保留下来的候选组，前期 FE 结果里 R1xday 与 AMC 信号较强。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>有</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">食品消费量</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.174</div>
+        <div class="detail-metric-copy">95% CrI [0.106, 0.244] · P(β &gt; 0) = 100.0%</div>
+        <p>对小白来说，这意味着在这个模型里，R1xday 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.115</div>
+        <div class="detail-metric-copy">95% CrI [0.059, 0.173] · P(β &gt; 0) = 100.0%</div>
+        <p>对小白来说，这意味着在这个模型里，抗菌药物使用强度 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">交互项</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.005</div>
+        <div class="detail-metric-copy">95% CrI [-0.050, 0.062] · P(β &gt; 0) = 56.5%</div>
+        <p>这条模型本身不能为“放大效应”提供强证据，至少还需要别的模型来补强。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以说：这条模型至少没有给出强的反向交互证据，但它本身不能作为放大效应的主证据。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能直接写成“放大效应已经被稳健证明”，因为当前区间还没有在这个模型里完全站到 0 的同一侧。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 3730，最小 tail ESS 为 2672。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-1-2">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制年份 · 放大效应模型 · 系统筛选方案 SYS_09557</h2>
+                  <p>这是 Year FE 主线上的交互探索版，在复现主效应的同时，继续追问“天气会不会放大抗菌药物使用的风险”。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把每一年全国共同变化的背景扣掉，但不额外扣除省份之间长期固定差异，除了看 R1xday 和抗菌药物使用强度的主效应，还进一步问：当 R1xday 更高时，AMC 的影响会不会更强。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09557</strong>。它的定位是：另一组系统筛选候选，用来检验结论是否对变量组合具有稳健性。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>有</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">文盲比例</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.154</div>
+        <div class="detail-metric-copy">95% CrI [0.083, 0.225] · P(β &gt; 0) = 100.0%</div>
+        <p>对小白来说，这意味着在这个模型里，R1xday 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.105</div>
+        <div class="detail-metric-copy">95% CrI [0.047, 0.164] · P(β &gt; 0) = 99.9%</div>
+        <p>对小白来说，这意味着在这个模型里，抗菌药物使用强度 越高，AMR 越高的说法比较站得住。</p>
+      </article>
+    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">交互项</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.016</div>
+        <div class="detail-metric-copy">95% CrI [-0.040, 0.073] · P(β &gt; 0) = 71.3%</div>
+        <p>这条模型本身不能为“放大效应”提供强证据，至少还需要别的模型来补强。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以说：这条模型至少没有给出强的反向交互证据，但它本身不能作为放大效应的主证据。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能直接写成“放大效应已经被稳健证明”，因为当前区间还没有在这个模型里完全站到 0 的同一侧。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 3757，最小 tail ESS 为 2545。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-2-0">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制省份 · 主效应模型 · 方案A 平衡主线组</h2>
+                  <p>这条线专门用来看：一旦把省份固有差异拿掉，原本看到的主效应还剩多少。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把省与省之间长期不同的底子扣掉，但不单独控制每一年的共同冲击，然后只问两个问题：R1xday 和抗菌药物使用强度是否还会和 AMR 同向变化。</p>
+                    <p>这条模型来自“人工主线变量组”中的 <strong>方案A 平衡主线组</strong>。它的定位是：人工整理的主线变量组，最适合承接论文叙事和结果展示。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>无</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">省平均气温</span><span class="var-chip">R1xday</span><span class="var-chip">PM2.5</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">GDP</span><span class="var-chip">文盲比例</span><span class="var-chip">人均日生活用水量(升)</span><span class="var-chip">牲畜饲养 / -猪年底头数</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = -0.010</div>
+        <div class="detail-metric-copy">95% CrI [-0.056, 0.036] · P(β &gt; 0) = 33.7%</div>
+        <p>这个模型里暂时看不出 R1xday 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.017</div>
+        <div class="detail-metric-copy">95% CrI [-0.025, 0.056] · P(β &gt; 0) = 79.1%</div>
+        <p>这个模型里暂时看不出 抗菌药物使用强度 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以把它理解成：一旦换成这个控制口径，原来的主效应明显变弱了。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能把这条模型直接解读成“已经证明放大效应”，因为它根本没有估计交互项。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.01，最小 bulk ESS 为 918，最小 tail ESS 为 1215。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-2-1">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制省份 · 主效应模型 · 系统筛选方案 SYS_09556</h2>
+                  <p>这条线专门用来看：一旦把省份固有差异拿掉，原本看到的主效应还剩多少。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把省与省之间长期不同的底子扣掉，但不单独控制每一年的共同冲击，然后只问两个问题：R1xday 和抗菌药物使用强度是否还会和 AMR 同向变化。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09556</strong>。它的定位是：系统筛选后保留下来的候选组，前期 FE 结果里 R1xday 与 AMC 信号较强。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>无</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">食品消费量</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.002</div>
+        <div class="detail-metric-copy">95% CrI [-0.046, 0.050] · P(β &gt; 0) = 53.4%</div>
+        <p>这个模型里暂时看不出 R1xday 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.017</div>
+        <div class="detail-metric-copy">95% CrI [-0.025, 0.061] · P(β &gt; 0) = 79.4%</div>
+        <p>这个模型里暂时看不出 抗菌药物使用强度 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以把它理解成：一旦换成这个控制口径，原来的主效应明显变弱了。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能把这条模型直接解读成“已经证明放大效应”，因为它根本没有估计交互项。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.01，最小 bulk ESS 为 703，最小 tail ESS 为 968。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-2-2">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制省份 · 主效应模型 · 系统筛选方案 SYS_09557</h2>
+                  <p>这条线专门用来看：一旦把省份固有差异拿掉，原本看到的主效应还剩多少。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把省与省之间长期不同的底子扣掉，但不单独控制每一年的共同冲击，然后只问两个问题：R1xday 和抗菌药物使用强度是否还会和 AMR 同向变化。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09557</strong>。它的定位是：另一组系统筛选候选，用来检验结论是否对变量组合具有稳健性。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>无</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">文盲比例</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = -0.005</div>
+        <div class="detail-metric-copy">95% CrI [-0.054, 0.043] · P(β &gt; 0) = 42.5%</div>
+        <p>这个模型里暂时看不出 R1xday 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card directional">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge directional">方向性正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.019</div>
+        <div class="detail-metric-copy">95% CrI [-0.022, 0.059] · P(β &gt; 0) = 82.0%</div>
+        <p>抗菌药物使用强度 看起来偏正向，但证据还没有稳到可以直接下硬结论。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以把它理解成：一旦换成这个控制口径，原来的主效应明显变弱了。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能把这条模型直接解读成“已经证明放大效应”，因为它根本没有估计交互项。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 621，最小 tail ESS 为 1081。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-3-0">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制省份 · 放大效应模型 · 方案A 平衡主线组</h2>
+                  <p>这是本轮最值得盯的交互信号线，因为最强的放大效应证据就出现在这一组模型里。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把省与省之间长期不同的底子扣掉，但不单独控制每一年的共同冲击，除了看 R1xday 和抗菌药物使用强度的主效应，还进一步问：当 R1xday 更高时，AMC 的影响会不会更强。</p>
+                    <p>这条模型来自“人工主线变量组”中的 <strong>方案A 平衡主线组</strong>。它的定位是：人工整理的主线变量组，最适合承接论文叙事和结果展示。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>有</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">省平均气温</span><span class="var-chip">R1xday</span><span class="var-chip">PM2.5</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">GDP</span><span class="var-chip">文盲比例</span><span class="var-chip">人均日生活用水量(升)</span><span class="var-chip">牲畜饲养 / -猪年底头数</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card negative">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge negative">方向性负向</span>
+        </div>
+        <div class="detail-metric-number">β = -0.028</div>
+        <div class="detail-metric-copy">95% CrI [-0.077, 0.023] · P(β &gt; 0) = 13.7%</div>
+        <p>R1xday 看起来偏负向，但这更像是一个方向信号，还不算特别硬。</p>
+      </article>
+    
+      <article class="detail-metric-card directional">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge directional">方向性正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.024</div>
+        <div class="detail-metric-copy">95% CrI [-0.018, 0.065] · P(β &gt; 0) = 87.4%</div>
+        <p>抗菌药物使用强度 看起来偏正向，但证据还没有稳到可以直接下硬结论。</p>
+      </article>
+    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">交互项</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.037</div>
+        <div class="detail-metric-copy">95% CrI [0.002, 0.074] · P(β &gt; 0) = 98.1%</div>
+        <p>对小白来说，这最接近“天气越极端时，抗菌药物使用带来的 AMR 风险会被放大”这句话，而且证据在这个模型里算比较硬。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以说：在这个特定控制口径和变量组合下，交互项支持“放大效应”。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>也不能把它扩大成“所有模型、所有控制口径下都稳健证明了放大效应”，因为更严格口径里交互项还会变弱。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.01，最小 bulk ESS 为 998，最小 tail ESS 为 1682。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-3-1">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制省份 · 放大效应模型 · 系统筛选方案 SYS_09556</h2>
+                  <p>这是本轮最值得盯的交互信号线，因为最强的放大效应证据就出现在这一组模型里。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把省与省之间长期不同的底子扣掉，但不单独控制每一年的共同冲击，除了看 R1xday 和抗菌药物使用强度的主效应，还进一步问：当 R1xday 更高时，AMC 的影响会不会更强。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09556</strong>。它的定位是：系统筛选后保留下来的候选组，前期 FE 结果里 R1xday 与 AMC 信号较强。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>有</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">食品消费量</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = -0.017</div>
+        <div class="detail-metric-copy">95% CrI [-0.069, 0.035] · P(β &gt; 0) = 26.8%</div>
+        <p>这个模型里暂时看不出 R1xday 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card directional">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge directional">方向性正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.023</div>
+        <div class="detail-metric-copy">95% CrI [-0.019, 0.066] · P(β &gt; 0) = 86.4%</div>
+        <p>抗菌药物使用强度 看起来偏正向，但证据还没有稳到可以直接下硬结论。</p>
+      </article>
+    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">交互项</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.038</div>
+        <div class="detail-metric-copy">95% CrI [0.001, 0.077] · P(β &gt; 0) = 97.8%</div>
+        <p>对小白来说，这最接近“天气越极端时，抗菌药物使用带来的 AMR 风险会被放大”这句话，而且证据在这个模型里算比较硬。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以说：在这个特定控制口径和变量组合下，交互项支持“放大效应”。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>也不能把它扩大成“所有模型、所有控制口径下都稳健证明了放大效应”，因为更严格口径里交互项还会变弱。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 784，最小 tail ESS 为 1254。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-3-2">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>仅控制省份 · 放大效应模型 · 系统筛选方案 SYS_09557</h2>
+                  <p>这是本轮最值得盯的交互信号线，因为最强的放大效应证据就出现在这一组模型里。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 先把省与省之间长期不同的底子扣掉，但不单独控制每一年的共同冲击，除了看 R1xday 和抗菌药物使用强度的主效应，还进一步问：当 R1xday 更高时，AMC 的影响会不会更强。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09557</strong>。它的定位是：另一组系统筛选候选，用来检验结论是否对变量组合具有稳健性。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>有</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">文盲比例</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card negative">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge negative">方向性负向</span>
+        </div>
+        <div class="detail-metric-number">β = -0.024</div>
+        <div class="detail-metric-copy">95% CrI [-0.076, 0.026] · P(β &gt; 0) = 18.6%</div>
+        <p>R1xday 看起来偏负向，但这更像是一个方向信号，还不算特别硬。</p>
+      </article>
+    
+      <article class="detail-metric-card directional">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge directional">方向性正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.025</div>
+        <div class="detail-metric-copy">95% CrI [-0.014, 0.066] · P(β &gt; 0) = 89.0%</div>
+        <p>抗菌药物使用强度 看起来偏正向，但证据还没有稳到可以直接下硬结论。</p>
+      </article>
+    
+      <article class="detail-metric-card strong">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">交互项</div>
+          <span class="badge strong">稳健正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.037</div>
+        <div class="detail-metric-copy">95% CrI [0.001, 0.074] · P(β &gt; 0) = 98.0%</div>
+        <p>对小白来说，这最接近“天气越极端时，抗菌药物使用带来的 AMR 风险会被放大”这句话，而且证据在这个模型里算比较硬。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以说：在这个特定控制口径和变量组合下，交互项支持“放大效应”。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>也不能把它扩大成“所有模型、所有控制口径下都稳健证明了放大效应”，因为更严格口径里交互项还会变弱。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 847，最小 tail ESS 为 1200。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-4-0">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>同时控制省份和年份 · 主效应模型 · 方案A 平衡主线组</h2>
+                  <p>这是最严格口径下的主效应检查，用来判断主效应在双重控制后还剩下多少。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 同时把省份长期差异和年份共同冲击都控制住，然后只问两个问题：R1xday 和抗菌药物使用强度是否还会和 AMR 同向变化。</p>
+                    <p>这条模型来自“人工主线变量组”中的 <strong>方案A 平衡主线组</strong>。它的定位是：人工整理的主线变量组，最适合承接论文叙事和结果展示。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>无</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">省平均气温</span><span class="var-chip">R1xday</span><span class="var-chip">PM2.5</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">GDP</span><span class="var-chip">文盲比例</span><span class="var-chip">人均日生活用水量(升)</span><span class="var-chip">牲畜饲养 / -猪年底头数</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = -0.001</div>
+        <div class="detail-metric-copy">95% CrI [-0.038, 0.036] · P(β &gt; 0) = 48.1%</div>
+        <p>这个模型里暂时看不出 R1xday 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.009</div>
+        <div class="detail-metric-copy">95% CrI [-0.023, 0.042] · P(β &gt; 0) = 71.9%</div>
+        <p>这个模型里暂时看不出 抗菌药物使用强度 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以把它理解成：一旦换成这个控制口径，原来的主效应明显变弱了。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能把这条模型直接解读成“已经证明放大效应”，因为它根本没有估计交互项。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 1215，最小 tail ESS 为 1644。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-4-1">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>同时控制省份和年份 · 主效应模型 · 系统筛选方案 SYS_09556</h2>
+                  <p>这是最严格口径下的主效应检查，用来判断主效应在双重控制后还剩下多少。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 同时把省份长期差异和年份共同冲击都控制住，然后只问两个问题：R1xday 和抗菌药物使用强度是否还会和 AMR 同向变化。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09556</strong>。它的定位是：系统筛选后保留下来的候选组，前期 FE 结果里 R1xday 与 AMC 信号较强。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>无</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">食品消费量</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.005</div>
+        <div class="detail-metric-copy">95% CrI [-0.033, 0.043] · P(β &gt; 0) = 60.1%</div>
+        <p>这个模型里暂时看不出 R1xday 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.009</div>
+        <div class="detail-metric-copy">95% CrI [-0.022, 0.040] · P(β &gt; 0) = 71.1%</div>
+        <p>这个模型里暂时看不出 抗菌药物使用强度 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以把它理解成：一旦换成这个控制口径，原来的主效应明显变弱了。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能把这条模型直接解读成“已经证明放大效应”，因为它根本没有估计交互项。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 1322，最小 tail ESS 为 1876。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-4-2">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>同时控制省份和年份 · 主效应模型 · 系统筛选方案 SYS_09557</h2>
+                  <p>这是最严格口径下的主效应检查，用来判断主效应在双重控制后还剩下多少。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 同时把省份长期差异和年份共同冲击都控制住，然后只问两个问题：R1xday 和抗菌药物使用强度是否还会和 AMR 同向变化。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09557</strong>。它的定位是：另一组系统筛选候选，用来检验结论是否对变量组合具有稳健性。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>无</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">文盲比例</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.005</div>
+        <div class="detail-metric-copy">95% CrI [-0.032, 0.043] · P(β &gt; 0) = 60.2%</div>
+        <p>这个模型里暂时看不出 R1xday 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.010</div>
+        <div class="detail-metric-copy">95% CrI [-0.020, 0.041] · P(β &gt; 0) = 74.2%</div>
+        <p>这个模型里暂时看不出 抗菌药物使用强度 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以把它理解成：一旦换成这个控制口径，原来的主效应明显变弱了。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能把这条模型直接解读成“已经证明放大效应”，因为它根本没有估计交互项。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 1257，最小 tail ESS 为 1953。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-5-0">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>同时控制省份和年份 · 放大效应模型 · 方案A 平衡主线组</h2>
+                  <p>这是最严格口径下的放大效应检查，方向如果还能保持，就更有说服力；但它也最容易把信号压弱。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 同时把省份长期差异和年份共同冲击都控制住，除了看 R1xday 和抗菌药物使用强度的主效应，还进一步问：当 R1xday 更高时，AMC 的影响会不会更强。</p>
+                    <p>这条模型来自“人工主线变量组”中的 <strong>方案A 平衡主线组</strong>。它的定位是：人工整理的主线变量组，最适合承接论文叙事和结果展示。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>有</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">省平均气温</span><span class="var-chip">R1xday</span><span class="var-chip">PM2.5</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">GDP</span><span class="var-chip">文盲比例</span><span class="var-chip">人均日生活用水量(升)</span><span class="var-chip">牲畜饲养 / -猪年底头数</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = -0.011</div>
+        <div class="detail-metric-copy">95% CrI [-0.049, 0.027] · P(β &gt; 0) = 29.4%</div>
+        <p>这个模型里暂时看不出 R1xday 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.013</div>
+        <div class="detail-metric-copy">95% CrI [-0.019, 0.046] · P(β &gt; 0) = 79.4%</div>
+        <p>这个模型里暂时看不出 抗菌药物使用强度 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card directional">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">交互项</div>
+          <span class="badge directional">方向性正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.020</div>
+        <div class="detail-metric-copy">95% CrI [-0.008, 0.049] · P(β &gt; 0) = 92.0%</div>
+        <p>交互项方向偏正，说明“放大效应”有苗头，但现在更像线索，还不适合写成已经被完全证明。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以说：这个模型对“放大效应”提供了方向性支持，但还属于偏正线索。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能直接写成“放大效应已经被稳健证明”，因为当前区间还没有在这个模型里完全站到 0 的同一侧。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 1157，最小 tail ESS 为 1497。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-5-1">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>同时控制省份和年份 · 放大效应模型 · 系统筛选方案 SYS_09556</h2>
+                  <p>这是最严格口径下的放大效应检查，方向如果还能保持，就更有说服力；但它也最容易把信号压弱。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 同时把省份长期差异和年份共同冲击都控制住，除了看 R1xday 和抗菌药物使用强度的主效应，还进一步问：当 R1xday 更高时，AMC 的影响会不会更强。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09556</strong>。它的定位是：系统筛选后保留下来的候选组，前期 FE 结果里 R1xday 与 AMC 信号较强。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>有</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">食品消费量</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = -0.003</div>
+        <div class="detail-metric-copy">95% CrI [-0.042, 0.038] · P(β &gt; 0) = 45.2%</div>
+        <p>这个模型里暂时看不出 R1xday 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = 0.013</div>
+        <div class="detail-metric-copy">95% CrI [-0.019, 0.046] · P(β &gt; 0) = 77.8%</div>
+        <p>这个模型里暂时看不出 抗菌药物使用强度 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card directional">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">交互项</div>
+          <span class="badge directional">方向性正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.017</div>
+        <div class="detail-metric-copy">95% CrI [-0.012, 0.045] · P(β &gt; 0) = 87.8%</div>
+        <p>交互项方向偏正，说明“放大效应”有苗头，但现在更像线索，还不适合写成已经被完全证明。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以说：这个模型对“放大效应”提供了方向性支持，但还属于偏正线索。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能直接写成“放大效应已经被稳健证明”，因为当前区间还没有在这个模型里完全站到 0 的同一侧。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 1085，最小 tail ESS 为 1567。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+            <template id="model-5-2">
+              <div class="explain-sheet">
+                <div class="explain-hero">
+                  <div class="eyebrow">Beginner Explainer</div>
+                  <h2>同时控制省份和年份 · 放大效应模型 · 系统筛选方案 SYS_09557</h2>
+                  <p>这是最严格口径下的放大效应检查，方向如果还能保持，就更有说服力；但它也最容易把信号压弱。</p>
+                </div>
+
+                <div class="explain-layout two">
+                  <section class="explain-section">
+                    <h3>这个模型在问什么</h3>
+                    <p>这个模型 同时把省份长期差异和年份共同冲击都控制住，除了看 R1xday 和抗菌药物使用强度的主效应，还进一步问：当 R1xday 更高时，AMC 的影响会不会更强。</p>
+                    <p>这条模型来自“系统筛选变量组”中的 <strong>系统筛选方案 SYS_09557</strong>。它的定位是：另一组系统筛选候选，用来检验结论是否对变量组合具有稳健性。</p>
+                  </section>
+                  <section class="explain-section">
+                    <h3>模型配置</h3>
+                    <div class="mini-stat-grid">
+                      <div class="mini-stat"><span>样本量</span><strong>300</strong></div>
+                      <div class="mini-stat"><span>省份</span><strong>30</strong></div>
+                      <div class="mini-stat"><span>年份</span><strong>10</strong></div>
+                      <div class="mini-stat"><span>交互项</span><strong>有</strong></div>
+                    </div>
+                    <div class="chip-belt"><span class="var-chip">R1xday</span><span class="var-chip">抗菌药物使用强度</span><span class="var-chip">TA（°C）</span><span class="var-chip">PM2.5</span><span class="var-chip">GDP</span><span class="var-chip">城市用水普及率</span><span class="var-chip">牲畜饲养 / -猪年底头数</span><span class="var-chip">主要城市降水量</span><span class="var-chip">文盲比例</span></div>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>结果翻译成人话</h3>
+                  <div class="detail-metric-grid">
+                    
+      <article class="detail-metric-card muted">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 1</div>
+          <span class="badge muted">证据不足</span>
+        </div>
+        <div class="detail-metric-number">β = -0.005</div>
+        <div class="detail-metric-copy">95% CrI [-0.044, 0.036] · P(β &gt; 0) = 40.8%</div>
+        <p>这个模型里暂时看不出 R1xday 与 AMR 有足够清晰、足够稳定的方向。</p>
+      </article>
+    
+      <article class="detail-metric-card directional">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">主效应 2</div>
+          <span class="badge directional">方向性正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.014</div>
+        <div class="detail-metric-copy">95% CrI [-0.018, 0.047] · P(β &gt; 0) = 80.8%</div>
+        <p>抗菌药物使用强度 看起来偏正向，但证据还没有稳到可以直接下硬结论。</p>
+      </article>
+    
+      <article class="detail-metric-card directional">
+        <div class="detail-metric-head">
+          <div class="detail-metric-title">交互项</div>
+          <span class="badge directional">方向性正向</span>
+        </div>
+        <div class="detail-metric-number">β = 0.018</div>
+        <div class="detail-metric-copy">95% CrI [-0.011, 0.047] · P(β &gt; 0) = 88.5%</div>
+        <p>交互项方向偏正，说明“放大效应”有苗头，但现在更像线索，还不适合写成已经被完全证明。</p>
+      </article>
+    
+                  </div>
+                </section>
+
+                <div class="explain-layout two">
+                  <section class="explain-section emphasis ok">
+                    <h3>这行结果可以怎么说</h3>
+                    <p>可以说：这个模型对“放大效应”提供了方向性支持，但还属于偏正线索。</p>
+                  </section>
+                  <section class="explain-section emphasis caution">
+                    <h3>这行结果还不能说什么</h3>
+                    <p>不能直接写成“放大效应已经被稳健证明”，因为当前区间还没有在这个模型里完全站到 0 的同一侧。</p>
+                  </section>
+                </div>
+
+                <section class="explain-section">
+                  <h3>质量与可信度</h3>
+                  <p>采样质量上，R-hat 最大值为 1.00，最小 bulk ESS 为 1205，最小 tail ESS 为 1859。对小白来说，这意味着这条模型的抽样结果总体是稳定的，不像是随机抖出来的。</p>
+                  <p>如果你是小白，可以把这段理解成：这条模型不是“随便跑一下”的结果，它的抽样过程整体比较稳定，所以前面的方向判断有基本可信度。</p>
+                </section>
+              </div>
+            </template>
+            
+    </div>
+
+    <footer>Generated from <code>4 贝叶斯分析\results\model_summaries</code> on 2026-04-18 23:02:33.</footer>
   </div>
+  <script>
+    (() => {
+      const shell = document.querySelector('[data-explain-shell]');
+      const body = document.querySelector('[data-explain-body]');
+      if (!shell || !body) return;
+
+      const close = () => {
+        shell.hidden = true;
+        body.innerHTML = '';
+        document.body.style.overflow = '';
+      };
+
+      const open = (targetId) => {
+        const template = document.getElementById(targetId);
+        if (!template) return;
+        body.innerHTML = template.innerHTML;
+        shell.hidden = false;
+        document.body.style.overflow = 'hidden';
+      };
+
+      document.addEventListener('click', (event) => {
+        const trigger = event.target.closest('[data-detail-target]');
+        if (trigger) {
+          open(trigger.dataset.detailTarget);
+          return;
+        }
+        if (event.target.closest('[data-explain-close]')) {
+          close();
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !shell.hidden) {
+          close();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
