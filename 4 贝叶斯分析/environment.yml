@@ -1,0 +1,17 @@
+name: code_health_bayes
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
+  - ipykernel
+  - openpyxl
+  - m2w64-toolchain
+  - pip:
+      - pymc
+      - arviz
+      - xarray_einstats

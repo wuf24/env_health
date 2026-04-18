@@ -1,0 +1,46 @@
+# Edit this file to choose which Bayesian combinations to run by default.
+#
+# First stage logic:
+# 1. Mirror the FE comparison structure with multiple Bayesian variants
+# 2. Compare additive vs amplification versions
+# 3. Only after that, build lagged variants
+#
+# Where to pick valid values:
+# 1. Open `4 贝叶斯分析/results/bayes_candidate_models.csv`
+# 2. Use either the `scheme_id` column or the exact `model_id` column
+
+[selection]
+
+default_fe_label = "Province: No / Year: Yes"
+
+# If this list is non-empty, the script uses these exact model_ids.
+selected_model_ids = [
+  "方案A_平衡主线组 | Province: No / Year: Yes",
+  "SYS_09556 | Province: No / Year: Yes",
+  "SYS_09557 | Province: No / Year: Yes",
+]
+
+# Optional scheme-level selection. Only used when `selected_model_ids = []`.
+selected_scheme_ids = []
+
+[model_grid]
+
+# First-round model grid: mirror the three FE situations before touching lag.
+variant_ids = [
+  "year_only_additive",
+  "year_only_amplification",
+  "province_only_additive",
+  "province_only_amplification",
+  "province_year_additive",
+  "province_year_amplification",
+]
+
+# Optional second-round diagnostics:
+# "mundlak_year_additive"
+# "mundlak_year_amplification"
+
+# "Amplification" means adding an interaction term to test whether
+# higher R1xday strengthens the AMC-AMR association.
+interaction_pairs = [
+  ["R1xday", "抗菌药物使用强度"],
+]

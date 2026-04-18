@@ -1,13 +1,22 @@
 # public_dashboards
 
-这个目录是 dashboard 的长期发布层。
+这个目录是 dashboard 的公开发布层，用来给 GitHub Pages 提供稳定入口。
 
-它和研究目录的职责分开：
+- 研究目录继续保留在 `2 固定效应模型/`
+- 对外页面统一从 `public_dashboards/` 发布
 
-- `2 固定效应模型/` 继续保存分析过程和原始构建产物。
-- `public_dashboards/` 提供稳定链接、发布入口和历史归档。
+## 在线地址
 
-## 当前结构
+- GitHub 仓库：`https://github.com/wuf24/env_health`
+- GitHub Pages 首页：`https://wuf24.github.io/env_health/`
+- 最新版 dashboard：首页：`https://wuf24.github.io/env_health/latest/index.html`
+- 最新版 Lancet 子页：`https://wuf24.github.io/env_health/latest/results_dashboard_lancet.html`
+- 最新版矩阵页：`https://wuf24.github.io/env_health/latest/results_dashboard_matrix.html`
+- 旧版 12 模型：首页：`https://wuf24.github.io/env_health/legacy-12models/index.html`
+- 旧版 12 模型 Lancet 子页：`https://wuf24.github.io/env_health/legacy-12models/results_dashboard_legacy_12models_lancet.html`
+- 旧版 12 模型矩阵页：`https://wuf24.github.io/env_health/legacy-12models/results_dashboard_legacy_12models_matrix.html`
+
+## 当前发布结构
 
 ```text
 public_dashboards/
@@ -15,59 +24,63 @@ public_dashboards/
   manifest.json
   latest/
   legacy-12models/
-  releases/20260417-221803/
+  releases/<timestamp>/
 ```
 
-## 维护命令
+- `latest/` 始终指向当前最新版
+- `legacy-12models/` 始终指向旧版 12 模型备份
+- `releases/<timestamp>/` 保留历史快照，方便回看
 
-重新构建并发布：
+## 以后怎么更新
+
+建议一直在本地安全分支 `public-main` 上更新，然后把它推到远程 `main`。
+
+1. 切到安全发布分支：
 
 ```bash
-python -X utf8 tools/deploy_public_dashboards.py
+git checkout public-main
 ```
 
-只发布已有 HTML，不重跑上游 builder：
-
-```bash
-python -X utf8 tools/deploy_public_dashboards.py --skip-build
-```
-
-在 GitHub Actions 里建议加上快照保留，例如：
+2. 如果 dashboard 逻辑或结果有变，重新生成公开页面：
 
 ```bash
 python -X utf8 tools/deploy_public_dashboards.py --retain-releases 12
 ```
 
-## 上游维护入口
+如果只是重发当前已有 HTML，不重跑上游 builder：
 
-- latest 布局与数据载入：`tools/build_results_dashboard.py`
-- legacy 布局与数据载入：`2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py`
+```bash
+python -X utf8 tools/deploy_public_dashboards.py --skip-build --retain-releases 12
+```
 
-## GitHub Pages
+3. 提交本次更新：
 
-- 推荐使用 GitHub Actions 发布，而不是手工提交生成后的静态文件分支。
-- 工作流文件见：`.github/workflows/deploy-github-pages.yml`。
-- 仓库设置路径：`Settings -> Pages -> Build and deployment -> Source -> GitHub Actions`。
-- 项目页默认 URL 一般是：`https://<用户名>.github.io/<仓库名>/`。
-- 这个站点内部已经统一使用相对链接，所以可以直接部署到项目子路径，不需要额外改 base URL。
-- 如果仓库是私有仓库，GitHub Pages 是否可用取决于你的 GitHub 方案；公开仓库在 GitHub Free 下可用。
-- GitHub Pages 站点是公开可访问的，不要把不希望公开的数据一起发布。
+```bash
+git add .
+git commit -m "Update dashboards"
+```
 
-## 首次启用步骤
+4. 推到 GitHub：
 
-1. 把仓库推到 GitHub。
-2. 进入仓库的 `Settings -> Pages`，把 Source 设为 `GitHub Actions`。
-3. 推送到默认分支后，等待 `Deploy GitHub Pages` 工作流完成。
-4. 首次成功后，在 Pages 设置页里复制公开 URL。
+```bash
+git push origin public-main:main
+```
 
-## 自定义域名
+5. 等 GitHub Actions 跑完后，到这里查看：
 
-- GitHub 官方建议先验证域名，再把域名接到 Pages，避免域名接管风险。
-- 如果你使用自定义 GitHub Actions workflow，需要在仓库 `Settings -> Pages` 里配置 Custom domain；仅靠仓库里的 `CNAME` 文件并不会自动新增或移除域名设置。
-- 域名生效后，再勾选 `Enforce HTTPS`。
+- Actions：`https://github.com/wuf24/env_health/actions`
+- Pages 首页：`https://wuf24.github.io/env_health/`
 
-## 说明
+## 相关文件
 
-- `latest/` 和 `legacy-12models/` 始终覆盖为最近一次部署后的稳定版本。
-- `releases/<timestamp>/` 会保留部署当时的归档快照，方便对照和回滚。
-- 每个 bundle 目录下都有 `metadata.json`，可用于排查来源和生成脚本。
+- 公开站入口页：`public_dashboards/index.html`
+- 自动部署脚本：`tools/deploy_public_dashboards.py`
+- GitHub Pages workflow：`.github/workflows/deploy-github-pages.yml`
+- latest 页面构建入口：`tools/build_results_dashboard.py`
+- legacy 页面构建入口：`2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py`
+
+## 安全提醒
+
+- 不要把本地内部历史分支 `main` 直接推到 GitHub。
+- 对外发布只推 `public-main:main`。
+- 原始输入数据 `amr_rate.csv`、`climate_social_eco.csv` 和 `bakeup/.../raw_inputs/` 已加入忽略规则，不应进入公开仓库。

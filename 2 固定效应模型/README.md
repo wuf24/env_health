@@ -356,6 +356,19 @@
 - `statsmodels`
 - `matplotlib`
 
+如果要继续做“选定组合的贝叶斯辅助分析”，现在请转到新目录：
+
+- [../4 贝叶斯分析/README.md](../4%20贝叶斯分析/README.md)
+
+贝叶斯分析已经从本目录拆出，避免和固定效应主分析混在一起。
+
+需要特别记住的是：
+
+- 现在贝叶斯第一轮已经改成 **model grid**，不再只押一个规格
+- 这条网格先镜像 FE 的三种情境：`year_only / province_only / province_year`
+- 每种情境再分成 `additive` 和 `amplification` 两版，其中 `amplification` 指显式加入 `R1xday × AMC`
+- 只有第一轮把多种口径跑清楚之后，才会把 lag 接到最有信息量的 amplification 版本上
+
 ## 已归档文件
 
 以下旧文件已移入根目录 `bakeup/2 固定效应模型/`：
@@ -377,3 +390,36 @@
 3. `R1xday` 经常是正向，但显著性弱于 AMC，且在更严格 FE 下明显衰减。
 4. 变量重构和系统穷举都在暗示：高分模型更依赖“复合代理框架”，而不是单一旧主线变量表。
 5. 题目里的 **amplifies** 目前还没有被交互项直接识别，后续仍有升级空间。
+
+## 贝叶斯分析去哪里看
+
+贝叶斯辅助分析现已独立到：
+
+- [../4 贝叶斯分析/README.md](../4%20贝叶斯分析/README.md)
+- [../4 贝叶斯分析/BAYES_AUXILIARY_ANALYSIS_PLAN.md](../4%20贝叶斯分析/BAYES_AUXILIARY_ANALYSIS_PLAN.md)
+
+当前这条贝叶斯线的核心作用已经不是“做个补充版本”，而是：
+
+- 用 FE 先筛出 `R1xday` 和 `AMC` 更有解释力的组合
+- 再用一套镜像 FE 三情境的贝叶斯网格，检查主线在不同控制口径下是否还成立
+- 最后再把 lag 接到最值得继续追的 amplification 版本上
+- 贝叶斯前处理现在单独记录了逐省按年的 X 补缺规则：`2014 -> 2015`，其他年份优先取前后非缺失值均值，边界年份取最近值
+
+截至当前已经正式跑完的第一轮 3 组 × 6 贝叶斯变体看：
+
+- `year_only` 贝叶斯版本最接近当前 Year FE 主线，`R1xday` 和 `AMC` 都稳定为正
+- `province_only` 与 `province_year` 会明显削弱 `R1xday` 主效应，这点和 FE 结果一致
+- 第一轮最强的 amplification 信号出现在 `province_only_amplification`
+- 但只要加上年份控制，交互项就还不够稳
+
+这进一步说明：当前题目叙事里最接近 **amplifies** 的证据，是“只控制省份”的交互项结果；但如果正文要坚持更强表述，还需要看第二轮 lag 能不能把这条线补强。
+
+旧的 `Bayes_ana.ipynb` 已归档到：
+
+- [../bakeup/4 贝叶斯分析/Bayes_ana_legacy_from_2固定效应模型_20260418.ipynb](../bakeup/4%20贝叶斯分析/Bayes_ana_legacy_from_2固定效应模型_20260418.ipynb)
+
+这样本目录继续专注于：
+
+- FE 主结果
+- 变量组比较
+- 全空间穷举

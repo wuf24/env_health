@@ -8,7 +8,9 @@ __pycache__/
 .ipynb_checkpoints/
 
 .venv/
+.venv_bayes/
 venv/
+.tmp_bayes/
 
 public_dashboards/releases/
 

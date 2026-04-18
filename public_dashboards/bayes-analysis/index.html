@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>贝叶斯分析解读看板</title>
+  <style>
+    :root {
+      --bg: #f4efe7;
+      --panel: rgba(255, 251, 246, 0.88);
+      --panel-strong: rgba(255, 251, 246, 0.96);
+      --ink: #17313b;
+      --muted: #5d737a;
+      --line: rgba(23, 49, 59, 0.10);
+      --teal: #1f6b73;
+      --rust: #b45a33;
+      --gold: #c79c45;
+      --positive: #126f52;
+      --negative: #9f3f35;
+      --soft: #eef5f4;
+      --shadow: 0 22px 70px rgba(33, 31, 27, 0.10);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Aptos", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(180, 90, 51, 0.18), transparent 22%),
+        radial-gradient(circle at 100% 0%, rgba(31, 107, 115, 0.16), transparent 28%),
+        linear-gradient(180deg, #fbf7f2 0%, #eef2ef 100%);
+    }
+    h1, h2, h3 {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      letter-spacing: -0.02em;
+    }
+    p, li {
+      line-height: 1.8;
+      color: var(--muted);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .page {
+      width: min(1280px, calc(100vw - 24px));
+      margin: 18px auto 40px;
+      display: grid;
+      gap: 18px;
+    }
+    .hero, .card, .panel {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+    .hero, .card {
+      border-radius: 30px;
+      padding: 28px;
+    }
+    .panel {
+      border-radius: 24px;
+      padding: 22px;
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(15, 37, 48, 0.98), rgba(29, 94, 96, 0.93)),
+        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      color: #fbf8f2;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -56px;
+      top: -56px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.20), transparent 68%);
+      pointer-events: none;
+    }
+    .hero p {
+      color: rgba(251, 248, 242, 0.86);
+      max-width: 860px;
+    }
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      opacity: 0.78;
+      margin-bottom: 10px;
+    }
+    .hero h1 {
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1.03;
+      max-width: 920px;
+    }
+    .hero .lead {
+      font-size: 17px;
+      margin-top: 16px;
+    }
+    .nav-pills, .tag-row, .stats-grid, .highlights-grid, .grid-3, .grid-2, .downloads {
+      display: grid;
+      gap: 14px;
+    }
+    .nav-pills {
+      grid-template-columns: repeat(5, minmax(0, max-content));
+      margin-top: 22px;
+      align-items: center;
+      justify-content: start;
+    }
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      font-weight: 700;
+      color: rgba(251, 248, 242, 0.94);
+    }
+    .stats-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin-top: 22px;
+    }
+    .stat {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+    }
+    .stat .k {
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 8px;
+    }
+    .stat .v {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat .h {
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(251, 248, 242, 0.84);
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    .section-head p {
+      margin: 10px 0 0;
+      max-width: 840px;
+    }
+    .section-head h2 {
+      font-size: 34px;
+      line-height: 1.1;
+    }
+    .highlights-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .highlight-card {
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+    }
+    .highlight-card.strong {
+      background: linear-gradient(180deg, rgba(18, 111, 82, 0.10), rgba(255, 251, 246, 0.96));
+    }
+    .highlight-card.directional {
+      background: linear-gradient(180deg, rgba(199, 156, 69, 0.12), rgba(255, 251, 246, 0.96));
+    }
+    .highlight-card.calm {
+      background: linear-gradient(180deg, rgba(31, 107, 115, 0.10), rgba(255, 251, 246, 0.96));
+    }
+    .highlight-label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .highlight-value {
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .soft {
+      background: linear-gradient(180deg, rgba(255,255,255,0.72), rgba(238,245,244,0.72));
+    }
+    .reading-card h3, .narrative-card h3, .soft h3 {
+      font-size: 24px;
+      line-height: 1.2;
+    }
+    .reading-card p, .narrative-card p {
+      margin-top: 12px;
+    }
+    .tag-row {
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      margin-top: 16px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(31, 107, 115, 0.08);
+      border: 1px solid rgba(31, 107, 115, 0.12);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--teal);
+      text-align: center;
+    }
+    .reporting-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .report-box {
+      padding: 20px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+    }
+    .report-box.good {
+      background: linear-gradient(180deg, rgba(18,111,82,0.10), rgba(255,251,246,0.98));
+    }
+    .report-box.warn {
+      background: linear-gradient(180deg, rgba(180,90,51,0.10), rgba(255,251,246,0.98));
+    }
+    .report-box.next {
+      background: linear-gradient(180deg, rgba(31,107,115,0.10), rgba(255,251,246,0.98));
+    }
+    .report-box ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+    }
+    .forest-axis-note {
+      margin-bottom: 14px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .forest-row {
+      display: grid;
+      grid-template-columns: 280px 1fr 140px;
+      gap: 16px;
+      align-items: center;
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+    }
+    .forest-row:first-of-type {
+      border-top: 0;
+    }
+    .forest-kicker {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .forest-title {
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .forest-copy {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .forest-track {
+      position: relative;
+      height: 42px;
+      border-radius: 999px;
+      background:
+        linear-gradient(180deg, rgba(31,107,115,0.06), rgba(31,107,115,0.02));
+      border: 1px solid rgba(31,107,115,0.08);
+    }
+    .forest-zero {
+      position: absolute;
+      top: 6px;
+      bottom: 6px;
+      left: var(--zero);
+      width: 2px;
+      background: rgba(159, 63, 53, 0.26);
+    }
+    .forest-line {
+      position: absolute;
+      top: 50%;
+      left: var(--start);
+      width: calc(var(--end) - var(--start));
+      height: 6px;
+      border-radius: 999px;
+      transform: translateY(-50%);
+      background: rgba(31,107,115,0.30);
+    }
+    .forest-line.strong {
+      background: rgba(18,111,82,0.56);
+    }
+    .forest-line.directional {
+      background: rgba(199,156,69,0.58);
+    }
+    .forest-line.negative {
+      background: rgba(159,63,53,0.56);
+    }
+    .forest-point {
+      position: absolute;
+      top: 50%;
+      left: var(--point);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--teal);
+      border: 2px solid #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.14);
+    }
+    .forest-point.strong {
+      background: var(--positive);
+    }
+    .forest-point.directional {
+      background: var(--gold);
+    }
+    .forest-point.negative {
+      background: var(--negative);
+    }
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.72);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+    th, td {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: rgba(23,49,59,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .metric-block {
+      display: grid;
+      gap: 6px;
+      min-width: 180px;
+    }
+    .metric-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .metric-value {
+      font-weight: 800;
+    }
+    .metric-sub, .metric-note {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .metric-note {
+      color: var(--ink);
+    }
+    .stacked-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .badge.strong {
+      background: rgba(18,111,82,0.12);
+      color: var(--positive);
+      border-color: rgba(18,111,82,0.14);
+    }
+    .badge.directional {
+      background: rgba(199,156,69,0.16);
+      color: #8a6619;
+      border-color: rgba(199,156,69,0.14);
+    }
+    .badge.negative {
+      background: rgba(159,63,53,0.12);
+      color: var(--negative);
+      border-color: rgba(159,63,53,0.12);
+    }
+    .badge.muted {
+      background: rgba(23,49,59,0.08);
+      color: var(--muted);
+      border-color: rgba(23,49,59,0.10);
+    }
+    .badge.calm {
+      background: rgba(31,107,115,0.12);
+      color: var(--teal);
+      border-color: rgba(31,107,115,0.12);
+    }
+    .downloads {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .download-card {
+      display: block;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(238,245,244,0.70));
+      transition: transform 140ms ease, box-shadow 140ms ease;
+    }
+    .download-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 30px rgba(23, 49, 59, 0.10);
+    }
+    .download-title {
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .download-copy {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding-top: 10px;
+    }
+    @media (max-width: 1080px) {
+      .stats-grid,
+      .highlights-grid,
+      .grid-3,
+      .grid-2,
+      .reporting-grid,
+      .downloads {
+        grid-template-columns: 1fr;
+      }
+      .nav-pills {
+        grid-template-columns: 1fr 1fr;
+      }
+      .forest-row {
+        grid-template-columns: 1fr;
+      }
+      .page {
+        width: calc(100vw - 12px);
+        margin: 8px auto 20px;
+      }
+      .hero, .card {
+        border-radius: 24px;
+        padding: 22px;
+      }
+      .panel {
+        border-radius: 20px;
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="eyebrow">Bayesian Analysis Dashboard</div>
+      <h1>气候变化、抗菌药物使用与 AMR 的贝叶斯分析解读</h1>
+      <p class="lead">这页把本轮 3 组变量方案 × 6 个贝叶斯变体的结果拆成“结论、证据、质量控制”三层来读。核心问题不是单纯看某个系数是否为正，而是比较在不同控制口径下，主效应和交互项究竟稳不稳、能说到什么程度。</p>
+      <div class="nav-pills">
+        <a class="nav-pill" href="#findings">核心结论</a>
+        <a class="nav-pill" href="#design">分析结构</a>
+        <a class="nav-pill" href="#evidence">证据矩阵</a>
+        <a class="nav-pill" href="#quality">诊断质量</a>
+        <a class="nav-pill" href="#downloads">数据下载</a>
+      </div>
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="k">模型总数</div>
+          <div class="v">18</div>
+          <div class="h">3 个方案 × 6 个变体，覆盖 year-only、province-only、province+year 三种控制口径。</div>
+        </div>
+        <div class="stat">
+          <div class="k">样本结构</div>
+          <div class="v">300</div>
+          <div class="h">30 个省份，10 个年份；代表进入模型后的分析样本规模。</div>
+        </div>
+        <div class="stat">
+          <div class="k">采样设置</div>
+          <div class="v">4×1000</div>
+          <div class="h">每个模型 4 条链，draws=1000，tune=1000。</div>
+        </div>
+        <div class="stat">
+          <div class="k">最强交互线</div>
+          <div class="v">Province-only</div>
+          <div class="h">仅控制省份 · 放大效应模型 · 方案A 平衡主线组 给出了全轮分析里最强的正向交互信号。</div>
+        </div>
+        <div class="stat">
+          <div class="k">生成时间</div>
+          <div class="v">2026-04-18 21:59</div>
+          <div class="h">静态网页已写入 <code>public_dashboards/bayes-analysis/</code>，可以直接打开浏览。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="findings">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Executive Summary</div>
+          <h2>先看结论</h2>
+          <p>如果只抓这轮贝叶斯分析最重要的几句话，重点就是：year-only 复现主效应最稳，province-only 给出最强的交互信号，而 province+year 作为最严格口径时，交互项仍偏正但还不够硬。</p>
+        </div>
+      </div>
+      <div class="highlights-grid">
+        
+        <article class="highlight-card strong">
+          <div class="highlight-label">Year-only 复现主线</div>
+          <div class="highlight-value">12/12</div>
+          <p>两类主效应在 3 个方案、2 个 year-only 变体里全部保持稳健正向。</p>
+        </article>
+        
+        <article class="highlight-card strong">
+          <div class="highlight-label">最强交互证据</div>
+          <div class="highlight-value">3/3</div>
+          <p>province-only amplification 的交互项在 3 个方案中全部 95% CrI 高于 0。</p>
+        </article>
+        
+        <article class="highlight-card directional">
+          <div class="highlight-label">最严格检验结果</div>
+          <div class="highlight-value">3/3</div>
+          <p>province+year amplification 的交互项方向仍为正，但都还没有形成稳健区间。</p>
+        </article>
+        
+        <article class="highlight-card calm">
+          <div class="highlight-label">采样稳定性</div>
+          <div class="highlight-value">R-hat ≤ 1.01</div>
+          <p>全部模型的 R-hat 不超过 1.01，最小 bulk ESS 为 621。</p>
+        </article>
+        
+      </div>
+    </section>
+
+    <section class="card" id="design">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Study Design</div>
+          <h2>分析结构怎么搭的</h2>
+          <p>这轮并不是只跑一个“贝叶斯版 FE”，而是先镜像出 3 种固定效应语境，再在每个语境下分别比较主效应模型与放大效应模型。这样可以看出结论到底依赖哪一种控制方式。</p>
+        </div>
+      </div>
+      <div class="grid-3">
+        
+        <article class="panel soft">
+          <div class="eyebrow">Year-only</div>
+          <h3>只控制年份的镜像口径</h3>
+          <p>对应当前最接近主线的 Year FE 镜像：主要判断主效应能否在贝叶斯框架下复现。</p>
+        </article>
+        
+        <article class="panel soft">
+          <div class="eyebrow">Province-only</div>
+          <h3>只控制省份差异的口径</h3>
+          <p>先吸收省际长期差异，再看气候与抗菌药物使用之间是否出现“放大效应”交互。</p>
+        </article>
+        
+        <article class="panel soft">
+          <div class="eyebrow">Province + year</div>
+          <h3>同时控制省份和年份的严格口径</h3>
+          <p>把省份与年份共同控制住，是最保守、也最接近严格识别的一道检验。</p>
+        </article>
+        
+        <article class="panel soft">
+          <div class="eyebrow">Scheme</div>
+          <h3>方案A 平衡主线组</h3>
+          <p>人工整理的主线变量组，最适合承接论文叙事和结果展示。</p>
+        </article>
+        
+        <article class="panel soft">
+          <div class="eyebrow">Scheme</div>
+          <h3>系统筛选方案 SYS_09556</h3>
+          <p>系统筛选后保留下来的候选组，前期 FE 结果里 R1xday 与 AMC 信号较强。</p>
+        </article>
+        
+        <article class="panel soft">
+          <div class="eyebrow">Scheme</div>
+          <h3>系统筛选方案 SYS_09557</h3>
+          <p>另一组系统筛选候选，用来检验结论是否对变量组合具有稳健性。</p>
+        </article>
+        
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Reading Guide</div>
+          <h2>怎么读贝叶斯指标</h2>
+          <p>页面里每个核心系数都按同一顺序展示：后验均值、95% 可信区间、P(β&gt;0)。这样读的时候不会把“方向偏正”和“已经稳健”混为一谈。</p>
+        </div>
+      </div>
+      <div class="grid-2">
+        
+        <article class="panel soft reading-card">
+          <h3>后验均值</h3>
+          <p>先看方向和量级。正值代表正向关联，负值代表反向关联。</p>
+        </article>
+        
+        <article class="panel soft reading-card">
+          <h3>95% CrI</h3>
+          <p>如果可信区间完整落在 0 的同一侧，说明证据比“仅方向偏正”更硬。</p>
+        </article>
+        
+        <article class="panel soft reading-card">
+          <h3>P(β&gt;0)</h3>
+          <p>越接近 100%，越支持正向；80%–95% 更适合表述为方向性支持。</p>
+        </article>
+        
+        <article class="panel soft reading-card">
+          <h3>R-hat / ESS</h3>
+          <p>它们不回答“效应多大”，而是回答“这次采样是否足够稳定可信”。</p>
+        </article>
+        
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Interpretation</div>
+          <h2>三种控制口径分别说明了什么</h2>
+          <p>最值得看的是在不同固定效应口径下，R1xday 主效应、AMC 主效应和交互项是怎样一起变化的。它们共同决定这轮分析能否支撑“climate amplifies AMR”这样的叙事强度。</p>
+        </div>
+      </div>
+      <div class="grid-3">
+        
+            <article class="panel narrative-card">
+              <div class="eyebrow">Year-only</div>
+              <h3>只控制年份的镜像口径</h3>
+              <p>在不含交互项的主效应模型里，R1xday 的后验均值落在 0.119–0.174，AMC 落在 0.102–0.115，两者在 3 个方案里 95% CrI 都高于 0。加入交互项后，两个主效应几乎不动，但交互项均值只有 0.005–0.030，说明这条线主要是在稳定复现主效应，而不是已经稳稳证明“放大效应”。</p>
+              <div class="tag-row"><span class="tag">R1xday 主效应：0.119–0.174</span><span class="tag">AMC 主效应：0.102–0.115</span><span class="tag">交互项：0.005–0.030</span></div>
+            </article>
+            
+            <article class="panel narrative-card">
+              <div class="eyebrow">Province-only</div>
+              <h3>只控制省份差异的口径</h3>
+              <p>一旦只控制省份差异，R1xday 主效应就回到 -0.010–0.002 的近零区间，AMC 也只剩下 0.017–0.019 的弱正向。但在放大效应模型里，交互项集中在 0.037–0.038，且 3 个方案的可信区间下界都刚好越过 0。这是整轮分析里最接近“amplifies”叙事的一条证据线。</p>
+              <div class="tag-row"><span class="tag">R1xday 主效应接近 0</span><span class="tag">AMC 主效应偏弱</span><span class="tag">交互项 3/3 稳健正向</span></div>
+            </article>
+            
+            <article class="panel narrative-card">
+              <div class="eyebrow">Province + year</div>
+              <h3>同时控制省份和年份的严格口径</h3>
+              <p>同时控制省份和年份后，R1xday 主效应进一步缩到 -0.001–0.005，AMC 也只剩下 0.009–0.010。交互项虽然依然是正的，均值大约 0.017–0.020，但 95% CrI 在所有方案里都重新跨回 0，说明严格口径下的证据还不够硬。</p>
+              <div class="tag-row"><span class="tag">主效应整体衰减</span><span class="tag">交互项保留正方向</span><span class="tag">0/3 达到稳健区间</span></div>
+            </article>
+            
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Interaction Signal</div>
+          <h2>交互项森林图</h2>
+          <p>下面只看放大效应模型里的 <code>R1xday × 抗菌药物使用强度</code>。如果整段区间都在 0 右侧，说明“放大效应”不只是方向偏正，而是达到更稳健的支持。</p>
+        </div>
+      </div>
+      <div class="forest-axis-note">横轴范围 -0.06 到 0.10，竖线表示 0；只有整段可信区间完全位于 0 右侧，才算“稳健正向”。</div>
+            <div class="forest-row">
+              <div class="forest-meta">
+                <div class="forest-kicker">Year-only</div>
+                <div class="forest-title">方案A 平衡主线组</div>
+                <div class="forest-copy">β = 0.030 · 95% CrI [-0.025, 0.087]</div>
+              </div>
+              <div class="forest-track" style="--zero:37.50%; --start:21.60%; --end:91.65%; --point:56.47%;">
+                <div class="forest-zero"></div>
+                <div class="forest-line directional"></div>
+                <div class="forest-point directional"></div>
+              </div>
+              <div class="forest-status"><span class="badge directional">方向性正向</span></div>
+            </div>
+            
+            <div class="forest-row">
+              <div class="forest-meta">
+                <div class="forest-kicker">Year-only</div>
+                <div class="forest-title">系统筛选方案 SYS_09556</div>
+                <div class="forest-copy">β = 0.005 · 95% CrI [-0.050, 0.062]</div>
+              </div>
+              <div class="forest-track" style="--zero:37.50%; --start:6.40%; --end:76.12%; --point:40.68%;">
+                <div class="forest-zero"></div>
+                <div class="forest-line muted"></div>
+                <div class="forest-point muted"></div>
+              </div>
+              <div class="forest-status"><span class="badge muted">证据不足</span></div>
+            </div>
+            
+            <div class="forest-row">
+              <div class="forest-meta">
+                <div class="forest-kicker">Year-only</div>
+                <div class="forest-title">系统筛选方案 SYS_09557</div>
+                <div class="forest-copy">β = 0.016 · 95% CrI [-0.040, 0.073]</div>
+              </div>
+              <div class="forest-track" style="--zero:37.50%; --start:12.50%; --end:83.38%; --point:47.71%;">
+                <div class="forest-zero"></div>
+                <div class="forest-line muted"></div>
+                <div class="forest-point muted"></div>
+              </div>
+              <div class="forest-status"><span class="badge muted">证据不足</span></div>
+            </div>
+            
+            <div class="forest-row">
+              <div class="forest-meta">
+                <div class="forest-kicker">Province-only</div>
+                <div class="forest-title">方案A 平衡主线组</div>
+                <div class="forest-copy">β = 0.037 · 95% CrI [0.002, 0.074]</div>
+              </div>
+              <div class="forest-track" style="--zero:37.50%; --start:38.58%; --end:83.46%; --point:60.40%;">
+                <div class="forest-zero"></div>
+                <div class="forest-line strong"></div>
+                <div class="forest-point strong"></div>
+              </div>
+              <div class="forest-status"><span class="badge strong">稳健正向</span></div>
+            </div>
+            
+            <div class="forest-row">
+              <div class="forest-meta">
+                <div class="forest-kicker">Province-only</div>
+                <div class="forest-title">系统筛选方案 SYS_09556</div>
+                <div class="forest-copy">β = 0.038 · 95% CrI [0.001, 0.077]</div>
+              </div>
+              <div class="forest-track" style="--zero:37.50%; --start:37.91%; --end:85.54%; --point:61.47%;">
+                <div class="forest-zero"></div>
+                <div class="forest-line strong"></div>
+                <div class="forest-point strong"></div>
+              </div>
+              <div class="forest-status"><span class="badge strong">稳健正向</span></div>
+            </div>
+            
+            <div class="forest-row">
+              <div class="forest-meta">
+                <div class="forest-kicker">Province-only</div>
+                <div class="forest-title">系统筛选方案 SYS_09557</div>
+                <div class="forest-copy">β = 0.037 · 95% CrI [0.001, 0.074]</div>
+              </div>
+              <div class="forest-track" style="--zero:37.50%; --start:38.32%; --end:83.95%; --point:60.86%;">
+                <div class="forest-zero"></div>
+                <div class="forest-line strong"></div>
+                <div class="forest-point strong"></div>
+              </div>
+              <div class="forest-status"><span class="badge strong">稳健正向</span></div>
+            </div>
+            
+            <div class="forest-row">
+              <div class="forest-meta">
+                <div class="forest-kicker">Province + year</div>
+                <div class="forest-title">方案A 平衡主线组</div>
+                <div class="forest-copy">β = 0.020 · 95% CrI [-0.008, 0.049]</div>
+              </div>
+              <div class="forest-track" style="--zero:37.50%; --start:32.34%; --end:67.92%; --point:50.22%;">
+                <div class="forest-zero"></div>
+                <div class="forest-line directional"></div>
+                <div class="forest-point directional"></div>
+              </div>
+              <div class="forest-status"><span class="badge directional">方向性正向</span></div>
+            </div>
+            
+            <div class="forest-row">
+              <div class="forest-meta">
+                <div class="forest-kicker">Province + year</div>
+                <div class="forest-title">系统筛选方案 SYS_09556</div>
+                <div class="forest-copy">β = 0.017 · 95% CrI [-0.012, 0.045]</div>
+              </div>
+              <div class="forest-track" style="--zero:37.50%; --start:30.23%; --end:65.36%; --point:48.17%;">
+                <div class="forest-zero"></div>
+                <div class="forest-line directional"></div>
+                <div class="forest-point directional"></div>
+              </div>
+              <div class="forest-status"><span class="badge directional">方向性正向</span></div>
+            </div>
+            
+            <div class="forest-row">
+              <div class="forest-meta">
+                <div class="forest-kicker">Province + year</div>
+                <div class="forest-title">系统筛选方案 SYS_09557</div>
+                <div class="forest-copy">β = 0.018 · 95% CrI [-0.011, 0.047]</div>
+              </div>
+              <div class="forest-track" style="--zero:37.50%; --start:30.73%; --end:67.03%; --point:48.79%;">
+                <div class="forest-zero"></div>
+                <div class="forest-line directional"></div>
+                <div class="forest-point directional"></div>
+              </div>
+              <div class="forest-status"><span class="badge directional">方向性正向</span></div>
+            </div>
+            
+    </section>
+
+    <section class="card" id="evidence">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Evidence Matrix</div>
+          <h2>主效应矩阵</h2>
+          <p>这张表只看 additive 变体，目的是把主效应本身单独拎出来。year-only 线非常稳定，而一旦把省份差异控制进去，R1xday 主效应会明显收缩到 0 附近。</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>控制口径</th>
+              <th>变量方案</th>
+              <th>R1xday</th>
+              <th>AMC</th>
+              <th>简要判断</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td>仅控制年份 · 主效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.119</div><div class="metric-sub">95% CrI [0.044, 0.192]</div><div class="metric-sub">P(β &gt; 0) = 99.9%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.106</div><div class="metric-sub">95% CrI [0.050, 0.164]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="stacked-badges"><span class="badge strong">稳健正向</span><span class="badge strong">稳健正向</span></div></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制年份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.174</div><div class="metric-sub">95% CrI [0.103, 0.245]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.115</div><div class="metric-sub">95% CrI [0.058, 0.171]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="stacked-badges"><span class="badge strong">稳健正向</span><span class="badge strong">稳健正向</span></div></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制年份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.158</div><div class="metric-sub">95% CrI [0.086, 0.229]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.102</div><div class="metric-sub">95% CrI [0.045, 0.158]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="stacked-badges"><span class="badge strong">稳健正向</span><span class="badge strong">稳健正向</span></div></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 主效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.010</div><div class="metric-sub">95% CrI [-0.056, 0.036]</div><div class="metric-sub">P(β &gt; 0) = 33.7%</div><div class="metric-note">P(β&gt;0)=33.7%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.017</div><div class="metric-sub">95% CrI [-0.025, 0.056]</div><div class="metric-sub">P(β &gt; 0) = 79.1%</div><div class="metric-note">P(β&gt;0)=79.1%，方向性不够集中。</div></div></td>
+              <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge muted">证据不足</span></div></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.002</div><div class="metric-sub">95% CrI [-0.046, 0.050]</div><div class="metric-sub">P(β &gt; 0) = 53.4%</div><div class="metric-note">P(β&gt;0)=53.4%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.017</div><div class="metric-sub">95% CrI [-0.025, 0.061]</div><div class="metric-sub">P(β &gt; 0) = 79.4%</div><div class="metric-note">P(β&gt;0)=79.4%，方向性不够集中。</div></div></td>
+              <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge muted">证据不足</span></div></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.005</div><div class="metric-sub">95% CrI [-0.054, 0.043]</div><div class="metric-sub">P(β &gt; 0) = 42.5%</div><div class="metric-note">P(β&gt;0)=42.5%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.019</div><div class="metric-sub">95% CrI [-0.022, 0.059]</div><div class="metric-sub">P(β &gt; 0) = 82.0%</div><div class="metric-note">P(β&gt;0)=82.0%，但区间仍跨 0。</div></div></td>
+              <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge directional">方向性正向</span></div></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 主效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.001</div><div class="metric-sub">95% CrI [-0.038, 0.036]</div><div class="metric-sub">P(β &gt; 0) = 48.1%</div><div class="metric-note">P(β&gt;0)=48.1%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.009</div><div class="metric-sub">95% CrI [-0.023, 0.042]</div><div class="metric-sub">P(β &gt; 0) = 71.9%</div><div class="metric-note">P(β&gt;0)=71.9%，方向性不够集中。</div></div></td>
+              <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge muted">证据不足</span></div></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.005</div><div class="metric-sub">95% CrI [-0.033, 0.043]</div><div class="metric-sub">P(β &gt; 0) = 60.1%</div><div class="metric-note">P(β&gt;0)=60.1%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.009</div><div class="metric-sub">95% CrI [-0.022, 0.040]</div><div class="metric-sub">P(β &gt; 0) = 71.1%</div><div class="metric-note">P(β&gt;0)=71.1%，方向性不够集中。</div></div></td>
+              <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge muted">证据不足</span></div></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.005</div><div class="metric-sub">95% CrI [-0.032, 0.043]</div><div class="metric-sub">P(β &gt; 0) = 60.2%</div><div class="metric-note">P(β&gt;0)=60.2%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.010</div><div class="metric-sub">95% CrI [-0.020, 0.041]</div><div class="metric-sub">P(β &gt; 0) = 74.2%</div><div class="metric-note">P(β&gt;0)=74.2%，方向性不够集中。</div></div></td>
+              <td><div class="stacked-badges"><span class="badge muted">证据不足</span><span class="badge muted">证据不足</span></div></td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Amplification Matrix</div>
+          <h2>放大效应矩阵</h2>
+          <p>这张表把 amplification 变体放在一起。关键不只看交互项本身，也要同时看加入交互以后两条主效应是否仍然站得住。</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>控制口径</th>
+              <th>变量方案</th>
+              <th>R1xday</th>
+              <th>AMC</th>
+              <th>R1xday × AMC</th>
+              <th>交互结论</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td>仅控制年份 · 放大效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.106</div><div class="metric-sub">95% CrI [0.029, 0.184]</div><div class="metric-sub">P(β &gt; 0) = 99.6%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.112</div><div class="metric-sub">95% CrI [0.055, 0.168]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.030</div><div class="metric-sub">95% CrI [-0.025, 0.087]</div><div class="metric-sub">P(β &gt; 0) = 84.8%</div><div class="metric-note">P(β&gt;0)=84.8%，但区间仍跨 0。</div></div></td>
+              <td><span class="badge directional">方向性正向</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制年份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.174</div><div class="metric-sub">95% CrI [0.106, 0.244]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.115</div><div class="metric-sub">95% CrI [0.059, 0.173]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.005</div><div class="metric-sub">95% CrI [-0.050, 0.062]</div><div class="metric-sub">P(β &gt; 0) = 56.5%</div><div class="metric-note">P(β&gt;0)=56.5%，方向性不够集中。</div></div></td>
+              <td><span class="badge muted">证据不足</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制年份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.154</div><div class="metric-sub">95% CrI [0.083, 0.225]</div><div class="metric-sub">P(β &gt; 0) = 100.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.105</div><div class="metric-sub">95% CrI [0.047, 0.164]</div><div class="metric-sub">P(β &gt; 0) = 99.9%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.016</div><div class="metric-sub">95% CrI [-0.040, 0.073]</div><div class="metric-sub">P(β &gt; 0) = 71.3%</div><div class="metric-note">P(β&gt;0)=71.3%，方向性不够集中。</div></div></td>
+              <td><span class="badge muted">证据不足</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 放大效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge negative">方向性负向</span></div><div class="metric-value">β = -0.028</div><div class="metric-sub">95% CrI [-0.077, 0.023]</div><div class="metric-sub">P(β &gt; 0) = 13.7%</div><div class="metric-note">P(β&gt;0)=13.7%，但区间仍跨 0。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.024</div><div class="metric-sub">95% CrI [-0.018, 0.065]</div><div class="metric-sub">P(β &gt; 0) = 87.4%</div><div class="metric-note">P(β&gt;0)=87.4%，但区间仍跨 0。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.037</div><div class="metric-sub">95% CrI [0.002, 0.074]</div><div class="metric-sub">P(β &gt; 0) = 98.1%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><span class="badge strong">稳健正向</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.017</div><div class="metric-sub">95% CrI [-0.069, 0.035]</div><div class="metric-sub">P(β &gt; 0) = 26.8%</div><div class="metric-note">P(β&gt;0)=26.8%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.023</div><div class="metric-sub">95% CrI [-0.019, 0.066]</div><div class="metric-sub">P(β &gt; 0) = 86.4%</div><div class="metric-note">P(β&gt;0)=86.4%，但区间仍跨 0。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.038</div><div class="metric-sub">95% CrI [0.001, 0.077]</div><div class="metric-sub">P(β &gt; 0) = 97.8%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><span class="badge strong">稳健正向</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge negative">方向性负向</span></div><div class="metric-value">β = -0.024</div><div class="metric-sub">95% CrI [-0.076, 0.026]</div><div class="metric-sub">P(β &gt; 0) = 18.6%</div><div class="metric-note">P(β&gt;0)=18.6%，但区间仍跨 0。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.025</div><div class="metric-sub">95% CrI [-0.014, 0.066]</div><div class="metric-sub">P(β &gt; 0) = 89.0%</div><div class="metric-note">P(β&gt;0)=89.0%，但区间仍跨 0。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge strong">稳健正向</span></div><div class="metric-value">β = 0.037</div><div class="metric-sub">95% CrI [0.001, 0.074]</div><div class="metric-sub">P(β &gt; 0) = 98.0%</div><div class="metric-note">95% CrI 全部位于 0 以上。</div></div></td>
+              <td><span class="badge strong">稳健正向</span></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 放大效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.011</div><div class="metric-sub">95% CrI [-0.049, 0.027]</div><div class="metric-sub">P(β &gt; 0) = 29.4%</div><div class="metric-note">P(β&gt;0)=29.4%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.013</div><div class="metric-sub">95% CrI [-0.019, 0.046]</div><div class="metric-sub">P(β &gt; 0) = 79.4%</div><div class="metric-note">P(β&gt;0)=79.4%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.020</div><div class="metric-sub">95% CrI [-0.008, 0.049]</div><div class="metric-sub">P(β &gt; 0) = 92.0%</div><div class="metric-note">P(β&gt;0)=92.0%，但区间仍跨 0。</div></div></td>
+              <td><span class="badge directional">方向性正向</span></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.003</div><div class="metric-sub">95% CrI [-0.042, 0.038]</div><div class="metric-sub">P(β &gt; 0) = 45.2%</div><div class="metric-note">P(β&gt;0)=45.2%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = 0.013</div><div class="metric-sub">95% CrI [-0.019, 0.046]</div><div class="metric-sub">P(β &gt; 0) = 77.8%</div><div class="metric-note">P(β&gt;0)=77.8%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.017</div><div class="metric-sub">95% CrI [-0.012, 0.045]</div><div class="metric-sub">P(β &gt; 0) = 87.8%</div><div class="metric-note">P(β&gt;0)=87.8%，但区间仍跨 0。</div></div></td>
+              <td><span class="badge directional">方向性正向</span></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge muted">证据不足</span></div><div class="metric-value">β = -0.005</div><div class="metric-sub">95% CrI [-0.044, 0.036]</div><div class="metric-sub">P(β &gt; 0) = 40.8%</div><div class="metric-note">P(β&gt;0)=40.8%，方向性不够集中。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.014</div><div class="metric-sub">95% CrI [-0.018, 0.047]</div><div class="metric-sub">P(β &gt; 0) = 80.8%</div><div class="metric-note">P(β&gt;0)=80.8%，但区间仍跨 0。</div></div></td>
+              <td><div class="metric-block"><div class="metric-top"><span class="badge directional">方向性正向</span></div><div class="metric-value">β = 0.018</div><div class="metric-sub">95% CrI [-0.011, 0.047]</div><div class="metric-sub">P(β &gt; 0) = 88.5%</div><div class="metric-note">P(β&gt;0)=88.5%，但区间仍跨 0。</div></div></td>
+              <td><span class="badge directional">方向性正向</span></td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" id="quality">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Diagnostics & Data</div>
+          <h2>采样诊断与数据处理</h2>
+          <p>这部分回答两个问题：一是 MCMC 有没有明显不稳定；二是缺失值和样本筛选是怎么处理的。只有这两步站住脚，前面的解释才可信。</p>
+        </div>
+      </div>
+      <div class="highlights-grid">
+        <article class="highlight-card calm">
+          <div class="highlight-label">R-hat 上限</div>
+          <div class="highlight-value">1.01</div>
+          <p>全部参数的 R-hat 都不超过 1.01，没有明显链间分离问题。</p>
+        </article>
+        <article class="highlight-card calm">
+          <div class="highlight-label">最小 ESS bulk</div>
+          <div class="highlight-value">621</div>
+          <p>即使是最吃力的模型，bulk ESS 也仍然在可接受范围内。</p>
+        </article>
+        <article class="highlight-card calm">
+          <div class="highlight-label">AMC 缺失值</div>
+          <div class="highlight-value">71 → 10</div>
+          <p>按省份-年份规则补入了 61 个缺失值，仍保留 10 个未补全点位。</p>
+        </article>
+        <article class="highlight-card calm">
+          <div class="highlight-label">结局变量处理</div>
+          <div class="highlight-value">3 → 0</div>
+          <p>AMR_AGG_z 不做人为插补；X 变量处理完后，再把结局仍缺失的样本剔除。</p>
+        </article>
+      </div>
+      <div class="panel soft" style="margin-top: 16px;">
+        <p>代表性元数据显示：本轮模型使用的默认采样配置为 <code>chains=4</code>、<code>draws=1000</code>、<code>tune=1000</code>、<code>target_accept=0.9</code>。X 变量采用按省份-年份推进的时间插补规则；对结局变量 <code>AMR_AGG_z</code> 不做人工补值，避免把模型结论建立在虚构的 outcome 上。</p>
+      </div>
+      <div class="table-wrap" style="margin-top: 16px;">
+        <table>
+          <thead>
+            <tr>
+              <th>控制口径</th>
+              <th>变量方案</th>
+              <th>R-hat 最大值</th>
+              <th>ESS bulk 最小值</th>
+              <th>ESS tail 最小值</th>
+              <th>状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td>仅控制年份 · 主效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td>1.00</td>
+              <td>2705</td>
+              <td>2575</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制年份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td>1.00</td>
+              <td>3538</td>
+              <td>2499</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制年份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td>1.00</td>
+              <td>3183</td>
+              <td>2690</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制年份 · 放大效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td>1.00</td>
+              <td>2735</td>
+              <td>2536</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制年份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td>1.00</td>
+              <td>3730</td>
+              <td>2672</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制年份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td>1.00</td>
+              <td>3757</td>
+              <td>2545</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 主效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td>1.01</td>
+              <td>918</td>
+              <td>1215</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td>1.01</td>
+              <td>703</td>
+              <td>968</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td>1.00</td>
+              <td>621</td>
+              <td>1081</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 放大效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td>1.01</td>
+              <td>998</td>
+              <td>1682</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td>1.00</td>
+              <td>784</td>
+              <td>1254</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>仅控制省份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td>1.00</td>
+              <td>847</td>
+              <td>1200</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 主效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td>1.00</td>
+              <td>1215</td>
+              <td>1644</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td>1.00</td>
+              <td>1322</td>
+              <td>1876</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 主效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td>1.00</td>
+              <td>1257</td>
+              <td>1953</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 放大效应模型</td>
+              <td>方案A 平衡主线组</td>
+              <td>1.00</td>
+              <td>1157</td>
+              <td>1497</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09556</td>
+              <td>1.00</td>
+              <td>1085</td>
+              <td>1567</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+            <tr>
+              <td>同时控制省份和年份 · 放大效应模型</td>
+              <td>系统筛选方案 SYS_09557</td>
+              <td>1.00</td>
+              <td>1205</td>
+              <td>1859</td>
+              <td><span class="badge strong">可接受</span></td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Reporting Guidance</div>
+          <h2>推荐怎么表述结果</h2>
+          <p>这部分把“现在能说什么”和“现在还不宜说得太满的地方”拆开，方便直接转写进汇报稿、论文说明或图注。</p>
+        </div>
+      </div>
+      <div class="reporting-grid">
+        <article class="report-box good">
+          <h3>可以稳妥地说</h3>
+          <ul>
+            <li>在 year-only 贝叶斯镜像下，R1xday 与抗菌药物使用强度的主效应在 3 个变量方案里都稳定为正。</li>
+            <li>在 province-only amplification 模型中，交互项在 3 个方案里都呈稳健正向，说明存在较强的放大效应线索。</li>
+            <li>不同变量方案对交互项的方向判断大体一致，区别主要在证据强度，而不是方向完全翻转。</li>
+          </ul>
+        </article>
+        <article class="report-box warn">
+          <h3>暂时不要直接写成</h3>
+          <ul>
+            <li>“已经在所有控制口径下稳健证明 climate change amplifies AMR”。</li>
+            <li>“加入省份和年份双重控制后，交互项仍然显著成立”。</li>
+            <li>把 province-only 的交互结果直接外推为对最严格识别条件下的最终结论。</li>
+          </ul>
+        </article>
+        <article class="report-box next">
+          <h3>下一步最值得做</h3>
+          <ul>
+            <li>优先把 lag 检验放在 <code>year_only_amplification</code>、<code>province_only_amplification</code>、<code>province_year_amplification</code> 三条线上。</li>
+            <li>如果要写主文结果，建议把 year-only 作为主线复现，把 province-only interaction 当作重点发现，把 province+year 当作严格稳健性检查。</li>
+            <li>如果要进一步强化交互证据，优先解释为什么加入年份共同冲击后区间会变宽或回跨 0。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="card" id="downloads">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color: var(--muted);">Downloads</div>
+          <h2>页面用到的数据</h2>
+          <p>为了让这个页面可追溯，我把主要汇总结果文件一并复制到了页面目录下。后续如果模型结果更新，只需要重新运行生成脚本即可一起刷新页面和附件。</p>
+        </div>
+      </div>
+      <div class="downloads">
+        
+            <a class="download-card" href="./data/focus_primary_summary.csv">
+              <div class="download-title">focus_primary_summary.csv</div>
+              <div class="download-copy">点击查看或下载页面所依据的汇总结果文件。</div>
+            </a>
+            
+            <a class="download-card" href="./data/focus_variant_bridge_summary.csv">
+              <div class="download-title">focus_variant_bridge_summary.csv</div>
+              <div class="download-copy">点击查看或下载页面所依据的汇总结果文件。</div>
+            </a>
+            
+            <a class="download-card" href="./data/combined_diagnostics.csv">
+              <div class="download-title">combined_diagnostics.csv</div>
+              <div class="download-copy">点击查看或下载页面所依据的汇总结果文件。</div>
+            </a>
+            
+        <a class="download-card" href="./metadata.json">
+          <div class="download-title">metadata.json</div>
+          <div class="download-copy">页面生成时间：2026-04-18 21:59:09，包含来源文件与汇总统计。</div>
+        </a>
+        
+      </div>
+    </section>
+
+    <footer>Generated from <code>4 贝叶斯分析\results\model_summaries</code> on 2026-04-18 21:59:09.</footer>
+  </div>
+</body>
+</html>

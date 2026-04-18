@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-04-18 21:59:09",
+  "source_dir": "4 贝叶斯分析/results/model_summaries",
+  "inputs": [
+    "4 贝叶斯分析/results/model_summaries/focus_primary_summary.csv",
+    "4 贝叶斯分析/results/model_summaries/focus_variant_bridge_summary.csv",
+    "4 贝叶斯分析/results/model_summaries/combined_diagnostics.csv"
+  ],
+  "n_models": 18,
+  "n_obs": 300,
+  "n_provinces": 30,
+  "n_years": 10,
+  "run_config": {
+    "draws": 1000,
+    "tune": 1000,
+    "chains": 4,
+    "cores": 2,
+    "target_accept": 0.9
+  },
+  "max_r_hat": 1.01,
+  "min_ess_bulk": 621,
+  "min_ess_tail": 968,
+  "strongest_interaction_line": "仅控制省份 · 放大效应模型 · 方案A 平衡主线组"
+}
