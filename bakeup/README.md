@@ -1,56 +1,37 @@
 # bakeup
 
-这个文件夹用于存放“从主工作区移出，但不真正删除”的文件。
+这个目录是当前项目的归档层，用来保存“已经从主工作区移出，但仍需保留追溯能力”的文件。这里的内容不等于当前主线，也不等于无用垃圾，而是“暂不留在工作区首页，但仍可能回看”的资料。
 
-## 目的
+## 归档规则
 
-- 避免直接删文件后无法追溯。
-- 让主目录保持整洁，只保留当前分析主线需要的文件。
-- 保留旧版 notebook、旧版结果表、早期草稿和被替换的文件名版本。
+- 需要清理但不能直接删掉的文件，优先移动到 `bakeup/`。
+- 尽量保留原始相对路径，便于将来判断它原来属于哪个目录。
+- 旧 notebook、历史结果、改名前版本、运行缓存，都可以进 `bakeup/`，但建议按用途分目录。
+- 运行产物建议单独放到 `cleanup_YYYYMMDD/` 这样的目录里，避免和分析成果归档混在一起。
 
-## 规则
-
-- 需要“删除”的文件，不做真正删除，而是移动到 `bakeup/`。
-- 在 `bakeup/` 中尽量保留原来的目录层级，方便回溯来源。
-- 如果只是改名，也保留原始文件名版本到 `bakeup/`。
-
-## 当前已归档内容
+## 当前主要归档内容
 
 - `1 单因素分析/amr_plotter.ipynb`
   - 早期草稿绘图 notebook。
+- `2 固定效应模型/`
+  - 旧版固定效应 notebook、旧森林图流程与历史导出结果。
+- `3 单固定效应模型/`
+  - 改名前的 `singal.ipynb` 与历史单菌种长表。
+- `4 贝叶斯分析/`
+  - 从 FE 主目录拆出的旧版贝叶斯 notebook。
 
-- `2 固定效应模型/cluster.ipynb`
-  - 旧版固定效应 notebook。
+## 什么时候应当放进这里
 
-- `2 固定效应模型/AMR_AGG_z_FE_results.csv`
-- `2 固定效应模型/AMR_AGG_z_FE_results.xlsx`
-- `2 固定效应模型/AMR_AGG_z_FE_results.tex`
-  - 由旧版 `cluster.ipynb` 生成的结果文件。
+- 当前工作区已经有更清晰的新版本，旧版本只需要留档。
+- 文件属于运行缓存、临时构建产物或本地环境痕迹，不适合继续留在主目录。
+- 文件未来可能还要追溯来源，直接删除风险太高。
 
-- `2 固定效应模型/CoefficientForest.ipynb`
-- `2 固定效应模型/AMR_AGG_z_FE_forest.png`
-- `2 固定效应模型/AMR_AGG_z_FE_forest.pdf`
-  - 旧版固定效应森林图流程及产物。
+## 什么时候不应当放进这里
 
-- `2 固定效应模型/amr_lancet_fe_from_raw_csv.ipynb`
-- `2 固定效应模型/fixed_effects_model.ipynb`
-  - 原来并行存在的两份固定效应主 notebook。
-  - 后续已整理为工作区中的 `fixed_effects_master_time.ipynb`、`fixed_effects_master_entity.ipynb`、`fixed_effects_master_both.ipynb`。
-
-- `2 固定效应模型/legacy_outputs/FE_OUTPUT/*`
-- `2 固定效应模型/legacy_outputs/outputs_lancet_fe/*`
-  - 早期没有模型后缀的固定效应导出文件。
-  - 为避免与当前 `time / entity / both` 三套结果混淆，已整体归档到 `legacy_outputs/`。
-
-- `3 单固定效应模型/singal.ipynb`
-  - 原始文件名版本已归档。
-  - 当前工作区内已改名为 `0 初始待办记录.ipynb`。
-
-- `3 单固定效应模型/outputs_single_species_fe/single_species_FE_long.csv`
-- `3 单固定效应模型/outputs_single_species_fe/single_species_FE_long.xlsx`
-  - 较早版本运行后留下的历史单菌种长表。
-  - 当前现存主线代码明确导出的已是 `single_species_FE_long_FIXED.csv/.xlsx`。
+- 当前仍在主线中直接使用的 notebook、脚本、结果表。
+- 需要公开发布的 dashboard 页面。
+- 原始数据主表。
 
 ## 说明
 
-`bakeup` 是当前项目中的归档约定。后续如果还要“删除”文件，优先移动到这里，而不是直接移除。
+`bakeup` 是这个项目已经采用的归档约定。后续如果还要“删文件”，默认先判断是否应该归档到这里，而不是直接移除。

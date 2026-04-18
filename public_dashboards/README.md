@@ -1,86 +1,62 @@
 # public_dashboards
 
-这个目录是 dashboard 的公开发布层，用来给 GitHub Pages 提供稳定入口。
+这个目录是项目对外展示层，只存放适合公开访问的静态页面与发布快照，不承担研究过程中的中间结果整理职责。
 
-- 研究目录继续保留在 `2 固定效应模型/`
-- 对外页面统一从 `public_dashboards/` 发布
+## 这个目录和研究目录怎么分工
 
-## 在线地址
+- `2 固定效应模型/`
+  - 保留分析过程、原始构建产物和研究侧 dashboard。
+- `4 贝叶斯分析/`
+  - 保留贝叶斯结果与汇总表。
+- `public_dashboards/`
+  - 提供稳定访问入口、公开发布包和历史 release 快照。
 
-- GitHub 仓库：`https://github.com/wuf24/env_health`
-- GitHub Pages 首页：`https://wuf24.github.io/env_health/`
-- 最新版 dashboard：首页：`https://wuf24.github.io/env_health/latest/index.html`
-- 最新版 Lancet 子页：`https://wuf24.github.io/env_health/latest/results_dashboard_lancet.html`
-- 最新版矩阵页：`https://wuf24.github.io/env_health/latest/results_dashboard_matrix.html`
-- 旧版 12 模型：首页：`https://wuf24.github.io/env_health/legacy-12models/index.html`
-- 旧版 12 模型 Lancet 子页：`https://wuf24.github.io/env_health/legacy-12models/results_dashboard_legacy_12models_lancet.html`
-- 旧版 12 模型矩阵页：`https://wuf24.github.io/env_health/legacy-12models/results_dashboard_legacy_12models_matrix.html`
+## 当前主要 bundle
 
-## 当前发布结构
+- `latest/`
+  - 当前主线 FE exhaustive dashboard。
+- `legacy-12models/`
+  - 旧版 12 模型对照 dashboard。
+- `bayes-analysis/`
+  - 贝叶斯辅助分析 dashboard。
+- `releases/`
+  - 带时间戳的历史发布快照。
+- `index.html`
+  - 发布首页，聚合各 bundle 的入口。
+- `manifest.json`
+  - 首页和 bundle 元信息。
+- `.nojekyll`
+  - GitHub Pages 所需的保留文件，虽然是空文件，但不能删除。
 
-```text
-public_dashboards/
-  index.html
-  manifest.json
-  latest/
-  legacy-12models/
-  releases/<timestamp>/
-```
+## 常用命令
 
-- `latest/` 始终指向当前最新版
-- `legacy-12models/` 始终指向旧版 12 模型备份
-- `releases/<timestamp>/` 保留历史快照，方便回看
-
-## 以后怎么更新
-
-建议一直在本地安全分支 `public-main` 上更新，然后把它推到远程 `main`。
-
-1. 切到安全发布分支：
+重新构建并发布：
 
 ```bash
-git checkout public-main
+python -X utf8 tools/deploy_public_dashboards.py
 ```
 
-2. 如果 dashboard 逻辑或结果有变，重新生成公开页面：
+只发布已有 HTML，不重跑上游 builder：
+
+```bash
+python -X utf8 tools/deploy_public_dashboards.py --skip-build
+```
+
+保留更多历史 release：
 
 ```bash
 python -X utf8 tools/deploy_public_dashboards.py --retain-releases 12
 ```
 
-如果只是重发当前已有 HTML，不重跑上游 builder：
+## 上游来源
 
-```bash
-python -X utf8 tools/deploy_public_dashboards.py --skip-build --retain-releases 12
-```
+- FE 主 dashboard：`tools/build_results_dashboard.py`
+- 贝叶斯 dashboard：`tools/build_bayes_analysis_dashboard.py`
+- 旧版 12 模型 dashboard：`2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py`
 
-3. 提交本次更新：
+## 发布与维护提醒
 
-```bash
-git add .
-git commit -m "Update dashboards"
-```
-
-4. 推到 GitHub：
-
-```bash
-git push origin public-main:main
-```
-
-5. 等 GitHub Actions 跑完后，到这里查看：
-
-- Actions：`https://github.com/wuf24/env_health/actions`
-- Pages 首页：`https://wuf24.github.io/env_health/`
-
-## 相关文件
-
-- 公开站入口页：`public_dashboards/index.html`
-- 自动部署脚本：`tools/deploy_public_dashboards.py`
-- GitHub Pages workflow：`.github/workflows/deploy-github-pages.yml`
-- latest 页面构建入口：`tools/build_results_dashboard.py`
-- legacy 页面构建入口：`2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py`
-
-## 安全提醒
-
-- 不要把本地内部历史分支 `main` 直接推到 GitHub。
-- 对外发布只推 `public-main:main`。
-- 原始输入数据 `amr_rate.csv`、`climate_social_eco.csv` 和 `bakeup/.../raw_inputs/` 已加入忽略规则，不应进入公开仓库。
+- 建议通过 GitHub Actions 发布，而不是手工维护静态页面分支。
+- 仓库中的页面默认使用相对链接，可直接部署到项目子路径。
+- GitHub Pages 面向公开访问，复制进来的数据和页面应默认视为可公开内容。
+- `latest/`、`legacy-12models/`、`bayes-analysis/` 会覆盖到当前稳定版本；需要保留历史状态时，应看 `releases/<timestamp>/`。

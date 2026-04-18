@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-17 22:18:03",
-  "release_tag": "20260417-221803",
+  "generated_at": "2026-04-18 23:41:20",
+  "release_tag": "20260418-234120",
   "public_dir": "public_dashboards",
   "bundles": [
     {
@@ -8,8 +8,8 @@
       "slug": "latest",
       "description": "全空间 exhaustive 搜索结果，包含首页、Lancet 子页和横向矩阵。",
       "scope_note": "当前主线发布版本，直接读取 exhaustive_* 结果。",
-      "generated_at": "2026-04-17 22:18:03",
-      "release_tag": "20260417-221803",
+      "generated_at": "2026-04-18 23:41:20",
+      "release_tag": "20260418-234120",
       "source_dir": "2 固定效应模型",
       "builder_script": "tools/build_results_dashboard.py",
       "files": {
@@ -18,18 +18,40 @@
         "lancet": "results_dashboard_lancet.html",
         "matrix": "results_dashboard_matrix.html"
       },
+      "links": [
+        {
+          "label": "Open home",
+          "target": "index.html",
+          "tone": "primary"
+        },
+        {
+          "label": "Lancet subpage",
+          "target": "results_dashboard_lancet.html",
+          "tone": ""
+        },
+        {
+          "label": "Matrix view",
+          "target": "results_dashboard_matrix.html",
+          "tone": ""
+        },
+        {
+          "label": "metadata.json",
+          "target": "metadata.json",
+          "tone": "ghost"
+        }
+      ],
       "stable_dir": "public_dashboards/latest",
-      "release_dir": "public_dashboards/releases/20260417-221803/latest",
+      "release_dir": "public_dashboards/releases/20260418-234120/latest",
       "stable_home": "latest/index.html",
-      "release_home": "releases/20260417-221803/latest/index.html"
+      "release_home": "releases/20260418-234120/latest/index.html"
     },
     {
       "label": "Legacy 12-Model Dashboard",
       "slug": "legacy-12models",
       "description": "旧版 4 套人工方案 × 3 种固定效应，共 12 个模型的三页式备份。",
       "scope_note": "用于和当前 exhaustive 版并排对照的历史快照。",
-      "generated_at": "2026-04-17 22:18:03",
-      "release_tag": "20260417-221803",
+      "generated_at": "2026-04-18 23:41:20",
+      "release_tag": "20260418-234120",
       "source_dir": "2 固定效应模型/backups/legacy_12models_dashboard_20260417",
       "builder_script": "2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py",
       "files": {
@@ -38,10 +60,72 @@
         "lancet": "results_dashboard_legacy_12models_lancet.html",
         "matrix": "results_dashboard_legacy_12models_matrix.html"
       },
+      "links": [
+        {
+          "label": "Open home",
+          "target": "index.html",
+          "tone": "primary"
+        },
+        {
+          "label": "Lancet subpage",
+          "target": "results_dashboard_legacy_12models_lancet.html",
+          "tone": ""
+        },
+        {
+          "label": "Matrix view",
+          "target": "results_dashboard_legacy_12models_matrix.html",
+          "tone": ""
+        },
+        {
+          "label": "metadata.json",
+          "target": "metadata.json",
+          "tone": "ghost"
+        }
+      ],
       "stable_dir": "public_dashboards/legacy-12models",
-      "release_dir": "public_dashboards/releases/20260417-221803/legacy-12models",
+      "release_dir": "public_dashboards/releases/20260418-234120/legacy-12models",
       "stable_home": "legacy-12models/index.html",
-      "release_home": "releases/20260417-221803/legacy-12models/index.html"
+      "release_home": "releases/20260418-234120/legacy-12models/index.html"
+    },
+    {
+      "label": "Bayesian Analysis Dashboard",
+      "slug": "bayes-analysis",
+      "description": "Bayesian model-grid dashboard with one-page interpretation plus downloadable summaries and diagnostics.",
+      "scope_note": "Tracks the six Bayesian variants and publishes the CSV summaries alongside the page.",
+      "generated_at": "2026-04-18 23:41:20",
+      "release_tag": "20260418-234120",
+      "source_dir": "public_dashboards/bayes-analysis",
+      "builder_script": "tools/build_bayes_analysis_dashboard.py",
+      "files": {
+        "home": "index.html",
+        "directory_index": "index.html"
+      },
+      "links": [
+        {
+          "label": "Open home",
+          "target": "index.html",
+          "tone": "primary"
+        },
+        {
+          "label": "Primary summary CSV",
+          "target": "data/focus_primary_summary.csv",
+          "tone": ""
+        },
+        {
+          "label": "Variant bridge CSV",
+          "target": "data/focus_variant_bridge_summary.csv",
+          "tone": ""
+        },
+        {
+          "label": "Diagnostics CSV",
+          "target": "data/combined_diagnostics.csv",
+          "tone": "ghost"
+        }
+      ],
+      "stable_dir": "public_dashboards/bayes-analysis",
+      "release_dir": "public_dashboards/releases/20260418-234120/bayes-analysis",
+      "stable_home": "bayes-analysis/index.html",
+      "release_home": "releases/20260418-234120/bayes-analysis/index.html"
     }
   ]
 }

@@ -18,6 +18,13 @@ RELEASES_DIR = PUBLIC_DIR / "releases"
 
 
 @dataclass(frozen=True)
+class BundleLink:
+    label: str
+    target: str
+    tone: str = ""
+
+
+@dataclass(frozen=True)
 class DashboardBundle:
     slug: str
     label: str
@@ -26,6 +33,9 @@ class DashboardBundle:
     source_dir: Path
     builder_script: Path
     files: dict[str, str]
+    links: tuple[BundleLink, ...]
+    copy_paths: tuple[str, ...] = ()
+    write_metadata_file: bool = True
 
 
 LATEST_BUNDLE = DashboardBundle(
@@ -40,6 +50,12 @@ LATEST_BUNDLE = DashboardBundle(
         "lancet": "results_dashboard_lancet.html",
         "matrix": "results_dashboard_matrix.html",
     },
+    links=(
+        BundleLink(label="Open home", target="index.html", tone="primary"),
+        BundleLink(label="Lancet subpage", target="results_dashboard_lancet.html"),
+        BundleLink(label="Matrix view", target="results_dashboard_matrix.html"),
+        BundleLink(label="metadata.json", target="metadata.json", tone="ghost"),
+    ),
 )
 
 LEGACY_BUNDLE = DashboardBundle(
@@ -59,6 +75,32 @@ LEGACY_BUNDLE = DashboardBundle(
         "lancet": "results_dashboard_legacy_12models_lancet.html",
         "matrix": "results_dashboard_legacy_12models_matrix.html",
     },
+    links=(
+        BundleLink(label="Open home", target="index.html", tone="primary"),
+        BundleLink(label="Lancet subpage", target="results_dashboard_legacy_12models_lancet.html"),
+        BundleLink(label="Matrix view", target="results_dashboard_legacy_12models_matrix.html"),
+        BundleLink(label="metadata.json", target="metadata.json", tone="ghost"),
+    ),
+)
+
+BAYES_BUNDLE = DashboardBundle(
+    slug="bayes-analysis",
+    label="Bayesian Analysis Dashboard",
+    description="Bayesian model-grid dashboard with one-page interpretation plus downloadable summaries and diagnostics.",
+    scope_note="Tracks the six Bayesian variants and publishes the CSV summaries alongside the page.",
+    source_dir=PUBLIC_DIR / "bayes-analysis",
+    builder_script=ROOT / "tools" / "build_bayes_analysis_dashboard.py",
+    files={
+        "home": "index.html",
+    },
+    links=(
+        BundleLink(label="Open home", target="index.html", tone="primary"),
+        BundleLink(label="Primary summary CSV", target="data/focus_primary_summary.csv"),
+        BundleLink(label="Variant bridge CSV", target="data/focus_variant_bridge_summary.csv"),
+        BundleLink(label="Diagnostics CSV", target="data/combined_diagnostics.csv", tone="ghost"),
+    ),
+    copy_paths=("data", "metadata.json"),
+    write_metadata_file=False,
 )
 
 
@@ -80,6 +122,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-legacy",
         action="store_true",
         help="Do not publish the legacy 12-model dashboard bundle.",
+    )
+    parser.add_argument(
+        "--skip-bayes",
+        action="store_true",
+        help="Do not publish the Bayesian analysis dashboard bundle.",
     )
     parser.add_argument(
         "--release-tag",
@@ -108,8 +155,28 @@ def run_builder(script_path: Path) -> None:
     )
 
 
+def same_path(source: Path, target: Path) -> bool:
+    try:
+        return source.resolve() == target.resolve()
+    except FileNotFoundError:
+        return False
+
+
+def copy_path(source: Path, target: Path) -> None:
+    if same_path(source, target):
+        return
+    if source.is_dir():
+        if target.exists():
+            shutil.rmtree(target)
+        shutil.copytree(source, target)
+        return
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, target)
+
+
 def ensure_sources(bundle: DashboardBundle) -> None:
-    missing = [name for name in bundle.files.values() if not (bundle.source_dir / name).exists()]
+    required_paths = list(bundle.files.values()) + list(bundle.copy_paths)
+    missing = [name for name in required_paths if not (bundle.source_dir / name).exists()]
     if missing:
         formatted = ", ".join(missing)
         raise FileNotFoundError(f"Missing dashboard files for {bundle.slug}: {formatted}")
@@ -121,11 +188,14 @@ def copy_bundle(bundle: DashboardBundle, destination: Path, release_tag: str, ge
     for page_key, filename in bundle.files.items():
         source = bundle.source_dir / filename
         target = destination / filename
-        shutil.copy2(source, target)
+        copy_path(source, target)
         copied[page_key] = filename
         if page_key == "home":
-            shutil.copy2(source, destination / "index.html")
+            copy_path(source, destination / "index.html")
             copied["directory_index"] = "index.html"
+
+    for rel_path in bundle.copy_paths:
+        copy_path(bundle.source_dir / rel_path, destination / rel_path)
 
     metadata = {
         "label": bundle.label,
@@ -137,11 +207,16 @@ def copy_bundle(bundle: DashboardBundle, destination: Path, release_tag: str, ge
         "source_dir": rel(bundle.source_dir),
         "builder_script": rel(bundle.builder_script),
         "files": copied,
+        "links": [
+            {"label": link.label, "target": link.target, "tone": link.tone}
+            for link in bundle.links
+        ],
     }
-    (destination / "metadata.json").write_text(
-        json.dumps(metadata, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
+    if bundle.write_metadata_file:
+        (destination / "metadata.json").write_text(
+            json.dumps(metadata, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
     return metadata
 
 
@@ -164,6 +239,37 @@ def bundle_card(bundle: dict[str, Any], base_href: str) -> str:
           <a class="btn" href="{escape(lancet_href)}">Lancet 子页</a>
           <a class="btn" href="{escape(matrix_href)}">横向矩阵</a>
           <a class="btn ghost" href="{escape(metadata_href)}">metadata.json</a>
+        </div>
+      </section>
+    """
+
+
+def render_bundle_links(bundle: dict[str, Any], base_href: str) -> str:
+    buttons: list[str] = []
+    for link in bundle["links"]:
+        href = f"{base_href}/{bundle['slug']}/{link['target']}"
+        tone = str(link.get("tone", "")).strip()
+        classes = "btn"
+        if tone:
+            classes += f" {tone}"
+        buttons.append(
+            f'<a class="{escape(classes)}" href="{escape(href)}">{escape(link["label"])}</a>'
+        )
+    return "".join(buttons)
+
+
+def bundle_card(bundle: dict[str, Any], base_href: str) -> str:
+    return f"""
+      <section class="panel">
+        <div class="eyebrow">{escape(bundle['slug'])}</div>
+        <h2>{escape(bundle['label'])}</h2>
+        <p>{escape(bundle['description'])}</p>
+        <div class="meta">
+          <span>Scope: {escape(bundle['scope_note'])}</span>
+          <span>Builder: <code>{escape(bundle['builder_script'])}</code></span>
+        </div>
+        <div class="links">
+          {render_bundle_links(bundle, base_href)}
         </div>
       </section>
     """
@@ -610,6 +716,7 @@ def build_public_readme(manifest: dict[str, Any]) -> str:
         "  manifest.json",
         "  latest/",
         "  legacy-12models/",
+        "  bayes-analysis/",
         f"  releases/{manifest['release_tag']}/",
         "```",
         "",
@@ -728,8 +835,12 @@ def main() -> None:
         bundles.append(LATEST_BUNDLE)
     if not args.skip_legacy:
         bundles.append(LEGACY_BUNDLE)
+    if not args.skip_bayes:
+        bundles.append(BAYES_BUNDLE)
     if not bundles:
-        raise SystemExit("Nothing to publish. Remove --skip-latest/--skip-legacy or select a bundle.")
+        raise SystemExit(
+            "Nothing to publish. Remove --skip-latest/--skip-legacy/--skip-bayes or select a bundle."
+        )
 
     if not args.skip_build:
         for bundle in bundles:

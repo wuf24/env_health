@@ -1,5 +1,6 @@
 .codex_http*.log
 .edge-headless/
+.pytensor_cache/
 .DS_Store
 Thumbs.db
 
@@ -13,6 +14,7 @@ venv/
 .tmp_bayes/
 
 public_dashboards/releases/
+bakeup/cleanup_*/
 
 # Raw inputs: keep local only, never publish to GitHub
 amr_rate.csv
