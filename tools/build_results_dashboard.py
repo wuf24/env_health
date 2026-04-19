@@ -13,6 +13,9 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_DIR = ROOT / "2 固定效应模型"
 RESULT_DIR = MODEL_DIR / "results"
+COUNTERFACTUAL_SELECTED_MODELS = (
+    ROOT / "5 反事实推演" / "results" / "AMR_AGG" / "model_screening" / "selected_models.csv"
+)
 OUTPUT_HOME_HTML = MODEL_DIR / "results_dashboard.html"
 OUTPUT_LANCET_HTML = MODEL_DIR / "results_dashboard_lancet.html"
 OUTPUT_MATRIX_HTML = MODEL_DIR / "results_dashboard_matrix.html"
@@ -65,6 +68,17 @@ def load_csv(name: str) -> pd.DataFrame:
     return pd.read_csv(RESULT_DIR / name, encoding="utf-8-sig")
 
 
+def dedupe_preserve_order(items: list[str]) -> list[str]:
+    seen: set[str] = set()
+    out: list[str] = []
+    for item in items:
+        if item in seen:
+            continue
+        seen.add(item)
+        out.append(item)
+    return out
+
+
 def parse_family_selection(value: Any) -> dict[str, str]:
     text = clean_value(value)
     if not text or text == "manual_curated":
@@ -98,6 +112,66 @@ def build_breakdown(series: pd.Series) -> list[dict[str, Any]]:
     ]
 
 
+def build_signal_summary(df: pd.DataFrame, label: str) -> dict[str, Any]:
+    count = int(df.shape[0])
+    return {
+        "label": label,
+        "count": count,
+        "avg_score": clean_value(df["performance_score"].mean()) if count else None,
+        "r1_sig_count": int((df["p_R1xday"] < 0.05).sum()) if count else 0,
+        "amc_sig_count": int((df["p_AMC"] < 0.05).sum()) if count else 0,
+        "both_positive_count": int(((df["coef_R1xday"] > 0) & (df["coef_AMC"] > 0)).sum()) if count else 0,
+    }
+
+
+def load_counterfactual_selection() -> pd.DataFrame:
+    if not COUNTERFACTUAL_SELECTED_MODELS.exists():
+        return pd.DataFrame()
+    return pd.read_csv(COUNTERFACTUAL_SELECTED_MODELS, encoding="utf-8-sig")
+
+
+def build_counterfactual_force_include(
+    ranking: pd.DataFrame, selected_models: pd.DataFrame
+) -> dict[str, Any]:
+    if selected_models.empty or "scheme_id" not in selected_models.columns:
+        return {
+            "selected_roles": [],
+            "selected_scheme_ids": [],
+            "forced_model_ids": [],
+        }
+
+    ranking_model_ids = set(ranking["model_id"].astype(str))
+    selected_roles = []
+    selected_scheme_ids: list[str] = []
+    for row in selected_models.to_dict(orient="records"):
+        scheme_id = clean_value(row.get("scheme_id"))
+        if not scheme_id:
+            continue
+        scheme_text = str(scheme_id)
+        selected_scheme_ids.append(scheme_text)
+        selected_roles.append(
+            {
+                "role_id": clean_value(row.get("role_id")),
+                "role_label": clean_value(row.get("role_label")),
+                "scheme_id": scheme_text,
+                "model_id": clean_value(row.get("model_id")),
+            }
+        )
+
+    forced_model_ids: list[str] = []
+    for scheme_id in dedupe_preserve_order(selected_scheme_ids):
+        for fe_label in FE_ORDER:
+            model_id = f"{scheme_id} | {fe_label}"
+            if model_id in ranking_model_ids:
+                forced_model_ids.append(model_id)
+
+    return {
+        "selected_roles": selected_roles,
+        "selected_scheme_ids": dedupe_preserve_order(selected_scheme_ids),
+        "forced_model_ids": dedupe_preserve_order(forced_model_ids),
+    }
+
+
 def parse_lancet_tables(df: pd.DataFrame, model_ids: set[str]) -> dict[str, list[dict[str, Any]]]:
     tables: dict[str, list[dict[str, Any]]] = {}
     for row in df[df["model_id"].isin(model_ids)].to_dict(orient="records"):
@@ -124,6 +198,30 @@ def parse_lancet_tables(df: pd.DataFrame, model_ids: set[str]) -> dict[str, list
     return tables
 
 
+def build_matrix_rows(
+    horizontal: pd.DataFrame,
+    matrix_model_ids: list[str],
+    ranking_map: dict[str, dict[str, Any]],
+    summary_map: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    horizontal_index = horizontal.set_index("metric")
+    matrix_rows: list[dict[str, Any]] = []
+    for metric in [clean_value(item) for item in horizontal["metric"].tolist()]:
+        source_row = horizontal_index.loc[metric] if metric in horizontal_index.index else None
+        values: dict[str, Any] = {}
+        for model_id in matrix_model_ids:
+            value = None
+            if source_row is not None and model_id in source_row.index:
+                value = clean_value(source_row.get(model_id))
+            if value is None:
+                value = summary_map.get(model_id, {}).get(metric)
+            if value is None:
+                value = ranking_map.get(model_id, {}).get(metric)
+            values[model_id] = clean_value(value)
+        matrix_rows.append({"metric": metric, "values": values})
+    return matrix_rows
+
+
 def build_payload() -> dict[str, Any]:
     ranking = load_csv("exhaustive_model_ranking.csv")
     summary = load_csv("exhaustive_model_summary.csv")
@@ -131,22 +229,31 @@ def build_payload() -> dict[str, Any]:
     horizontal = load_csv("exhaustive_model_horizontal_compare_top200.csv")
     lancet = load_csv("exhaustive_model_lancet_tables.csv")
     scheme_catalog = load_csv("exhaustive_scheme_catalog.csv")
+    counterfactual_selected = load_counterfactual_selection()
+    counterfactual_force = build_counterfactual_force_include(ranking, counterfactual_selected)
 
     display_ids = list(
         dict.fromkeys(
             ranking.head(DISPLAY_RANK_LIMIT)["model_id"].tolist()
+            + counterfactual_force["forced_model_ids"]
             + ranking.loc[ranking["scheme_source"] == "curated", "model_id"].tolist()
         )
     )
     display_id_set = set(display_ids)
 
+    ranking_map = {
+        clean_value(row["model_id"]): {k: clean_value(v) for k, v in row.items()}
+        for row in ranking[ranking["model_id"].isin(display_id_set)].to_dict(orient="records")
+    }
     summary_map = {
         clean_value(row["model_id"]): {k: clean_value(v) for k, v in row.items()}
         for row in summary[summary["model_id"].isin(display_id_set)].to_dict(orient="records")
     }
+    display_ranking = ranking[ranking["model_id"].isin(display_id_set)].sort_values("performance_rank")
+    counterfactual_forced_set = set(counterfactual_force["forced_model_ids"])
 
     ranking_records: list[dict[str, Any]] = []
-    for row in ranking[ranking["model_id"].isin(display_id_set)].sort_values("performance_rank").to_dict(orient="records"):
+    for row in display_ranking.to_dict(orient="records"):
         rec = {k: clean_value(v) for k, v in row.items()}
         full = summary_map[rec["model_id"]]
         family_map = parse_family_selection(full.get("family_selection"))
@@ -186,6 +293,7 @@ def build_payload() -> dict[str, Any]:
                 "family_pairs": family_pairs,
                 "temperature_proxy": temperature_proxy,
                 "pollution_proxy": pollution_proxy,
+                "counterfactual_anchor": rec["model_id"] in counterfactual_forced_set,
                 "search_text": " ".join(str(item) for item in search_parts if item).lower(),
             }
         )
@@ -206,23 +314,17 @@ def build_payload() -> dict[str, Any]:
     for model_id in list(vif_map):
         vif_map[model_id] = vif_map[model_id][:DISPLAY_VIF_TOP_N]
 
-    matrix_model_ids = [col for col in horizontal.columns if col != "metric"]
-    matrix_rows = []
-    for row in horizontal.to_dict(orient="records"):
-        matrix_rows.append(
-            {
-                "metric": clean_value(row.get("metric")),
-                "values": {model_id: clean_value(row.get(model_id)) for model_id in matrix_model_ids},
-            }
-        )
+    matrix_model_ids = display_ids
+    matrix_rows = build_matrix_rows(horizontal, matrix_model_ids, ranking_map, summary_map)
 
-    top200_summary = summary.sort_values("performance_rank").head(200)
+    dashboard_summary = summary[summary["model_id"].isin(display_id_set)].sort_values("performance_rank")
     family_counters: dict[str, Counter[str]] = defaultdict(Counter)
-    for item in top200_summary["family_selection"]:
+    for item in dashboard_summary["family_selection"]:
         mapping = parse_family_selection(item)
         for family in FAMILY_ORDER:
             family_counters[family][mapping.get(family, "skip")] += 1
     family_summary = []
+    family_total = max(int(dashboard_summary.shape[0]), 1)
     for family in FAMILY_ORDER:
         if not family_counters[family]:
             continue
@@ -233,8 +335,8 @@ def build_payload() -> dict[str, Any]:
                     {
                         "label": name if name != "skip" else "未纳入",
                         "count": int(count),
-                        "share": count / 200,
-                        "share_text": share_text(int(count), 200),
+                        "share": count / family_total,
+                        "share_text": share_text(int(count), family_total),
                     }
                     for name, count in family_counters[family].most_common(4)
                 ],
@@ -258,16 +360,8 @@ def build_payload() -> dict[str, Any]:
     signal_windows = []
     for top_n in [20, 50, 100, 200]:
         top = ranking.head(top_n)
-        signal_windows.append(
-            {
-                "label": f"Top {top_n}",
-                "count": top_n,
-                "avg_score": clean_value(top["performance_score"].mean()),
-                "r1_sig_count": int((top["p_R1xday"] < 0.05).sum()),
-                "amc_sig_count": int((top["p_AMC"] < 0.05).sum()),
-                "both_positive_count": int(((top["coef_R1xday"] > 0) & (top["coef_AMC"] > 0)).sum()),
-            }
-        )
+        signal_windows.append(build_signal_summary(top, f"Top {top_n}"))
+    dashboard_signal_summary = build_signal_summary(display_ranking, "Dashboard 展示集")
 
     curated_work = ranking.merge(
         summary[["model_id", "scheme_note", "variables", "n_vars"]],
@@ -301,17 +395,23 @@ def build_payload() -> dict[str, Any]:
         "source_prefix": "exhaustive_*",
         "scope_note": (
             f"全量统计来自 {len(ranking):,} 个 exhaustive 模型；"
-            f"页面明细聚焦 Top {DISPLAY_RANK_LIMIT} + 全部 curated，共 {len(ranking_records):,} 个模型。"
+            f"页面展示集以 Top {DISPLAY_RANK_LIMIT} 为基础，额外强制纳入反事实入选方案展开后的 "
+            f"{len(counterfactual_force['forced_model_ids']):,} 个 FE 模型，并保留全部 curated，共 {len(ranking_records):,} 个模型。"
         ),
         "total_models_all": int(len(ranking)),
         "total_schemes_all": int(scheme_catalog["scheme_id"].nunique()),
         "dashboard_models": int(len(ranking_records)),
         "dashboard_rank_limit": DISPLAY_RANK_LIMIT,
+        "dashboard_scope_label": "Top 200 基础窗口 + 反事实入选方案三类 FE + 全部 curated",
+        "dashboard_required_models": int(len(counterfactual_force["forced_model_ids"])),
+        "dashboard_required_roles": int(len(counterfactual_force["selected_roles"])),
+        "dashboard_required_schemes": int(len(counterfactual_force["selected_scheme_ids"])),
+        "dashboard_required_model_ids": counterfactual_force["forced_model_ids"],
         "total_curated_models": int((ranking["scheme_source"] == "curated").sum()),
         "total_systematic_models": int((ranking["scheme_source"] == "systematic").sum()),
         "source_breakdown_all": build_breakdown(ranking["scheme_source"]),
         "fe_breakdown_all": build_breakdown(ranking["fe_label"]),
-        "fe_breakdown_top200": build_breakdown(ranking.head(200)["fe_label"]),
+        "fe_breakdown_top200": build_breakdown(display_ranking["fe_label"]),
         "top_model": {
             "model_id": clean_value(top_row.get("model_id")),
             "performance_score": clean_value(top_row.get("performance_score")),
@@ -322,6 +422,7 @@ def build_payload() -> dict[str, Any]:
             "performance_score": clean_value(best_curated.get("performance_score")),
         },
         "family_summary_top200": family_summary,
+        "dashboard_signal_summary": dashboard_signal_summary,
         "variable_frequency_top100": variable_frequency,
         "signal_windows": signal_windows,
         "curated_highlights": curated_highlights,
@@ -507,7 +608,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
           <div class="lancet-stack" id="lancetGallery"></div>
         </section>
         <section class="card hidden" id="matrixSection">
-          <div class="section-head"><div><h2>横向比较矩阵</h2><p>矩阵来自 <code>exhaustive_model_horizontal_compare_top200.csv</code>，这里只比较进入 Top 200 的模型。</p></div><div class="chips"><span class="chip soft" id="matrixCountChip"></span></div></div>
+          <div class="section-head"><div><h2>横向比较矩阵</h2><p>矩阵以 <code>exhaustive_model_horizontal_compare_top200.csv</code> 为基础，并为反事实锚点与 curated 补齐额外列，所以这里显示的是完整 dashboard 展示集。</p></div><div class="chips"><span class="chip soft" id="matrixCountChip"></span></div></div>
           <div class="table-wrap windowed"><table class="matrix" id="matrixTable"></table></div>
         </section>
       </main>
@@ -535,7 +636,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
     const heroItems = [
       ['全量模型数', data.total_models_all, '来自 exhaustive_model_ranking.csv'],
       ['方案数量', data.total_schemes_all, 'systematic + curated 的唯一 scheme_id'],
-      ['首页明细范围', data.dashboard_models, `Top ${data.dashboard_rank_limit} + 全部 curated`],
+      ['首页明细范围', data.dashboard_models, data.dashboard_scope_label || `Top ${data.dashboard_rank_limit} + curated`],
       ['最佳人工方案', data.best_curated && data.best_curated.performance_rank ? `#${data.best_curated.performance_rank}` : '—', data.best_curated && data.best_curated.model_id ? data.best_curated.model_id : '当前未找到 curated'],
     ];
     const sortDefaults = {
@@ -711,16 +812,16 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
     function renderBatchInsight() {
       const target = document.getElementById('batchInsight');
       const top200Year = (data.fe_breakdown_top200 || []).find(item => item.label === 'Province: No / Year: Yes');
-      const topWindow = (data.signal_windows || []).find(item => item.label === 'Top 200');
+      const topWindow = data.dashboard_signal_summary || null;
       const familySnaps = (data.family_summary_top200 || []).slice(0,3).map(group => {
         const first = group.choices && group.choices[0];
         return first ? `<div class="bar-line"><div class="bar-line-head"><span>${html(group.label)}</span><strong>${label(first.label)}</strong></div><div style="font-size:12px;color:var(--muted)">${first.share_text}</div></div>` : '';
       }).join('');
       target.innerHTML = `
         <div class="pick"><div class="chips"><span class="chip soft">全量结构</span></div><div style="font-size:12px;color:var(--muted)">systematic ${data.total_systematic_models} · curated ${data.total_curated_models}</div></div>
-        <div class="pick"><div class="chips"><span class="chip soft">Top 200 FE</span></div><div style="font-size:12px;color:var(--muted)">Year FE only 占比 ${top200Year ? top200Year.share_text : '—'}</div></div>
-        <div class="pick"><div class="chips"><span class="chip soft">Top 200 信号</span></div><div style="font-size:12px;color:var(--muted)">R1xday 显著 ${topWindow ? `${topWindow.r1_sig_count}/200` : '—'} · AMC 显著 ${topWindow ? `${topWindow.amc_sig_count}/200` : '—'}</div></div>
-        <div class="pick"><div class="chips"><span class="chip soft">Top 家族偏好</span></div>${familySnaps || '<div style="font-size:12px;color:var(--muted)">暂无 family 统计</div>'}</div>
+        <div class="pick"><div class="chips"><span class="chip soft">展示集 FE</span></div><div style="font-size:12px;color:var(--muted)">Year FE only 占比 ${top200Year ? top200Year.share_text : '—'} · 反事实锚点 ${data.dashboard_required_models || 0} 个</div></div>
+        <div class="pick"><div class="chips"><span class="chip soft">展示集信号</span></div><div style="font-size:12px;color:var(--muted)">R1xday 显著 ${topWindow ? `${topWindow.r1_sig_count}/${topWindow.count}` : '—'} · AMC 显著 ${topWindow ? `${topWindow.amc_sig_count}/${topWindow.count}` : '—'}</div></div>
+        <div class="pick"><div class="chips"><span class="chip soft">展示集家族偏好</span></div>${familySnaps || '<div style="font-size:12px;color:var(--muted)">暂无 family 统计</div>'}</div>
       `;
     }
 
@@ -729,7 +830,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       const table = document.getElementById('rankingTable');
       if (!list.length) { table.innerHTML = '<tbody><tr><td class="empty">当前筛选条件下没有模型。</td></tr></tbody>'; return; }
       const sortHead = (key, labelText) => `<button class="sort-btn ${state.sortKey === key ? `active ${state.sortDir}` : ''}" data-sort="${key}" title="点击按 ${labelText} 排序"><span>${labelText}</span><span class="arrows"><span class="up">▲</span><span class="down">▼</span></span></button>`;
-      table.innerHTML = `<thead><tr><th>${sortHead('performance_rank','Rank')}</th><th>${sortHead('scheme_id','Scheme')}</th><th>Proxy Mix</th><th>${sortHead('performance_score','Score')}</th><th>${sortHead('coef_R1xday','R1xday')}</th><th>${sortHead('coef_AMC','AMC')}</th><th>${sortHead('r2_model','R²')}</th><th>${sortHead('max_vif_z','VIF(z)')}</th></tr></thead><tbody>${list.map(row => `<tr data-model="${html(row.model_id)}" class="${row.model_id === state.selected ? 'on' : ''}"><td><span class="badge${badge(row.performance_rank)}">#${row.performance_rank}</span></td><td><div style="font-weight:700;line-height:1.5">${label(row.scheme_id || row.model_id)}</div><div class="chips" style="margin-top:6px"><span class="chip ${sourceCls(row.source_group)}">${html(row.source_group)}</span><span class="chip soft">${html(row.fe_label)}</span></div></td><td><div>${label(row.temperature_proxy)}</div><div style="font-size:12px;color:var(--muted)">${label(row.pollution_proxy)} · ${html(row.n_vars_label)}</div></td><td class="score">${num(row.performance_score)}</td><td><div class="${ccls(row.coef_R1xday)}">${num(row.coef_R1xday,4)}${stars(row.p_R1xday)}</div><div class="${pcls(row.p_R1xday)}" style="font-size:12px">p=${num(row.p_R1xday,4)}</div></td><td><div class="${ccls(row.coef_AMC)}">${num(row.coef_AMC,4)}${stars(row.p_AMC)}</div><div class="${pcls(row.p_AMC)}" style="font-size:12px">p=${num(row.p_AMC,4)}</div></td><td>${num(row.r2_model)}</td><td>${num(row.max_vif_z)}</td></tr>`).join('')}</tbody>`;
+      table.innerHTML = `<thead><tr><th>${sortHead('performance_rank','Rank')}</th><th>${sortHead('scheme_id','Scheme')}</th><th>Proxy Mix</th><th>${sortHead('performance_score','Score')}</th><th>${sortHead('coef_R1xday','R1xday')}</th><th>${sortHead('coef_AMC','AMC')}</th><th>${sortHead('r2_model','R²')}</th><th>${sortHead('max_vif_z','VIF(z)')}</th></tr></thead><tbody>${list.map(row => `<tr data-model="${html(row.model_id)}" class="${row.model_id === state.selected ? 'on' : ''}"><td><span class="badge${badge(row.performance_rank)}">#${row.performance_rank}</span></td><td><div style="font-weight:700;line-height:1.5">${label(row.scheme_id || row.model_id)}</div><div class="chips" style="margin-top:6px"><span class="chip ${sourceCls(row.source_group)}">${html(row.source_group)}</span><span class="chip soft">${html(row.fe_label)}</span>${row.counterfactual_anchor ? '<span class="chip scheme">反事实锚点</span>' : ''}</div></td><td><div>${label(row.temperature_proxy)}</div><div style="font-size:12px;color:var(--muted)">${label(row.pollution_proxy)} · ${html(row.n_vars_label)}</div></td><td class="score">${num(row.performance_score)}</td><td><div class="${ccls(row.coef_R1xday)}">${num(row.coef_R1xday,4)}${stars(row.p_R1xday)}</div><div class="${pcls(row.p_R1xday)}" style="font-size:12px">p=${num(row.p_R1xday,4)}</div></td><td><div class="${ccls(row.coef_AMC)}">${num(row.coef_AMC,4)}${stars(row.p_AMC)}</div><div class="${pcls(row.p_AMC)}" style="font-size:12px">p=${num(row.p_AMC,4)}</div></td><td>${num(row.r2_model)}</td><td>${num(row.max_vif_z)}</td></tr>`).join('')}</tbody>`;
       table.querySelectorAll('[data-sort]').forEach(btn => btn.onclick = (event) => { event.stopPropagation(); setSort(btn.dataset.sort); renderAll(false); });
       table.querySelectorAll('tbody tr[data-model]').forEach(tr => tr.onclick = () => { state.selected = tr.dataset.model; renderAll(false); });
     }
@@ -745,7 +846,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       const lancetLink = `results_dashboard_lancet.html#${encodeURIComponent(model.model_id)}`;
       target.innerHTML = `
         <div class="score-strip">
-          <div class="panel"><div class="eyebrow" style="color:var(--muted)">Selected Model</div><h3>${label(model.model_id)}</h3><p style="margin:10px 0 0;color:var(--muted);line-height:1.7">${html(model.scheme_note || '该 systematic 方案来自 family 组合。')}</p><div class="chips" style="margin-top:12px"><span class="chip ${sourceCls(model.source_group)}">${html(model.source_group)}</span><span class="chip">${html(model.fe_label)}</span><span class="chip soft">Rank ${model.performance_rank}</span><span class="chip soft">${html(model.n_vars_label)}</span></div><div class="bar"><span style="width:${pct}%"></span></div></div>
+          <div class="panel"><div class="eyebrow" style="color:var(--muted)">Selected Model</div><h3>${label(model.model_id)}</h3><p style="margin:10px 0 0;color:var(--muted);line-height:1.7">${html(model.scheme_note || '该 systematic 方案来自 family 组合。')}</p><div class="chips" style="margin-top:12px"><span class="chip ${sourceCls(model.source_group)}">${html(model.source_group)}</span><span class="chip">${html(model.fe_label)}</span><span class="chip soft">Rank ${model.performance_rank}</span><span class="chip soft">${html(model.n_vars_label)}</span>${model.counterfactual_anchor ? '<span class="chip scheme">反事实锚点</span>' : ''}</div><div class="bar"><span style="width:${pct}%"></span></div></div>
           <div class="panel"><div class="eyebrow" style="color:var(--muted)">Composite Score</div><div class="big">${num(model.performance_score)}</div><div style="font-size:12px;color:var(--muted);margin-top:8px">core ${num(model.core_signal_score)} · fit ${num(model.fit_score)} · vif ${num(model.vif_score)}</div></div>
         </div>
         <div class="metric-grid">
@@ -995,7 +1096,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       const table = document.getElementById('matrixTable');
       const matrixRows = performanceOrdered(list.filter(row => matrixModelSet.has(row.model_id))).slice(0, state.matrixLimit);
       document.getElementById('matrixCountChip').textContent = `当前显示 ${matrixRows.length} 列 / 命中 ${list.filter(row => matrixModelSet.has(row.model_id)).length} 列`;
-      if (!matrixRows.length) { table.innerHTML = '<tbody><tr><td class="empty">当前筛选条件下，没有进入 Top 200 横向矩阵的数据。</td></tr></tbody>'; return; }
+      if (!matrixRows.length) { table.innerHTML = '<tbody><tr><td class="empty">当前筛选条件下，没有命中 dashboard 展示集矩阵的数据。</td></tr></tbody>'; return; }
       const ids = matrixRows.map(row => row.model_id);
       table.innerHTML = `<thead><tr><th>Metric</th>${ids.map(id => `<th>${label(id)}</th>`).join('')}</tr></thead><tbody>${data.matrix_rows.map(row => `<tr><td>${html(row.metric)}</td>${ids.map(id => { const val = row.values ? row.values[id] : null; return `<td class="${String(row.metric).startsWith('p_') ? pcls(val) : ''}">${short(val)}</td>`; }).join('')}</tr>`).join('')}</tbody>`;
     }

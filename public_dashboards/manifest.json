@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-19 16:05:36",
-  "release_tag": "20260419-160536",
+  "generated_at": "2026-04-19 17:04:13",
+  "release_tag": "20260419-170413",
   "public_dir": "public_dashboards",
   "bundles": [
     {
@@ -8,8 +8,8 @@
       "slug": "latest",
       "description": "全空间 exhaustive 搜索结果，包含首页、Lancet 子页和横向矩阵。",
       "scope_note": "当前主线发布版本，直接读取 exhaustive_* 结果。",
-      "generated_at": "2026-04-19 16:05:36",
-      "release_tag": "20260419-160536",
+      "generated_at": "2026-04-19 17:04:13",
+      "release_tag": "20260419-170413",
       "source_dir": "2 固定效应模型",
       "builder_script": "tools/build_results_dashboard.py",
       "files": {
@@ -41,17 +41,17 @@
         }
       ],
       "stable_dir": "public_dashboards/latest",
-      "release_dir": "public_dashboards/releases/20260419-160536/latest",
+      "release_dir": "public_dashboards/releases/20260419-170413/latest",
       "stable_home": "latest/index.html",
-      "release_home": "releases/20260419-160536/latest/index.html"
+      "release_home": "releases/20260419-170413/latest/index.html"
     },
     {
       "label": "Legacy 12-Model Dashboard",
       "slug": "legacy-12models",
       "description": "旧版 4 套人工方案 × 3 种固定效应，共 12 个模型的三页式备份。",
       "scope_note": "用于和当前 exhaustive 版并排对照的历史快照。",
-      "generated_at": "2026-04-19 16:05:36",
-      "release_tag": "20260419-160536",
+      "generated_at": "2026-04-19 17:04:13",
+      "release_tag": "20260419-170413",
       "source_dir": "2 固定效应模型/backups/legacy_12models_dashboard_20260417",
       "builder_script": "2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py",
       "files": {
@@ -83,17 +83,17 @@
         }
       ],
       "stable_dir": "public_dashboards/legacy-12models",
-      "release_dir": "public_dashboards/releases/20260419-160536/legacy-12models",
+      "release_dir": "public_dashboards/releases/20260419-170413/legacy-12models",
       "stable_home": "legacy-12models/index.html",
-      "release_home": "releases/20260419-160536/legacy-12models/index.html"
+      "release_home": "releases/20260419-170413/legacy-12models/index.html"
     },
     {
       "label": "Bayesian Analysis Dashboard",
       "slug": "bayes-analysis",
       "description": "Bayesian model-grid dashboard with one-page interpretation plus downloadable summaries and diagnostics.",
       "scope_note": "Tracks the six Bayesian variants and publishes the CSV summaries alongside the page.",
-      "generated_at": "2026-04-19 16:05:36",
-      "release_tag": "20260419-160536",
+      "generated_at": "2026-04-19 17:04:13",
+      "release_tag": "20260419-170413",
       "source_dir": "public_dashboards/bayes-analysis",
       "builder_script": "tools/build_bayes_analysis_dashboard.py",
       "files": {
@@ -123,17 +123,17 @@
         }
       ],
       "stable_dir": "public_dashboards/bayes-analysis",
-      "release_dir": "public_dashboards/releases/20260419-160536/bayes-analysis",
+      "release_dir": "public_dashboards/releases/20260419-170413/bayes-analysis",
       "stable_home": "bayes-analysis/index.html",
-      "release_home": "releases/20260419-160536/bayes-analysis/index.html"
+      "release_home": "releases/20260419-170413/bayes-analysis/index.html"
     },
     {
       "label": "Counterfactual Simulation Dashboard",
       "slug": "counterfactual-amr-agg",
       "description": "AMR_AGG 的反事实推演入口，包含模型筛选、推演方程、单模型聚焦分析和分省结果。",
       "scope_note": "基于已筛选固定效应模型开展 counterfactual simulation，并打包 figures、CSV 和写作说明。",
-      "generated_at": "2026-04-19 16:05:36",
-      "release_tag": "20260419-160536",
+      "generated_at": "2026-04-19 17:04:13",
+      "release_tag": "20260419-170413",
       "source_dir": "5 反事实推演/results/AMR_AGG",
       "builder_script": "5 反事实推演/build_counterfactual_dashboard.py",
       "files": {
@@ -163,9 +163,9 @@
         }
       ],
       "stable_dir": "public_dashboards/counterfactual-amr-agg",
-      "release_dir": "public_dashboards/releases/20260419-160536/counterfactual-amr-agg",
+      "release_dir": "public_dashboards/releases/20260419-170413/counterfactual-amr-agg",
       "stable_home": "counterfactual-amr-agg/index.html",
-      "release_home": "releases/20260419-160536/counterfactual-amr-agg/index.html"
+      "release_home": "releases/20260419-170413/counterfactual-amr-agg/index.html"
     }
   ]
 }
