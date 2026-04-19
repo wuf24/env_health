@@ -1,34 +1,26 @@
 # public_dashboards
 
-这个目录是项目对外展示层，只存放适合公开访问的静态页面与发布快照，不承担研究过程中的中间结果整理职责。
+这个目录是 dashboard 的长期发布层。
 
-## 这个目录和研究目录怎么分工
+它和研究目录的职责分开：
 
-- `2 固定效应模型/`
-  - 保留分析过程、原始构建产物和研究侧 dashboard。
-- `4 贝叶斯分析/`
-  - 保留贝叶斯结果与汇总表。
-- `public_dashboards/`
-  - 提供稳定访问入口、公开发布包和历史 release 快照。
+- `2 固定效应模型/` 继续保存分析过程和原始构建产物。
+- `public_dashboards/` 提供稳定链接、发布入口和历史归档。
 
-## 当前主要 bundle
+## 当前结构
 
-- `latest/`
-  - 当前主线 FE exhaustive dashboard。
-- `legacy-12models/`
-  - 旧版 12 模型对照 dashboard。
-- `bayes-analysis/`
-  - 贝叶斯辅助分析 dashboard。
-- `releases/`
-  - 带时间戳的历史发布快照。
-- `index.html`
-  - 发布首页，聚合各 bundle 的入口。
-- `manifest.json`
-  - 首页和 bundle 元信息。
-- `.nojekyll`
-  - GitHub Pages 所需的保留文件，虽然是空文件，但不能删除。
+```text
+public_dashboards/
+  index.html
+  manifest.json
+  latest/
+  legacy-12models/
+  bayes-analysis/
+  counterfactual-amr-agg/
+  releases/20260419-160536/
+```
 
-## 常用命令
+## 维护命令
 
 重新构建并发布：
 
@@ -42,21 +34,44 @@ python -X utf8 tools/deploy_public_dashboards.py
 python -X utf8 tools/deploy_public_dashboards.py --skip-build
 ```
 
-保留更多历史 release：
+在 GitHub Actions 里建议加上快照保留，例如：
 
 ```bash
 python -X utf8 tools/deploy_public_dashboards.py --retain-releases 12
 ```
 
-## 上游来源
+## 上游维护入口
 
-- FE 主 dashboard：`tools/build_results_dashboard.py`
-- 贝叶斯 dashboard：`tools/build_bayes_analysis_dashboard.py`
-- 旧版 12 模型 dashboard：`2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py`
+- latest builder：`tools/build_results_dashboard.py`
+- legacy-12models builder：`2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py`
+- bayes-analysis builder：`tools/build_bayes_analysis_dashboard.py`
+- counterfactual-amr-agg builder：`5 反事实推演/build_counterfactual_dashboard.py`
 
-## 发布与维护提醒
+## GitHub Pages
 
-- 建议通过 GitHub Actions 发布，而不是手工维护静态页面分支。
-- 仓库中的页面默认使用相对链接，可直接部署到项目子路径。
-- GitHub Pages 面向公开访问，复制进来的数据和页面应默认视为可公开内容。
-- `latest/`、`legacy-12models/`、`bayes-analysis/` 会覆盖到当前稳定版本；需要保留历史状态时，应看 `releases/<timestamp>/`。
+- 推荐使用 GitHub Actions 发布，而不是手工提交生成后的静态文件分支。
+- 工作流文件见：`.github/workflows/deploy-github-pages.yml`。
+- 仓库设置路径：`Settings -> Pages -> Build and deployment -> Source -> GitHub Actions`。
+- 项目页默认 URL 一般是：`https://<用户名>.github.io/<仓库名>/`。
+- 这个站点内部已经统一使用相对链接，所以可以直接部署到项目子路径，不需要额外改 base URL。
+- 如果仓库是私有仓库，GitHub Pages 是否可用取决于你的 GitHub 方案；公开仓库在 GitHub Free 下可用。
+- GitHub Pages 站点是公开可访问的，不要把不希望公开的数据一起发布。
+
+## 首次启用步骤
+
+1. 把仓库推到 GitHub。
+2. 进入仓库的 `Settings -> Pages`，把 Source 设为 `GitHub Actions`。
+3. 推送到默认分支后，等待 `Deploy GitHub Pages` 工作流完成。
+4. 首次成功后，在 Pages 设置页里复制公开 URL。
+
+## 自定义域名
+
+- GitHub 官方建议先验证域名，再把域名接到 Pages，避免域名接管风险。
+- 如果你使用自定义 GitHub Actions workflow，需要在仓库 `Settings -> Pages` 里配置 Custom domain；仅靠仓库里的 `CNAME` 文件并不会自动新增或移除域名设置。
+- 域名生效后，再勾选 `Enforce HTTPS`。
+
+## 说明
+
+- `latest/` 和 `legacy-12models/` 始终覆盖为最近一次部署后的稳定版本。
+- `releases/<timestamp>/` 会保留部署当时的归档快照，方便对照和回滚。
+- 每个 bundle 目录下都有 `metadata.json`，可用于排查来源和生成脚本。

@@ -16,6 +16,8 @@
   - 将 13 个 AMR 指标拆开后的单菌种固定效应分析。
 - `4 贝叶斯分析/`
   - 镜像 FE 三种控制口径的贝叶斯模型网格与结果汇总。
+- `5 反事实推演/`
+  - 基于已筛选固定效应模型的 counterfactual simulation、全国年度/分省结果与图形输出。
 - `public_dashboards/`
   - 对外发布的静态 dashboard 目录，含当前稳定入口与历史 release 快照。
 - `tools/`
@@ -29,13 +31,15 @@
 2. 再看 `1 单因素分析/README.md`，回溯变量筛选和展示图来源。
 3. 需要检查异质性时，看 `3 单固定效应模型/README.md`。
 4. 需要检验放大效应叙事时，看 `4 贝叶斯分析/README.md`。
-5. 需要发布或核对静态页面时，看 `public_dashboards/README.md` 和 `tools/README.md`。
+5. 需要把主模型推进到反事实量化时，看 `5 反事实推演/README.md`。
+6. 需要发布或核对静态页面时，看 `public_dashboards/README.md` 和 `tools/README.md`。
 
 ## 常用入口
 
 - 变量空间穷举：`python -X utf8 tools/run_variable_space_exhaustive.py`
 - 构建 FE dashboard：`python -X utf8 tools/build_results_dashboard.py`
 - 生成贝叶斯候选清单：`python -X utf8 tools/build_bayes_candidate_models.py`
+- 运行反事实推演：`python -X utf8 "5 反事实推演/run_counterfactual_analysis.py"`
 - 发布公共 dashboard：`python -X utf8 tools/deploy_public_dashboards.py`
 
 ## 当前整理约定

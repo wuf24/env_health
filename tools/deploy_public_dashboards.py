@@ -103,6 +103,25 @@ BAYES_BUNDLE = DashboardBundle(
     write_metadata_file=False,
 )
 
+COUNTERFACTUAL_BUNDLE = DashboardBundle(
+    slug="counterfactual-amr-agg",
+    label="Counterfactual Simulation Dashboard",
+    description="AMR_AGG 的反事实推演入口，包含模型筛选、推演方程、单模型聚焦分析和分省结果。",
+    scope_note="基于已筛选固定效应模型开展 counterfactual simulation，并打包 figures、CSV 和写作说明。",
+    source_dir=ROOT / "5 反事实推演" / "results" / "AMR_AGG",
+    builder_script=ROOT / "5 反事实推演" / "build_counterfactual_dashboard.py",
+    files={
+        "home": "counterfactual_results_dashboard.html",
+    },
+    links=(
+        BundleLink(label="Open dashboard", target="index.html", tone="primary"),
+        BundleLink(label="Model screening", target="model_screening/selected_models.csv"),
+        BundleLink(label="National summary", target="counterfactual_outputs/national_overall.csv"),
+        BundleLink(label="Write-up notes", target="selection_and_writeup_notes.md", tone="ghost"),
+    ),
+    copy_paths=("figures", "counterfactual_outputs", "model_screening", "selection_and_writeup_notes.md"),
+)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -127,6 +146,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-bayes",
         action="store_true",
         help="Do not publish the Bayesian analysis dashboard bundle.",
+    )
+    parser.add_argument(
+        "--skip-counterfactual",
+        action="store_true",
+        help="Do not publish the counterfactual simulation dashboard bundle.",
     )
     parser.add_argument(
         "--release-tag",
@@ -289,7 +313,7 @@ def build_entry_html(manifest: dict[str, Any]) -> str:
       --bg: #f6efe7;
       --panel: rgba(255, 250, 244, 0.94);
       --ink: #20363c;
-      --muted: #667b80;
+      --muted: #52666c;
       --accent: #b45735;
       --accent-2: #2f6f74;
       --line: rgba(32, 54, 60, 0.12);
@@ -306,7 +330,7 @@ def build_entry_html(manifest: dict[str, Any]) -> str:
         linear-gradient(180deg, #faf4eb 0%, #eef3f1 100%);
     }}
     .page {{
-      width: min(1120px, calc(100vw - 24px));
+      width: min(1240px, calc(100vw - 24px));
       margin: 20px auto 28px;
       display: grid;
       gap: 18px;
@@ -360,11 +384,12 @@ def build_entry_html(manifest: dict[str, Any]) -> str:
     }}
     p {{
       margin: 12px 0 0;
-      line-height: 1.72;
+      line-height: 1.75;
       color: var(--muted);
+      font-size: 16px;
     }}
     .hero p {{
-      color: rgba(251, 247, 241, 0.86);
+      color: rgba(251, 247, 241, 0.92);
     }}
     .stats {{
       display: grid;
@@ -385,10 +410,12 @@ def build_entry_html(manifest: dict[str, Any]) -> str:
       margin-bottom: 8px;
     }}
     .stat .v {{
-      font-size: 28px;
+      font-size: clamp(26px, 3vw, 40px);
       font-weight: 800;
       line-height: 1;
       margin-bottom: 6px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }}
     .stat .h {{
       font-size: 12px;
@@ -407,11 +434,14 @@ def build_entry_html(manifest: dict[str, Any]) -> str:
       gap: 18px;
     }}
     .grid.two {{
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     }}
     .panel {{
       border-radius: 24px;
       padding: 22px;
+    }}
+    .panel p {{
+      color: #53686e;
     }}
     .meta {{
       display: grid;
@@ -423,6 +453,11 @@ def build_entry_html(manifest: dict[str, Any]) -> str:
       border: 1px solid var(--line);
       font-size: 13px;
       color: var(--muted);
+      overflow: hidden;
+    }}
+    .meta span, .ops div {{
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }}
     .links {{
       display: flex;
@@ -466,6 +501,17 @@ def build_entry_html(manifest: dict[str, Any]) -> str:
       border-radius: 10px;
       padding: 1px 7px;
       color: var(--ink);
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      display: inline-block;
+      max-width: 100%;
+      vertical-align: top;
+    }}
+    .hero code {{
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.16);
+      color: #fff9f3;
     }}
     @media (max-width: 940px) {{
       .grid.two, .stats {{
@@ -560,7 +606,7 @@ def build_release_index_html(manifest: dict[str, Any]) -> str:
       --bg: #f6efe7;
       --panel: rgba(255, 250, 244, 0.94);
       --ink: #20363c;
-      --muted: #667b80;
+      --muted: #52666c;
       --accent: #b45735;
       --line: rgba(32, 54, 60, 0.12);
       --shadow: 0 16px 44px rgba(39, 35, 31, 0.10);
@@ -573,7 +619,7 @@ def build_release_index_html(manifest: dict[str, Any]) -> str:
       background: linear-gradient(180deg, #faf4eb 0%, #eef3f1 100%);
     }}
     .page {{
-      width: min(1100px, calc(100vw - 24px));
+      width: min(1240px, calc(100vw - 24px));
       margin: 20px auto 28px;
       display: grid;
       gap: 18px;
@@ -607,10 +653,11 @@ def build_release_index_html(manifest: dict[str, Any]) -> str:
       margin: 12px 0 0;
       line-height: 1.72;
       color: var(--muted);
+      font-size: 16px;
     }}
     .grid {{
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 18px;
     }}
     .panel {{
@@ -626,6 +673,11 @@ def build_release_index_html(manifest: dict[str, Any]) -> str:
       font-size: 13px;
       color: var(--muted);
       line-height: 1.65;
+      overflow: hidden;
+    }}
+    .meta span {{
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }}
     .links {{
       display: flex;
@@ -656,6 +708,12 @@ def build_release_index_html(manifest: dict[str, Any]) -> str:
       border: 1px solid rgba(32, 54, 60, 0.08);
       border-radius: 10px;
       padding: 1px 7px;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      display: inline-block;
+      max-width: 100%;
+      vertical-align: top;
     }}
     @media (max-width: 900px) {{
       .grid {{
@@ -698,6 +756,8 @@ def build_release_index_html(manifest: dict[str, Any]) -> str:
 
 
 def build_public_readme(manifest: dict[str, Any]) -> str:
+    bundle_dirs = [f"  {bundle['slug']}/" for bundle in manifest["bundles"]]
+    builder_lines = [f"- {bundle['slug']} builder：`{bundle['builder_script']}`" for bundle in manifest["bundles"]]
     lines = [
         "# public_dashboards",
         "",
@@ -714,9 +774,7 @@ def build_public_readme(manifest: dict[str, Any]) -> str:
         "public_dashboards/",
         "  index.html",
         "  manifest.json",
-        "  latest/",
-        "  legacy-12models/",
-        "  bayes-analysis/",
+        *bundle_dirs,
         f"  releases/{manifest['release_tag']}/",
         "```",
         "",
@@ -742,8 +800,7 @@ def build_public_readme(manifest: dict[str, Any]) -> str:
         "",
         "## 上游维护入口",
         "",
-        f"- latest 布局与数据载入：`{rel(LATEST_BUNDLE.builder_script)}`",
-        f"- legacy 布局与数据载入：`{rel(LEGACY_BUNDLE.builder_script)}`",
+        *builder_lines,
         "",
         "## GitHub Pages",
         "",
@@ -837,9 +894,11 @@ def main() -> None:
         bundles.append(LEGACY_BUNDLE)
     if not args.skip_bayes:
         bundles.append(BAYES_BUNDLE)
+    if not args.skip_counterfactual:
+        bundles.append(COUNTERFACTUAL_BUNDLE)
     if not bundles:
         raise SystemExit(
-            "Nothing to publish. Remove --skip-latest/--skip-legacy/--skip-bayes or select a bundle."
+            "Nothing to publish. Remove skip flags or select at least one bundle."
         )
 
     if not args.skip_build:

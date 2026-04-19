@@ -1,0 +1,9 @@
+﻿role_id,role_label,selection_rule,reason,model_id,scheme_id,scheme_source,fe_label,variables,performance_rank,performance_score,coef_R1xday,p_R1xday,coef_AMC,p_AMC,r2_model,max_vif_z
+main_model,主模型,curated + Year FE + R1xday 与 AMC 同时正向且 p<0.05,理论上最容易承接正文主线，且双核心变量在频率学和 year-only 贝叶斯结果中都最稳定。,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes,"省平均气温 | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
+-猪年底头数",972,0.7218422485555385,0.1508246294759486,0.042609775295463,0.1310341033515701,0.0033854032562117,0.3338148826961948,3.0544803429981107
+robust_low_vif,稳健性模型 1,curated + Year FE + 低 VIF + 双核心方向稳定,用于检验主结果是否依赖于较高共线性的变量组织方式。,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes,"TA（°C） | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
+-猪年底头数 | 主要城市日照时数",156,0.754215661360927,0.1343718513136075,0.0511176547836138,0.1282545796871254,0.0033740699130591,0.3450624353022486,1.8204312093552328
+robust_systematic,稳健性模型 2,systematic + Year FE + 已有贝叶斯桥接 + 双核心显著,用于证明结论不完全依赖人工选模，并与已完成的贝叶斯扩展自然衔接。,SYS_09556 | Province: No / Year: Yes,SYS_09556,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | GDP | 城市用水普及率 | 牲畜饲养
+-猪年底头数 | 主要城市降水量 | 食品消费量",49,0.7665352008628431,0.1812432996167564,0.0218372297507352,0.1164206832956922,0.0054403730794863,0.361691613754023,1.8630223924966105
+robust_strict_fe,稳健性模型 3,主模型同变量集 + 双向 FE,用于给出更严格 FE 控制下的保守下界，识别结果对 FE 设定的敏感性。,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes,"省平均气温 | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
+-猪年底头数",23331,0.4501476749911623,-0.0033076735002741,0.8506875682706379,0.0092846932124281,0.5169604958523597,0.0212117047615382,3.0544803429981107

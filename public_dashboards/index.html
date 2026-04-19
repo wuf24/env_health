@@ -9,7 +9,7 @@
       --bg: #f6efe7;
       --panel: rgba(255, 250, 244, 0.94);
       --ink: #20363c;
-      --muted: #667b80;
+      --muted: #52666c;
       --accent: #b45735;
       --accent-2: #2f6f74;
       --line: rgba(32, 54, 60, 0.12);
@@ -26,7 +26,7 @@
         linear-gradient(180deg, #faf4eb 0%, #eef3f1 100%);
     }
     .page {
-      width: min(1120px, calc(100vw - 24px));
+      width: min(1240px, calc(100vw - 24px));
       margin: 20px auto 28px;
       display: grid;
       gap: 18px;
@@ -80,11 +80,12 @@
     }
     p {
       margin: 12px 0 0;
-      line-height: 1.72;
+      line-height: 1.75;
       color: var(--muted);
+      font-size: 16px;
     }
     .hero p {
-      color: rgba(251, 247, 241, 0.86);
+      color: rgba(251, 247, 241, 0.92);
     }
     .stats {
       display: grid;
@@ -105,10 +106,12 @@
       margin-bottom: 8px;
     }
     .stat .v {
-      font-size: 28px;
+      font-size: clamp(26px, 3vw, 40px);
       font-weight: 800;
       line-height: 1;
       margin-bottom: 6px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     .stat .h {
       font-size: 12px;
@@ -127,11 +130,14 @@
       gap: 18px;
     }
     .grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     }
     .panel {
       border-radius: 24px;
       padding: 22px;
+    }
+    .panel p {
+      color: #53686e;
     }
     .meta {
       display: grid;
@@ -143,6 +149,11 @@
       border: 1px solid var(--line);
       font-size: 13px;
       color: var(--muted);
+      overflow: hidden;
+    }
+    .meta span, .ops div {
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     .links {
       display: flex;
@@ -186,6 +197,17 @@
       border-radius: 10px;
       padding: 1px 7px;
       color: var(--ink);
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      display: inline-block;
+      max-width: 100%;
+      vertical-align: top;
+    }
+    .hero code {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.16);
+      color: #fff9f3;
     }
     @media (max-width: 940px) {
       .grid.two, .stats {
@@ -209,9 +231,9 @@
       <h1>AMR Dashboard 发布入口</h1>
       <p>这里是长期维护用的静态发布目录。研究目录继续保存原始分析结果，<code>public_dashboards/</code> 负责对外访问、稳定链接和版本归档。</p>
       <div class="stats">
-        <div class="stat"><div class="k">生成时间</div><div class="v">2026-04-18 23:41:20</div><div class="h">这次部署完成的时间戳</div></div>
-        <div class="stat"><div class="k">发布版本</div><div class="v">20260418-234120</div><div class="h">归档快照目录名</div></div>
-        <div class="stat"><div class="k">稳定入口</div><div class="v">3</div><div class="h">当前维护中的 dashboard 套数</div></div>
+        <div class="stat"><div class="k">生成时间</div><div class="v">2026-04-19 16:05:36</div><div class="h">这次部署完成的时间戳</div></div>
+        <div class="stat"><div class="k">发布版本</div><div class="v">20260419-160536</div><div class="h">归档快照目录名</div></div>
+        <div class="stat"><div class="k">稳定入口</div><div class="v">4</div><div class="h">当前维护中的 dashboard 套数</div></div>
         <div class="stat"><div class="k">发布根目录</div><div class="v">public</div><div class="h"><code>public_dashboards</code></div></div>
       </div>
     </section>
@@ -265,6 +287,19 @@
         </div>
       </section>
     
+      <section class="panel">
+        <div class="eyebrow">counterfactual-amr-agg</div>
+        <h2>Counterfactual Simulation Dashboard</h2>
+        <p>AMR_AGG 的反事实推演入口，包含模型筛选、推演方程、单模型聚焦分析和分省结果。</p>
+        <div class="meta">
+          <span>Scope: 基于已筛选固定效应模型开展 counterfactual simulation，并打包 figures、CSV 和写作说明。</span>
+          <span>Builder: <code>5 反事实推演/build_counterfactual_dashboard.py</code></span>
+        </div>
+        <div class="links">
+          <a class="btn primary" href="./counterfactual-amr-agg/index.html">Open dashboard</a><a class="btn" href="./counterfactual-amr-agg/model_screening/selected_models.csv">Model screening</a><a class="btn" href="./counterfactual-amr-agg/counterfactual_outputs/national_overall.csv">National summary</a><a class="btn ghost" href="./counterfactual-amr-agg/selection_and_writeup_notes.md">Write-up notes</a>
+        </div>
+      </section>
+    
       </div>
     </section>
 
@@ -273,10 +308,10 @@
         <div>
           <div class="eyebrow" style="color: var(--muted);">Release Snapshot</div>
           <h2>本次归档快照</h2>
-          <p>每次部署都会把当前版本复制到 <code>releases/20260418-234120</code>，方便以后回看或回滚。</p>
+          <p>每次部署都会把当前版本复制到 <code>releases/20260419-160536</code>，方便以后回看或回滚。</p>
         </div>
         <div class="links">
-          <a class="btn primary" href="./releases/20260418-234120/index.html">打开本次快照</a>
+          <a class="btn primary" href="./releases/20260419-160536/index.html">打开本次快照</a>
           <a class="btn ghost" href="./manifest.json">manifest.json</a>
         </div>
       </div>
@@ -291,7 +326,7 @@
           <span>Builder: <code>tools/build_results_dashboard.py</code></span>
         </div>
         <div class="links">
-          <a class="btn primary" href="./releases/20260418-234120/latest/index.html">Open home</a><a class="btn" href="./releases/20260418-234120/latest/results_dashboard_lancet.html">Lancet subpage</a><a class="btn" href="./releases/20260418-234120/latest/results_dashboard_matrix.html">Matrix view</a><a class="btn ghost" href="./releases/20260418-234120/latest/metadata.json">metadata.json</a>
+          <a class="btn primary" href="./releases/20260419-160536/latest/index.html">Open home</a><a class="btn" href="./releases/20260419-160536/latest/results_dashboard_lancet.html">Lancet subpage</a><a class="btn" href="./releases/20260419-160536/latest/results_dashboard_matrix.html">Matrix view</a><a class="btn ghost" href="./releases/20260419-160536/latest/metadata.json">metadata.json</a>
         </div>
       </section>
     
@@ -304,7 +339,7 @@
           <span>Builder: <code>2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py</code></span>
         </div>
         <div class="links">
-          <a class="btn primary" href="./releases/20260418-234120/legacy-12models/index.html">Open home</a><a class="btn" href="./releases/20260418-234120/legacy-12models/results_dashboard_legacy_12models_lancet.html">Lancet subpage</a><a class="btn" href="./releases/20260418-234120/legacy-12models/results_dashboard_legacy_12models_matrix.html">Matrix view</a><a class="btn ghost" href="./releases/20260418-234120/legacy-12models/metadata.json">metadata.json</a>
+          <a class="btn primary" href="./releases/20260419-160536/legacy-12models/index.html">Open home</a><a class="btn" href="./releases/20260419-160536/legacy-12models/results_dashboard_legacy_12models_lancet.html">Lancet subpage</a><a class="btn" href="./releases/20260419-160536/legacy-12models/results_dashboard_legacy_12models_matrix.html">Matrix view</a><a class="btn ghost" href="./releases/20260419-160536/legacy-12models/metadata.json">metadata.json</a>
         </div>
       </section>
     
@@ -317,7 +352,20 @@
           <span>Builder: <code>tools/build_bayes_analysis_dashboard.py</code></span>
         </div>
         <div class="links">
-          <a class="btn primary" href="./releases/20260418-234120/bayes-analysis/index.html">Open home</a><a class="btn" href="./releases/20260418-234120/bayes-analysis/data/focus_primary_summary.csv">Primary summary CSV</a><a class="btn" href="./releases/20260418-234120/bayes-analysis/data/focus_variant_bridge_summary.csv">Variant bridge CSV</a><a class="btn ghost" href="./releases/20260418-234120/bayes-analysis/data/combined_diagnostics.csv">Diagnostics CSV</a>
+          <a class="btn primary" href="./releases/20260419-160536/bayes-analysis/index.html">Open home</a><a class="btn" href="./releases/20260419-160536/bayes-analysis/data/focus_primary_summary.csv">Primary summary CSV</a><a class="btn" href="./releases/20260419-160536/bayes-analysis/data/focus_variant_bridge_summary.csv">Variant bridge CSV</a><a class="btn ghost" href="./releases/20260419-160536/bayes-analysis/data/combined_diagnostics.csv">Diagnostics CSV</a>
+        </div>
+      </section>
+    
+      <section class="panel">
+        <div class="eyebrow">counterfactual-amr-agg</div>
+        <h2>Counterfactual Simulation Dashboard</h2>
+        <p>AMR_AGG 的反事实推演入口，包含模型筛选、推演方程、单模型聚焦分析和分省结果。</p>
+        <div class="meta">
+          <span>Scope: 基于已筛选固定效应模型开展 counterfactual simulation，并打包 figures、CSV 和写作说明。</span>
+          <span>Builder: <code>5 反事实推演/build_counterfactual_dashboard.py</code></span>
+        </div>
+        <div class="links">
+          <a class="btn primary" href="./releases/20260419-160536/counterfactual-amr-agg/index.html">Open dashboard</a><a class="btn" href="./releases/20260419-160536/counterfactual-amr-agg/model_screening/selected_models.csv">Model screening</a><a class="btn" href="./releases/20260419-160536/counterfactual-amr-agg/counterfactual_outputs/national_overall.csv">National summary</a><a class="btn ghost" href="./releases/20260419-160536/counterfactual-amr-agg/selection_and_writeup_notes.md">Write-up notes</a>
         </div>
       </section>
     
