@@ -3,8 +3,8 @@
   "slug": "future-scenario-analysis",
   "description": "双 baseline 的未来情景总览页，整合全国、地区、省级结果、模型来源和文件入口。",
   "scope_note": "对应 6 未来情景分析/index.html，并随 results/、docs/ 与关键映射表一起发布。",
-  "generated_at": "2026-04-22 22:55:02",
-  "release_tag": "20260422-225502",
+  "generated_at": "2026-04-22 23:28:41",
+  "release_tag": "20260422-232841",
   "source_dir": "6 未来情景分析",
   "builder_script": "tools/build_future_scenario_dashboard_report.py",
   "files": {

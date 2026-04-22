@@ -62,8 +62,8 @@ LEGACY_PUBLIC_EXHAUSTIVE_BUNDLE = DashboardBundle(
     slug="legacy-exhaustive-20260419",
     label="Legacy Public Exhaustive Dashboard",
     description="保留 2026-04-19 对外发布的 exhaustive dashboard，作为更新筛选逻辑前的公开快照。",
-    scope_note="来源于 public_dashboards/releases/20260419-170413/latest，用于回看之前的 public latest 版本。",
-    source_dir=PUBLIC_DIR / "releases" / "20260419-170413" / "latest",
+    scope_note="来源于 public_dashboards/legacy-exhaustive-20260419 这份已提交的公开快照，用于回看之前的 public latest 版本。",
+    source_dir=PUBLIC_DIR / "legacy-exhaustive-20260419",
     builder_script=ROOT / "tools" / "build_results_dashboard.py",
     files={
         "home": "results_dashboard.html",

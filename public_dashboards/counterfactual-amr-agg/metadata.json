@@ -3,8 +3,8 @@
   "slug": "counterfactual-amr-agg",
   "description": "AMR_AGG 的反事实推演入口，包含模型筛选、推演方程、单模型聚焦分析和分省结果。",
   "scope_note": "基于已筛选固定效应模型开展 counterfactual simulation，并打包 figures、CSV 和写作说明。",
-  "generated_at": "2026-04-22 22:55:02",
-  "release_tag": "20260422-225502",
+  "generated_at": "2026-04-22 23:28:41",
+  "release_tag": "20260422-232841",
   "source_dir": "5 反事实推演/results/AMR_AGG",
   "builder_script": "5 反事实推演/build_counterfactual_dashboard.py",
   "files": {
