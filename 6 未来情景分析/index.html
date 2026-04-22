@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>6 未来情景分析</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --ink: #141926;
+      --muted: #5a6477;
+      --line: #dbe2ec;
+      --line-strong: #c7d3e1;
+      --primary: #113a8f;
+      --accent: #b45309;
+      --green: #0f766e;
+      --shadow: 0 20px 48px rgba(14, 26, 52, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --sans: "Fira Sans", "Segoe UI", "Trebuchet MS", sans-serif;
+      --mono: "Fira Code", Consolas, "SFMono-Regular", monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(17, 58, 143, 0.10), transparent 26%),
+        radial-gradient(circle at top right, rgba(180, 83, 9, 0.10), transparent 24%),
+        linear-gradient(180deg, #fbfcff 0%, #f4f7fb 100%);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+    .page {
+      width: min(1500px, calc(100vw - 28px));
+      margin: 18px auto 40px;
+      display: grid;
+      gap: 18px;
+    }
+    .panel, .section {
+      background: rgba(255, 255, 255, 0.90);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .hero {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      padding: 34px;
+      background:
+        radial-gradient(circle at right top, rgba(255,255,255,0.18), transparent 32%),
+        linear-gradient(135deg, #111827 0%, #163d8f 56%, #1f5ca8 100%);
+      color: #f8fbff;
+      display: grid;
+      gap: 24px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      opacity: 0.72;
+      margin-bottom: 12px;
+    }
+    h1, h2, h3, h4, p {
+      margin: 0;
+    }
+    h1 {
+      font-size: clamp(38px, 5vw, 68px);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      max-width: 10ch;
+    }
+    h2 {
+      font-size: clamp(28px, 2.8vw, 40px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+    h3 {
+      font-size: 24px;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    h4 {
+      font-size: 17px;
+      line-height: 1.2;
+    }
+    p, li {
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 15px;
+    }
+    .hero p {
+      color: rgba(248, 251, 255, 0.90);
+      max-width: 68ch;
+    }
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .hero-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.12);
+      display: grid;
+      gap: 8px;
+    }
+    .hero-card strong {
+      font-size: clamp(22px, 3vw, 34px);
+      line-height: 1;
+      color: #ffffff;
+      display: block;
+    }
+    .hero-side {
+      display: grid;
+      gap: 12px;
+    }
+    .hero-note {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+    }
+    .nav a {
+      display: inline-flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 15px;
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--ink);
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--line);
+      font-weight: 700;
+    }
+    .section {
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      display: grid;
+      gap: 20px;
+    }
+    .section-head {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 22px;
+      align-items: end;
+    }
+    .summary-grid, .analysis-grid, .figure-grid, .mode-grid, .robust-grid, .appendix-grid, .two-table-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .summary-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .summary-card, .analysis-card, .note-card {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.78);
+    }
+    .summary-card strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1;
+      color: var(--primary);
+      margin: 6px 0 8px;
+    }
+    .mode-compare {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .mode-card {
+      padding: 22px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(245,248,253,0.92));
+      display: grid;
+      gap: 12px;
+    }
+    .mode-card .inline-code,
+    .inline-code {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(17, 58, 143, 0.08);
+      border: 1px solid rgba(17, 58, 143, 0.12);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--primary);
+    }
+    .formula {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(20, 25, 38, 0.04);
+      border: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.75;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      color: #263248;
+    }
+    .chapter-block {
+      display: grid;
+      gap: 16px;
+      padding: 24px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.82);
+    }
+    .chapter-head {
+      display: grid;
+      gap: 10px;
+    }
+    .figure-grid-large {
+      grid-template-columns: 1fr;
+    }
+    .figure-grid-two, .mode-grid, .robust-grid, .two-table-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .figure-card {
+      margin: 0;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      background: #f7fafc;
+      box-shadow: 0 12px 32px rgba(17, 24, 39, 0.05);
+    }
+    .figure-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #eef3f8;
+    }
+    .hero-figure img {
+      max-height: 740px;
+      object-fit: contain;
+    }
+    figcaption {
+      display: grid;
+      gap: 4px;
+      padding: 14px 16px 16px;
+      border-top: 1px solid var(--line);
+      background: rgba(255,255,255,0.92);
+    }
+    figcaption strong {
+      color: var(--ink);
+      font-size: 15px;
+    }
+    figcaption span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.88);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+    .compact table {
+      min-width: 620px;
+    }
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    thead th {
+      background: #eef3f8;
+      color: #2b3a4e;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .delta {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .muted {
+      color: var(--muted);
+    }
+    .coef-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+    .coef-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .coef-list li:last-child {
+      border-bottom: none;
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip-row span {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(17,58,143,0.06);
+      border: 1px solid rgba(17,58,143,0.10);
+      font-size: 12px;
+      color: #2f456f;
+    }
+    details {
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.82);
+      overflow: hidden;
+    }
+    summary {
+      cursor: pointer;
+      padding: 16px 18px;
+      font-weight: 700;
+      list-style: none;
+      background: rgba(17,58,143,0.04);
+    }
+    summary::-webkit-details-marker { display: none; }
+    .link-list {
+      margin: 0;
+      padding: 8px 18px 18px 34px;
+      display: grid;
+      gap: 10px;
+    }
+    .link-list a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .footer {
+      padding: 4px 0 10px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .hero-points,
+      .section-head,
+      .mode-compare,
+      .mode-grid,
+      .robust-grid,
+      .analysis-grid,
+      .figure-grid-two,
+      .summary-grid,
+      .two-table-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 760px) {
+      .page {
+        width: calc(100vw - 12px);
+        margin: 8px auto 18px;
+      }
+      .hero, .section {
+        padding: 18px;
+      }
+      h1 {
+        max-width: unset;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero panel">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">6 未来情景分析</div>
+          <h1>把未来情景结果写成一页能读清的研究报告。</h1>
+          <p>
+            这版不再把页面做成“先切选项再自己找结论”的仪表盘，而是按真正的阅读顺序重排：
+            先讲最关键的判断，再把两种 baseline 的全国结果摆在一起，然后往下看地区、再看省级，最后才回到稳健性和方法来源。
+            页面里所有已产出的主要图件都直接展开，不需要另外打开文件。
+          </p>
+        </div>
+        <div class="hero-side">
+          <div class="hero-note">
+            <strong>先看什么</strong>
+            <p>如果你只想抓结论，先看“Key Judgements”和“全国结果”。如果你在写结果部分，再继续往下看地区和省级空间格局。</p>
+          </div>
+          <div class="hero-note">
+            <strong>当前边界</strong>
+            <p>当前 SSP 情景真正进入未来路径的协变量只有 <span class="inline-code">R1xday</span>；因此两种 baseline 的情景增量几乎相同，主要差异来自 baseline 水平本身。</p>
+          </div>
+          <div class="hero-note">
+            <strong>怎么理解稳健性</strong>
+            <p>主模型、低 VIF、systematic、strict FE 不是四个装饰性标签，而是四套不同历史系数。因为未来只让 R1xday 变动，所以 R1xday 系数大小直接决定了情景敏感度。</p>
+          </div>
+        </div>
+      </div>
+      <div class="hero-points">
+        <article class="hero-card"><div class="eyebrow">Baseline gap widened</div><strong>0.128 → 2.211</strong><p>X-driven 和 Lancet ETS 在 2024 的差距很小，但到 2050 已拉开到 2.21 个点，说明真正主导两版差异的是 baseline 生成方式。</p></article><article class="hero-card"><div class="eyebrow">Scenario spread</div><strong>0.129</strong><p>主模型下，SSP5-8.5 与 SSP1-1.9 的 2050 national delta spread 为 0.129，两种 baseline 完全一致。</p></article><article class="hero-card"><div class="eyebrow">Regional split</div><strong>华南 +1.61</strong><p>SSP5-8.5 下最高的是 华南，最低的是 华中 -0.63。</p></article><article class="hero-card"><div class="eyebrow">Provincial extremes</div><strong>浙江 +2.28</strong><p>SSP5-8.5 下最高是 浙江，最低是 河南，最大双情景 gap 在 海南。</p></article>
+      </div>
+    </header>
+
+    <nav class="nav">
+      <a href="#judgements"><span>Key Judgements</span><span>01</span></a>
+      <a href="#baseline"><span>Baseline Logic</span><span>02</span></a>
+      <a href="#national"><span>National Results</span><span>03</span></a>
+      <a href="#spatial"><span>Regional & Provincial</span><span>04</span></a>
+      <a href="#robustness"><span>Robustness</span><span>05</span></a>
+      <a href="#appendix"><span>Appendix</span><span>06</span></a>
+    </nav>
+
+    <section class="section" id="judgements">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Key Judgements</div>
+          <h2>这页最重要的判断，不需要先读表就能抓到。</h2>
+        </div>
+        <p>
+          这四条是当前这版结果里最值得先说清的事实。它们决定了后面怎么解释全国曲线、怎么解释空间差异，也决定了应该把哪一版 baseline 放主分析、哪一版放扩展分析。
+        </p>
+      </div>
+      <div class="summary-grid">
+        <article class="summary-card">
+          <div class="eyebrow">1. baseline drives level</div>
+          <strong>2.211</strong>
+          <p>X-driven 比 Lancet ETS 在 2050 高出 2.211 个点，而两者在 2024 只差 0.128。这说明两版最大的差别不是情景增量，而是 baseline 怎么延伸到 2050。</p>
+        </article>
+        <article class="summary-card">
+          <div class="eyebrow">2. scenario spread is modest</div>
+          <strong>0.129</strong>
+          <p>主模型下，SSP5-8.5 与 SSP1-1.9 的 national delta spread 只有 0.129。这意味着当前由 R1xday 驱动的 SSP 分歧存在，但没有大到压过 baseline 趋势。</p>
+        </article>
+        <article class="summary-card">
+          <div class="eyebrow">3. spatial pattern is split</div>
+          <strong>华南</strong>
+          <p>SSP5-8.5 下，地区层面最高是 华南 +1.61，最低是 华中 -0.63。全国平均掩盖了明显的区域分化。</p>
+        </article>
+        <article class="summary-card">
+          <div class="eyebrow">4. province heterogeneity is large</div>
+          <strong>海南</strong>
+          <p>SSP5-8.5 下省级抬升最高是 浙江，最低是 河南；而 SSP5-8.5 与 SSP1-1.9 的最大 gap 出现在 海南。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="baseline">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Baseline Logic</div>
+          <h2>先把两种 baseline 分清，再去看结果，结论才不会串。</h2>
+        </div>
+        <p>
+          两种 baseline 共享同一套历史 FE 系数、同一套未来 R1xday 情景和同一套全国平均口径。它们唯一真正不同的地方，是“未来 baseline 到底由什么生成”。
+        </p>
+      </div>
+      <div class="mode-compare">
+        <article class="mode-card">
+          <div class="eyebrow">Lancet ETS</div>
+          <h3>先让 AMR 自身沿 ETS 延续</h3>
+          <p>这版最贴近 Lancet 2023 的表述：baseline scenario continued at current rates, as estimated by ETS models。它更强调结果变量自身历史惯性。</p>
+          <div class="formula">Y_it = α_i + λ_t + Σ β_k Z_itk + ε_it
+Y^base_it = ETS(Y_i, historical series)
+Δ^scenario_it = Σ β_k × (Z^scenario_itk - Z^base_itk)
+Y^scenario_it = Y^base_it + Δ^scenario_it</div>
+          <ul><li>2024 到 2050 的 national baseline 从 30.79 下降到 27.21。</li><li>适合作为主分析，因为它最容易和参考文献对齐。</li><li>缺点是 AMR 历史惯性更强，未来曲线更容易继续往历史方向延长。</li></ul>
+        </article>
+        <article class="mode-card">
+          <div class="eyebrow">X-driven</div>
+          <h3>先用协变量路径重建 baseline</h3>
+          <p>这版更接近“由未来协变量路径驱动未来结果”的解释框架。它不是完整的 Nature Medicine 时空贝叶斯模型，但逻辑上更靠近 X-driven baseline。</p>
+          <div class="formula">Y_it = α_i + λ_t + Σ β_k Z_itk + ε_it
+Y^base_it = α_i* + λ_t* + Σ β_k Z^base_itk
+Y^scenario_it = α_i* + λ_t* + Σ β_k Z^scenario_itk
+If only R1xday varies:
+Y^scenario_it = Y^base_it + β_R × (R1xday^scenario_it - R1xday^base_it)</div>
+          <ul><li>2024 到 2050 的 national baseline 从 30.91 下降到 29.42，下降幅度小于 Lancet ETS。</li><li>更适合回答“如果未来气候路径真的分化，AMR 会被推开多少”这类机制问题。</li><li>当前和 Lancet ETS 的情景增量一致，说明两版差异主要来自 baseline 水平，而不是 scenario adjustment。</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="national">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">National Results</div>
+          <h2>全国结果的核心不是“哪条线更高”，而是 baseline 与情景抬升分别贡献了多少。</h2>
+        </div>
+        <p>
+          下面先把两版的全国主图和全国补充图完整展开，再给出 2050 年双 baseline 的并列表。这样可以同时看水平、增量、排序和不确定性。
+        </p>
+      </div>
+      
+      <section class="chapter-block">
+        <div class="chapter-head">
+          <div class="eyebrow">Lancet ETS</div>
+          <h3>全国结果：Lancet ETS</h3>
+          <p>
+            2050 baseline 从 30.79 下降到 27.21，
+            变化 -3.58。到 2050 年，情景最低是 SSP1-1.9
+            (27.36)，最高是 SSP5-8.5
+            (27.49)，两者相差 0.129。
+          </p>
+        </div>
+        <div class="figure-grid figure-grid-large">
+          
+      <figure class="figure-card hero-figure">
+        <img src="results/lancet_ets/figures/figure5_style_main.png" alt="Lancet ETS 全国总图" loading="lazy" />
+        <figcaption>
+          <strong>Lancet ETS 全国总图</strong>
+          <span>主模型 Figure 5 风格总图。</span>
+        </figcaption>
+      </figure>
+    
+        </div>
+        <div class="figure-grid figure-grid-two">
+          
+      <figure class="figure-card">
+        <img src="results/lancet_ets/figures/national_yearly_main_model.png" alt="Lancet ETS 全国轨迹" loading="lazy" />
+        <figcaption>
+          <strong>Lancet ETS 全国轨迹</strong>
+          <span>全国年序列主模型轨迹图。</span>
+        </figcaption>
+      </figure>
+    
+          
+      <figure class="figure-card">
+        <img src="results/lancet_ets/figures/scenario_delta_2050_main_model.png" alt="Lancet ETS 2050 情景增量" loading="lazy" />
+        <figcaption>
+          <strong>Lancet ETS 2050 情景增量</strong>
+          <span>2050 年 SSP 相对 baseline 的增量。</span>
+        </figcaption>
+      </figure>
+    
+        </div>
+        <div class="analysis-grid">
+          <article class="analysis-card">
+            <h4>全国结果怎么读</h4>
+            <ul>
+              <li>五个 SSP 中，SSP1-1.9 始终最低，SSP5-8.5 始终最高。</li><li>主模型下 2050 的情景 spread 为 0.129，说明当前由 R1xday 带来的情景分化存在，但量级仍明显小于 baseline 本身的长期变化。</li><li>所有 SSP 在 2050 年都仍低于最后观测值，说明当前这版结果里 baseline 下降趋势仍然压过了情景抬升。</li>
+            </ul>
+          </article>
+          <article class="analysis-card">
+            <h4>地区与省级空间格局</h4>
+            <ul>
+              <li>在 SSP5-8.5 下，地区层面最高的是 华南 (+1.61)，最低的是 华中 (-0.63)。</li><li>到 SSP5-8.5 时，7 大区里有 5 个为正、2 个为负；省级则有 20 个为正、11 个为负。</li><li>省级极值中，抬升最高的是 浙江 (+2.28)，下降最明显的是 河南 (-2.49)。</li>
+            </ul>
+          </article>
+        </div>
+        <div class="figure-grid figure-grid-two">
+          
+      <figure class="figure-card">
+        <img src="results/lancet_ets/regional_figures/regional_figure5_grid.png" alt="Lancet ETS 地区图" loading="lazy" />
+        <figcaption>
+          <strong>Lancet ETS 地区图</strong>
+          <span>七大区 Figure 5 小图矩阵。</span>
+        </figcaption>
+      </figure>
+    
+          
+      <figure class="figure-card">
+        <img src="results/lancet_ets/regional_figures/regional_delta_2050_heatmap.png" alt="Lancet ETS 地区热图" loading="lazy" />
+        <figcaption>
+          <strong>Lancet ETS 地区热图</strong>
+          <span>七大区 2050 增量热图。</span>
+        </figcaption>
+      </figure>
+    
+        </div>
+        
+      <div class="table-wrap compact">
+        <table>
+          <thead>
+            <tr>
+              <th>Region</th>
+              <th>SSP1-1.9 Δ</th>
+              <th>SSP5-8.5 Δ</th>
+              <th>SSP5-8.5 predicted</th>
+              <th>Province n</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>华中</strong><br /><span class="muted">Central China</span></td>
+              <td>-0.74</td>
+              <td>-0.63</td>
+              <td>26.35</td>
+              <td>3</td>
+            </tr>
+            
+            <tr>
+              <td><strong>东北</strong><br /><span class="muted">Northeast China</span></td>
+              <td>-0.25</td>
+              <td>-0.09</td>
+              <td>25.87</td>
+              <td>3</td>
+            </tr>
+            
+            <tr>
+              <td><strong>华北</strong><br /><span class="muted">North China</span></td>
+              <td>-0.08</td>
+              <td>+0.07</td>
+              <td>27.39</td>
+              <td>5</td>
+            </tr>
+            
+            <tr>
+              <td><strong>西北</strong><br /><span class="muted">Northwest China</span></td>
+              <td>+0.02</td>
+              <td>+0.11</td>
+              <td>30.66</td>
+              <td>5</td>
+            </tr>
+            
+            <tr>
+              <td><strong>西南</strong><br /><span class="muted">Southwest China</span></td>
+              <td>+0.15</td>
+              <td>+0.23</td>
+              <td>27.51</td>
+              <td>5</td>
+            </tr>
+            
+            <tr>
+              <td><strong>华东</strong><br /><span class="muted">East China</span></td>
+              <td>+0.43</td>
+              <td>+0.58</td>
+              <td>25.02</td>
+              <td>7</td>
+            </tr>
+            
+            <tr>
+              <td><strong>华南</strong><br /><span class="muted">South China</span></td>
+              <td>+1.42</td>
+              <td>+1.61</td>
+              <td>30.90</td>
+              <td>3</td>
+            </tr>
+            </tbody>
+        </table>
+      </div>
+    
+        <div class="figure-grid figure-grid-two">
+          
+      <figure class="figure-card">
+        <img src="results/lancet_ets/provincial_figures/provincial_future_scenario_panel.png" alt="Lancet ETS 省级总图" loading="lazy" />
+        <figcaption>
+          <strong>Lancet ETS 省级总图</strong>
+          <span>全国轨迹与省级热图放在同一张图里。</span>
+        </figcaption>
+      </figure>
+    
+          
+      <figure class="figure-card">
+        <img src="results/lancet_ets/dual_scenario_figures/dual_scenario_compare_ssp119_vs_ssp585_delta.png" alt="Lancet ETS 双情景比较" loading="lazy" />
+        <figcaption>
+          <strong>Lancet ETS 双情景比较</strong>
+          <span>默认比较 SSP1-1.9 与 SSP5-8.5 的 ΔAMR 版图。</span>
+        </figcaption>
+      </figure>
+    
+        </div>
+        <div class="two-table-grid">
+          <article>
+            <h4>SSP5-8.5 下抬升最高的省份</h4>
+            
+      <div class="table-wrap compact">
+        <table>
+          <thead>
+            <tr>
+              <th>Province</th>
+              <th>Region</th>
+              <th>2050 predicted</th>
+              <th>Δ vs baseline</th>
+              <th>rx1day Δ</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td><strong>浙江</strong></td>
+          <td>华东</td>
+          <td>22.70</td>
+          <td class="delta">+2.28</td>
+          <td>+76.61</td>
+        </tr>
+        
+        <tr>
+          <td><strong>广东</strong></td>
+          <td>华南</td>
+          <td>32.41</td>
+          <td class="delta">+2.18</td>
+          <td>+73.28</td>
+        </tr>
+        
+        <tr>
+          <td><strong>天津</strong></td>
+          <td>华北</td>
+          <td>30.51</td>
+          <td class="delta">+1.65</td>
+          <td>+55.53</td>
+        </tr>
+        
+        <tr>
+          <td><strong>安徽</strong></td>
+          <td>华东</td>
+          <td>21.57</td>
+          <td class="delta">+1.65</td>
+          <td>+55.34</td>
+        </tr>
+        
+        <tr>
+          <td><strong>广西</strong></td>
+          <td>华南</td>
+          <td>31.77</td>
+          <td class="delta">+1.34</td>
+          <td>+44.89</td>
+        </tr>
+        
+        <tr>
+          <td><strong>海南</strong></td>
+          <td>华南</td>
+          <td>28.51</td>
+          <td class="delta">+1.30</td>
+          <td>+43.57</td>
+        </tr>
+        
+        <tr>
+          <td><strong>福建</strong></td>
+          <td>华东</td>
+          <td>22.54</td>
+          <td class="delta">+0.66</td>
+          <td>+22.06</td>
+        </tr>
+        
+        <tr>
+          <td><strong>湖北</strong></td>
+          <td>华中</td>
+          <td>30.13</td>
+          <td class="delta">+0.33</td>
+          <td>+10.91</td>
+        </tr>
+        </tbody>
+        </table>
+      </div>
+    
+          </article>
+          <article>
+            <h4>SSP5-8.5 与 SSP1-1.9 的最大 gap</h4>
+            
+          <div class="table-wrap compact">
+            <table>
+              <thead>
+                <tr>
+                  <th>Province</th>
+                  <th>Region</th>
+                  <th>SSP1-1.9</th>
+                  <th>SSP5-8.5</th>
+                  <th>Gap</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td><strong>海南</strong></td>
+              <td>华南</td>
+              <td>+0.88</td>
+              <td>+1.30</td>
+              <td class="delta">+0.41</td>
+            </tr>
+            
+            <tr>
+              <td><strong>天津</strong></td>
+              <td>华北</td>
+              <td>+1.38</td>
+              <td>+1.65</td>
+              <td class="delta">+0.28</td>
+            </tr>
+            
+            <tr>
+              <td><strong>北京</strong></td>
+              <td>华北</td>
+              <td>-0.39</td>
+              <td>-0.13</td>
+              <td class="delta">+0.26</td>
+            </tr>
+            
+            <tr>
+              <td><strong>河北</strong></td>
+              <td>华北</td>
+              <td>-1.28</td>
+              <td>-1.09</td>
+              <td class="delta">+0.20</td>
+            </tr>
+            
+            <tr>
+              <td><strong>辽宁</strong></td>
+              <td>东北</td>
+              <td>-0.36</td>
+              <td>-0.18</td>
+              <td class="delta">+0.18</td>
+            </tr>
+            
+            <tr>
+              <td><strong>吉林</strong></td>
+              <td>东北</td>
+              <td>-0.28</td>
+              <td>-0.10</td>
+              <td class="delta">+0.17</td>
+            </tr>
+            
+            <tr>
+              <td><strong>江西</strong></td>
+              <td>华东</td>
+              <td>-0.08</td>
+              <td>+0.09</td>
+              <td class="delta">+0.17</td>
+            </tr>
+            
+            <tr>
+              <td><strong>山东</strong></td>
+              <td>华东</td>
+              <td>-0.40</td>
+              <td>-0.23</td>
+              <td class="delta">+0.16</td>
+            </tr>
+            </tbody>
+            </table>
+          </div>
+        
+          </article>
+        </div>
+      </section>
+    
+      
+      <section class="chapter-block">
+        <div class="chapter-head">
+          <div class="eyebrow">X-driven</div>
+          <h3>全国结果：X-driven</h3>
+          <p>
+            2050 baseline 从 30.91 下降到 29.42，
+            变化 -1.49。到 2050 年，情景最低是 SSP1-1.9
+            (29.57)，最高是 SSP5-8.5
+            (29.70)，两者相差 0.129。
+          </p>
+        </div>
+        <div class="figure-grid figure-grid-large">
+          
+      <figure class="figure-card hero-figure">
+        <img src="results/x_driven/figures/figure5_style_main.png" alt="X-driven 全国总图" loading="lazy" />
+        <figcaption>
+          <strong>X-driven 全国总图</strong>
+          <span>主模型 Figure 5 风格总图。</span>
+        </figcaption>
+      </figure>
+    
+        </div>
+        <div class="figure-grid figure-grid-two">
+          
+      <figure class="figure-card">
+        <img src="results/x_driven/figures/national_yearly_main_model.png" alt="X-driven 全国轨迹" loading="lazy" />
+        <figcaption>
+          <strong>X-driven 全国轨迹</strong>
+          <span>全国年序列主模型轨迹图。</span>
+        </figcaption>
+      </figure>
+    
+          
+      <figure class="figure-card">
+        <img src="results/x_driven/figures/scenario_delta_2050_main_model.png" alt="X-driven 2050 情景增量" loading="lazy" />
+        <figcaption>
+          <strong>X-driven 2050 情景增量</strong>
+          <span>2050 年 SSP 相对 baseline 的增量。</span>
+        </figcaption>
+      </figure>
+    
+        </div>
+        <div class="analysis-grid">
+          <article class="analysis-card">
+            <h4>全国结果怎么读</h4>
+            <ul>
+              <li>五个 SSP 中，SSP1-1.9 始终最低，SSP5-8.5 始终最高。</li><li>主模型下 2050 的情景 spread 为 0.129，说明当前由 R1xday 带来的情景分化存在，但量级仍明显小于 baseline 本身的长期变化。</li><li>所有 SSP 在 2050 年都仍低于最后观测值，说明当前这版结果里 baseline 下降趋势仍然压过了情景抬升。</li>
+            </ul>
+          </article>
+          <article class="analysis-card">
+            <h4>地区与省级空间格局</h4>
+            <ul>
+              <li>在 SSP5-8.5 下，地区层面最高的是 华南 (+1.61)，最低的是 华中 (-0.63)。</li><li>到 SSP5-8.5 时，7 大区里有 5 个为正、2 个为负；省级则有 20 个为正、11 个为负。</li><li>省级极值中，抬升最高的是 浙江 (+2.28)，下降最明显的是 河南 (-2.49)。</li>
+            </ul>
+          </article>
+        </div>
+        <div class="figure-grid figure-grid-two">
+          
+      <figure class="figure-card">
+        <img src="results/x_driven/regional_figures/regional_figure5_grid.png" alt="X-driven 地区图" loading="lazy" />
+        <figcaption>
+          <strong>X-driven 地区图</strong>
+          <span>七大区 Figure 5 小图矩阵。</span>
+        </figcaption>
+      </figure>
+    
+          
+      <figure class="figure-card">
+        <img src="results/x_driven/regional_figures/regional_delta_2050_heatmap.png" alt="X-driven 地区热图" loading="lazy" />
+        <figcaption>
+          <strong>X-driven 地区热图</strong>
+          <span>七大区 2050 增量热图。</span>
+        </figcaption>
+      </figure>
+    
+        </div>
+        
+      <div class="table-wrap compact">
+        <table>
+          <thead>
+            <tr>
+              <th>Region</th>
+              <th>SSP1-1.9 Δ</th>
+              <th>SSP5-8.5 Δ</th>
+              <th>SSP5-8.5 predicted</th>
+              <th>Province n</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>华中</strong><br /><span class="muted">Central China</span></td>
+              <td>-0.74</td>
+              <td>-0.63</td>
+              <td>31.61</td>
+              <td>3</td>
+            </tr>
+            
+            <tr>
+              <td><strong>东北</strong><br /><span class="muted">Northeast China</span></td>
+              <td>-0.25</td>
+              <td>-0.09</td>
+              <td>26.26</td>
+              <td>3</td>
+            </tr>
+            
+            <tr>
+              <td><strong>华北</strong><br /><span class="muted">North China</span></td>
+              <td>-0.08</td>
+              <td>+0.07</td>
+              <td>28.02</td>
+              <td>5</td>
+            </tr>
+            
+            <tr>
+              <td><strong>西北</strong><br /><span class="muted">Northwest China</span></td>
+              <td>+0.02</td>
+              <td>+0.11</td>
+              <td>31.52</td>
+              <td>5</td>
+            </tr>
+            
+            <tr>
+              <td><strong>西南</strong><br /><span class="muted">Southwest China</span></td>
+              <td>+0.15</td>
+              <td>+0.23</td>
+              <td>28.99</td>
+              <td>5</td>
+            </tr>
+            
+            <tr>
+              <td><strong>华东</strong><br /><span class="muted">East China</span></td>
+              <td>+0.43</td>
+              <td>+0.58</td>
+              <td>31.00</td>
+              <td>7</td>
+            </tr>
+            
+            <tr>
+              <td><strong>华南</strong><br /><span class="muted">South China</span></td>
+              <td>+1.42</td>
+              <td>+1.61</td>
+              <td>29.21</td>
+              <td>3</td>
+            </tr>
+            </tbody>
+        </table>
+      </div>
+    
+        <div class="figure-grid figure-grid-two">
+          
+      <figure class="figure-card">
+        <img src="results/x_driven/provincial_figures/provincial_future_scenario_panel.png" alt="X-driven 省级总图" loading="lazy" />
+        <figcaption>
+          <strong>X-driven 省级总图</strong>
+          <span>全国轨迹与省级热图放在同一张图里。</span>
+        </figcaption>
+      </figure>
+    
+          
+      <figure class="figure-card">
+        <img src="results/x_driven/dual_scenario_figures/dual_scenario_compare_ssp119_vs_ssp585_delta.png" alt="X-driven 双情景比较" loading="lazy" />
+        <figcaption>
+          <strong>X-driven 双情景比较</strong>
+          <span>默认比较 SSP1-1.9 与 SSP5-8.5 的 ΔAMR 版图。</span>
+        </figcaption>
+      </figure>
+    
+        </div>
+        <div class="two-table-grid">
+          <article>
+            <h4>SSP5-8.5 下抬升最高的省份</h4>
+            
+      <div class="table-wrap compact">
+        <table>
+          <thead>
+            <tr>
+              <th>Province</th>
+              <th>Region</th>
+              <th>2050 predicted</th>
+              <th>Δ vs baseline</th>
+              <th>rx1day Δ</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td><strong>浙江</strong></td>
+          <td>华东</td>
+          <td>32.88</td>
+          <td class="delta">+2.28</td>
+          <td>+76.61</td>
+        </tr>
+        
+        <tr>
+          <td><strong>广东</strong></td>
+          <td>华南</td>
+          <td>37.78</td>
+          <td class="delta">+2.18</td>
+          <td>+73.28</td>
+        </tr>
+        
+        <tr>
+          <td><strong>天津</strong></td>
+          <td>华北</td>
+          <td>29.64</td>
+          <td class="delta">+1.65</td>
+          <td>+55.53</td>
+        </tr>
+        
+        <tr>
+          <td><strong>安徽</strong></td>
+          <td>华东</td>
+          <td>24.25</td>
+          <td class="delta">+1.65</td>
+          <td>+55.34</td>
+        </tr>
+        
+        <tr>
+          <td><strong>广西</strong></td>
+          <td>华南</td>
+          <td>25.37</td>
+          <td class="delta">+1.34</td>
+          <td>+44.89</td>
+        </tr>
+        
+        <tr>
+          <td><strong>海南</strong></td>
+          <td>华南</td>
+          <td>24.48</td>
+          <td class="delta">+1.30</td>
+          <td>+43.57</td>
+        </tr>
+        
+        <tr>
+          <td><strong>福建</strong></td>
+          <td>华东</td>
+          <td>29.63</td>
+          <td class="delta">+0.66</td>
+          <td>+22.06</td>
+        </tr>
+        
+        <tr>
+          <td><strong>湖北</strong></td>
+          <td>华中</td>
+          <td>29.65</td>
+          <td class="delta">+0.33</td>
+          <td>+10.91</td>
+        </tr>
+        </tbody>
+        </table>
+      </div>
+    
+          </article>
+          <article>
+            <h4>SSP5-8.5 与 SSP1-1.9 的最大 gap</h4>
+            
+          <div class="table-wrap compact">
+            <table>
+              <thead>
+                <tr>
+                  <th>Province</th>
+                  <th>Region</th>
+                  <th>SSP1-1.9</th>
+                  <th>SSP5-8.5</th>
+                  <th>Gap</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td><strong>海南</strong></td>
+              <td>华南</td>
+              <td>+0.88</td>
+              <td>+1.30</td>
+              <td class="delta">+0.41</td>
+            </tr>
+            
+            <tr>
+              <td><strong>天津</strong></td>
+              <td>华北</td>
+              <td>+1.38</td>
+              <td>+1.65</td>
+              <td class="delta">+0.28</td>
+            </tr>
+            
+            <tr>
+              <td><strong>北京</strong></td>
+              <td>华北</td>
+              <td>-0.39</td>
+              <td>-0.13</td>
+              <td class="delta">+0.26</td>
+            </tr>
+            
+            <tr>
+              <td><strong>河北</strong></td>
+              <td>华北</td>
+              <td>-1.28</td>
+              <td>-1.09</td>
+              <td class="delta">+0.20</td>
+            </tr>
+            
+            <tr>
+              <td><strong>辽宁</strong></td>
+              <td>东北</td>
+              <td>-0.36</td>
+              <td>-0.18</td>
+              <td class="delta">+0.18</td>
+            </tr>
+            
+            <tr>
+              <td><strong>吉林</strong></td>
+              <td>东北</td>
+              <td>-0.28</td>
+              <td>-0.10</td>
+              <td class="delta">+0.17</td>
+            </tr>
+            
+            <tr>
+              <td><strong>江西</strong></td>
+              <td>华东</td>
+              <td>-0.08</td>
+              <td>+0.09</td>
+              <td class="delta">+0.17</td>
+            </tr>
+            
+            <tr>
+              <td><strong>山东</strong></td>
+              <td>华东</td>
+              <td>-0.40</td>
+              <td>-0.23</td>
+              <td class="delta">+0.16</td>
+            </tr>
+            </tbody>
+            </table>
+          </div>
+        
+          </article>
+        </div>
+      </section>
+    
+      <article class="note-card">
+        <div class="eyebrow">2050 National Comparison</div>
+        <h3>把两版放在同一张表里看，差异更容易解释。</h3>
+        <p>
+          这张表直接告诉你两件事：第一，两版的 delta 排序完全一致，说明 scenario ordering 主要由同一套 R1xday 路径决定；
+          第二，两版的 baseline 与 predicted level 系统性错开，说明主差异来自 baseline 生成口径。
+        </p>
+        
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th rowspan="2">Scenario</th>
+              <th colspan="3">Lancet ETS</th>
+              <th colspan="3">X-driven</th>
+              <th rowspan="2">Lancet uncertainty</th>
+            </tr>
+            <tr>
+              <th>2050 baseline</th>
+              <th>2050 predicted</th>
+              <th>Δ vs baseline</th>
+              <th>2050 baseline</th>
+              <th>2050 predicted</th>
+              <th>Δ vs baseline</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td><strong>SSP1-1.9</strong></td>
+              <td>27.21</td>
+              <td>27.36</td>
+              <td class="delta">+0.15</td>
+              <td>29.42</td>
+              <td>29.57</td>
+              <td class="delta">+0.15</td>
+              <td>+0.18 to +0.08</td>
+            </tr>
+            
+            <tr>
+              <td><strong>SSP1-2.6</strong></td>
+              <td>27.21</td>
+              <td>27.42</td>
+              <td class="delta">+0.21</td>
+              <td>29.42</td>
+              <td>29.63</td>
+              <td class="delta">+0.21</td>
+              <td>+0.21 to +0.21</td>
+            </tr>
+            
+            <tr>
+              <td><strong>SSP2-4.5</strong></td>
+              <td>27.21</td>
+              <td>27.47</td>
+              <td class="delta">+0.26</td>
+              <td>29.42</td>
+              <td>29.68</td>
+              <td class="delta">+0.26</td>
+              <td>+0.22 to +0.31</td>
+            </tr>
+            
+            <tr>
+              <td><strong>SSP3-7.0</strong></td>
+              <td>27.21</td>
+              <td>27.43</td>
+              <td class="delta">+0.22</td>
+              <td>29.42</td>
+              <td>29.65</td>
+              <td class="delta">+0.22</td>
+              <td>+0.19 to +0.24</td>
+            </tr>
+            
+            <tr>
+              <td><strong>SSP5-8.5</strong></td>
+              <td>27.21</td>
+              <td>27.49</td>
+              <td class="delta">+0.28</td>
+              <td>29.42</td>
+              <td>29.70</td>
+              <td class="delta">+0.28</td>
+              <td>+0.23 to +0.33</td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    
+      </article>
+    </section>
+
+    <section class="section" id="spatial">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Spatial Results</div>
+          <h2>真正决定“全国平均长什么样”的，是空间分异，而不是一条全国线本身。</h2>
+        </div>
+        <p>
+          七大区和省级结果都显示出非常明显的空间异质性。当前因为两种 baseline 的 scenario delta 相同，所以空间 pattern 基本一致，差异仍主要体现在 baseline level。
+        </p>
+      </div>
+      <div class="analysis-grid">
+        <article class="analysis-card">
+          <h4>地区层面的统一结论</h4>
+          <ul><li>在主模型下，SSP1-1.9 时 7 大区中有 4 个正值、3 个负值；到 SSP5-8.5 变成 5 个正值、2 个负值。</li><li>华南始终是最高增量区，到 SSP5-8.5 为 +1.61；华中始终最低，到 SSP5-8.5 为 -0.63。</li><li>这意味着全国均值上看似温和的变化，实际上是由一部分地区显著抬升、另一部分地区继续走低共同拼出来的。</li></ul>
+        </article>
+        <article class="analysis-card">
+          <h4>省级层面的统一结论</h4>
+          <ul><li>在 SSP5-8.5 下，31 省里有 20 个省为正、11 个省为负，省际方向并不一致。</li><li>抬升最高的是 浙江 +2.28，下降最低的是 河南 -2.49。</li><li>双情景 gap 最大的省份是 海南，说明它对未来气候路径分化最敏感。</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="robustness">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Robustness</div>
+          <h2>稳健性不是附录装饰，它直接告诉你情景敏感度到底是谁在驱动。</h2>
+        </div>
+        <p>稳健性结果里，主模型和低 VIF 模型几乎重合；systematic 模型更敏感，strict FE 几乎被压平。这和 R1xday 系数完全一致：主模型 0.869、低 VIF 0.873、systematic 1.064，而 strict FE 只有 0.042。</p>
+      </div>
+      <div class="robust-grid">
+        <article class="note-card">
+          <div class="eyebrow">Lancet ETS Roles</div>
+          <h3>四个 role 的 2050 对照</h3>
+          
+      <div class="table-wrap compact">
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>2050 baseline</th>
+              <th>SSP1-1.9 Δ</th>
+              <th>SSP5-8.5 Δ</th>
+              <th>Scenario spread</th>
+              <th>R1xday coef</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td><strong>主模型</strong></td>
+          <td>27.21</td>
+          <td>+0.15</td>
+          <td>+0.28</td>
+          <td>+0.129</td>
+          <td>+0.869</td>
+        </tr>
+        
+        <tr>
+          <td><strong>稳健性模型 1</strong></td>
+          <td>27.21</td>
+          <td>+0.15</td>
+          <td>+0.28</td>
+          <td>+0.130</td>
+          <td>+0.873</td>
+        </tr>
+        
+        <tr>
+          <td><strong>稳健性模型 2</strong></td>
+          <td>27.21</td>
+          <td>+0.19</td>
+          <td>+0.35</td>
+          <td>+0.158</td>
+          <td>+1.064</td>
+        </tr>
+        
+        <tr>
+          <td><strong>稳健性模型 3</strong></td>
+          <td>27.21</td>
+          <td>+0.01</td>
+          <td>+0.01</td>
+          <td>+0.006</td>
+          <td>+0.042</td>
+        </tr>
+        </tbody>
+        </table>
+      </div>
+    
+        </article>
+        <article class="note-card">
+          <div class="eyebrow">X-driven Roles</div>
+          <h3>四个 role 的 2050 对照</h3>
+          
+      <div class="table-wrap compact">
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>2050 baseline</th>
+              <th>SSP1-1.9 Δ</th>
+              <th>SSP5-8.5 Δ</th>
+              <th>Scenario spread</th>
+              <th>R1xday coef</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td><strong>主模型</strong></td>
+          <td>29.42</td>
+          <td>+0.15</td>
+          <td>+0.28</td>
+          <td>+0.129</td>
+          <td>+0.869</td>
+        </tr>
+        
+        <tr>
+          <td><strong>稳健性模型 1</strong></td>
+          <td>30.79</td>
+          <td>+0.15</td>
+          <td>+0.28</td>
+          <td>+0.130</td>
+          <td>+0.873</td>
+        </tr>
+        
+        <tr>
+          <td><strong>稳健性模型 2</strong></td>
+          <td>32.01</td>
+          <td>+0.19</td>
+          <td>+0.35</td>
+          <td>+0.158</td>
+          <td>+1.064</td>
+        </tr>
+        
+        <tr>
+          <td><strong>稳健性模型 3</strong></td>
+          <td>29.45</td>
+          <td>+0.01</td>
+          <td>+0.01</td>
+          <td>+0.006</td>
+          <td>+0.042</td>
+        </tr>
+        </tbody>
+        </table>
+      </div>
+    
+        </article>
+      </div>
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Model Provenance</div>
+          <h2>每个 role 用了什么变量、对应什么系数，这里都摆出来。</h2>
+        </div>
+        <p>
+          由于当前未来情景只更改 R1xday，所以下面这组模型卡片里最应该盯住的，其实就是各 role 的 R1xday 系数大小；
+          但其他协变量也一起列出来，方便你写方法时完整交代。
+        </p>
+      </div>
+      <div class="mode-grid">
+        
+            <article class="model-card">
+              <div class="eyebrow">主模型</div>
+              <h3>方案A_平衡主线组</h3>
+              <p><span class="inline-code">Province: No / Year: Yes</span></p>
+              <div class="chip-row"><span>省平均气温</span><span>R1xday</span><span>PM2.5</span><span>抗菌药物使用强度</span><span>GDP</span><span>文盲比例</span><span>人均日生活用水量(升)</span><span>牲畜饲养 -猪年底头数</span></div>
+              <ul class="coef-list"><li><span>省平均气温</span><strong>+0.108</strong></li><li><span>R1xday</span><strong>+0.869</strong></li><li><span>PM2.5</span><strong>+0.367</strong></li><li><span>抗菌药物使用强度</span><strong>+0.777</strong></li><li><span>GDP</span><strong>+1.097</strong></li><li><span>文盲比例</span><strong>+0.547</strong></li><li><span>人均日生活用水量(升)</span><strong>-0.581</strong></li><li><span>牲畜饲养
+-猪年底头数</span><strong>+0.465</strong></li></ul>
+            </article>
+            
+            <article class="model-card">
+              <div class="eyebrow">稳健性模型 1</div>
+              <h3>方案F_低VIF主线组</h3>
+              <p><span class="inline-code">Province: No / Year: Yes</span></p>
+              <div class="chip-row"><span>TA（°C）</span><span>R1xday</span><span>PM2.5</span><span>抗菌药物使用强度</span><span>GDP</span><span>文盲比例</span><span>人均日生活用水量(升)</span><span>牲畜饲养 -猪年底头数</span><span>主要城市日照时数</span></div>
+              <ul class="coef-list"><li><span>TA（°C）</span><strong>+0.508</strong></li><li><span>R1xday</span><strong>+0.873</strong></li><li><span>PM2.5</span><strong>+0.385</strong></li><li><span>抗菌药物使用强度</span><strong>+0.762</strong></li><li><span>GDP</span><strong>+1.004</strong></li><li><span>文盲比例</span><strong>+0.655</strong></li><li><span>人均日生活用水量(升)</span><strong>-0.566</strong></li><li><span>牲畜饲养
+-猪年底头数</span><strong>+0.446</strong></li><li><span>主要城市日照时数</span><strong>-0.182</strong></li></ul>
+            </article>
+            
+            <article class="model-card">
+              <div class="eyebrow">稳健性模型 2</div>
+              <h3>SYS_09556</h3>
+              <p><span class="inline-code">Province: No / Year: Yes</span></p>
+              <div class="chip-row"><span>R1xday</span><span>抗菌药物使用强度</span><span>TA（°C）</span><span>PM2.5</span><span>GDP</span><span>城市用水普及率</span><span>牲畜饲养 -猪年底头数</span><span>主要城市降水量</span><span>食品消费量</span></div>
+              <ul class="coef-list"><li><span>R1xday</span><strong>+1.064</strong></li><li><span>抗菌药物使用强度</span><strong>+0.703</strong></li><li><span>TA（°C）</span><strong>+0.318</strong></li><li><span>PM2.5</span><strong>+0.189</strong></li><li><span>GDP</span><strong>+1.091</strong></li><li><span>城市用水普及率</span><strong>+0.199</strong></li><li><span>牲畜饲养
+-猪年底头数</span><strong>+0.613</strong></li><li><span>主要城市降水量</span><strong>-0.698</strong></li><li><span>食品消费量</span><strong>+0.389</strong></li></ul>
+            </article>
+            
+            <article class="model-card">
+              <div class="eyebrow">稳健性模型 3</div>
+              <h3>方案A_平衡主线组</h3>
+              <p><span class="inline-code">Province: Yes / Year: Yes</span></p>
+              <div class="chip-row"><span>省平均气温</span><span>R1xday</span><span>PM2.5</span><span>抗菌药物使用强度</span><span>GDP</span><span>文盲比例</span><span>人均日生活用水量(升)</span><span>牲畜饲养 -猪年底头数</span></div>
+              <ul class="coef-list"><li><span>省平均气温</span><strong>+3.111</strong></li><li><span>R1xday</span><strong>+0.042</strong></li><li><span>PM2.5</span><strong>+0.168</strong></li><li><span>抗菌药物使用强度</span><strong>+0.024</strong></li><li><span>GDP</span><strong>-0.436</strong></li><li><span>文盲比例</span><strong>+0.887</strong></li><li><span>人均日生活用水量(升)</span><strong>+0.409</strong></li><li><span>牲畜饲养
+-猪年底头数</span><strong>-0.976</strong></li></ul>
+            </article>
+            
+      </div>
+    </section>
+
+    <section class="section" id="appendix">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Appendix</div>
+          <h2>方法边界、运行命令和关键文件入口。</h2>
+        </div>
+        <p>
+          图和分析已经全部放在正文里了。下面只保留你在复核、补图或写方法时真正会用到的说明和文件入口，不再把“打开文件”当成正文阅读流程的一部分。
+        </p>
+      </div>
+      <div class="analysis-grid">
+        <article class="analysis-card">
+          <h4>当前结果的解释边界</h4>
+          <ul><li>当前 SSP 情景真正接入未来路径的协变量只有 R1xday，因此这版更像是在回答“未来极端降水路径会把 AMR 推开多少”。</li><li>抗菌药物使用、供水/卫生、经济和卫生投入等变量仍沿 baseline 路径延续，所以这版不能被解释成完整的多协变量 SSP 预测系统。</li><li>如果后续把这些外部输入补齐，这个页面的框架仍然适用，只需要把 narrative 里的“仅 R1xday 变化”改掉。</li></ul>
+        </article>
+        <article class="analysis-card">
+          <h4>最常用命令</h4>
+          <div class="formula">python -X utf8 ".\6 未来情景分析\scripts\run_future_scenario_projection.py"
+python -X utf8 ".\6 未来情景分析\scripts\run_regional_future_figure5.py"
+python -X utf8 ".\6 未来情景分析\scripts\run_provincial_future_figure.py"
+python -X utf8 ".\6 未来情景分析\scripts\run_dual_scenario_compare_figure.py"</div>
+        </article>
+      </div>
+      
+            <details>
+              <summary>项目说明</summary>
+              <ul class="link-list">
+            <li>
+              <a href="README.md">README</a>
+              <span>目录、运行命令与推荐阅读顺序。</span>
+            </li>
+            
+            <li>
+              <a href="docs/Lancet未来情景预测框架说明.md">Framework note</a>
+              <span>Lancet 风格未来情景预测框架说明。</span>
+            </li>
+            
+            <li>
+              <a href="docs/两种baseline版本详解.md">Baseline note</a>
+              <span>两种 baseline 版本差异的详细解释。</span>
+            </li>
+            
+            <li>
+              <a href="results/run_metadata.json">Run metadata</a>
+              <span>这次构建的全局元数据和输出路径。</span>
+            </li>
+            </ul>
+            </details>
+            
+            <details>
+              <summary>双 baseline 对照</summary>
+              <ul class="link-list">
+            <li>
+              <a href="results/baseline_mode_compare/national_yearly_compare.csv">national_yearly_compare.csv</a>
+              <span>全国年序列双 baseline 合并表。</span>
+            </li>
+            
+            <li>
+              <a href="results/baseline_mode_compare/scenario_summary_2050_compare.csv">scenario_summary_2050_compare.csv</a>
+              <span>2050 情景总表，包含全部 role。</span>
+            </li>
+            
+            <li>
+              <a href="results/baseline_mode_compare/main_model_2050_compare.csv">main_model_2050_compare.csv</a>
+              <span>主模型的 2050 对照表。</span>
+            </li>
+            
+            <li>
+              <a href="results/baseline_mode_compare/regional_summary_2050_compare.csv">regional_summary_2050_compare.csv</a>
+              <span>七大区结果对照表。</span>
+            </li>
+            
+            <li>
+              <a href="results/baseline_mode_compare/baseline_mode_comparison.md">baseline_mode_comparison.md</a>
+              <span>两种 baseline 的解释说明。</span>
+            </li>
+            </ul>
+            </details>
+            
+            <details>
+              <summary>Lancet ETS 输出</summary>
+              <ul class="link-list">
+            <li>
+              <a href="results/lancet_ets/projection_notes.md">projection_notes.md</a>
+              <span>Lancet ETS 版本的结果说明。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/projection_outputs/national_yearly.csv">national_yearly.csv</a>
+              <span>全国年序列结果。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/projection_outputs/historical_national.csv">historical_national.csv</a>
+              <span>历史全国序列。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/projection_outputs/scenario_summary_2050.csv">scenario_summary_2050.csv</a>
+              <span>2050 情景结果总表。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/projection_outputs/province_projection_2050.csv">province_projection_2050.csv</a>
+              <span>省级 2050 结果总表。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/projection_outputs/future_scenario_projection_panel.csv">future_scenario_projection_panel.csv</a>
+              <span>完整省级逐年未来情景面板。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/regional_outputs/region_summary_2050.csv">region_summary_2050.csv</a>
+              <span>七大区 2050 结果。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/regional_outputs/regional_yearly.csv">regional_yearly.csv</a>
+              <span>七大区逐年结果。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/provincial_outputs/province_order_2050.csv">province_order_2050.csv</a>
+              <span>省级排序输出。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/dual_scenario_outputs/dual_scenario_compare_ssp119_vs_ssp585_delta_2050.csv">dual_scenario_compare_ssp119_vs_ssp585_delta_2050.csv</a>
+              <span>默认双情景 2050 差值表。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/figures/figure5_style_main.png">figure5_style_main.png</a>
+              <span>全国主图。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/regional_figures/regional_figure5_grid.png">regional_figure5_grid.png</a>
+              <span>地区结果图。</span>
+            </li>
+            
+            <li>
+              <a href="results/lancet_ets/provincial_figures/provincial_future_scenario_panel.png">provincial_future_scenario_panel.png</a>
+              <span>省级未来情景图。</span>
+            </li>
+            </ul>
+            </details>
+            
+            <details>
+              <summary>X-driven 输出</summary>
+              <ul class="link-list">
+            <li>
+              <a href="results/x_driven/projection_notes.md">projection_notes.md</a>
+              <span>X-driven 版本的结果说明。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/projection_outputs/national_yearly.csv">national_yearly.csv</a>
+              <span>全国年序列结果。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/projection_outputs/historical_national.csv">historical_national.csv</a>
+              <span>历史全国序列。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/projection_outputs/scenario_summary_2050.csv">scenario_summary_2050.csv</a>
+              <span>2050 情景结果总表。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/projection_outputs/province_projection_2050.csv">province_projection_2050.csv</a>
+              <span>省级 2050 结果总表。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/projection_outputs/future_scenario_projection_panel.csv">future_scenario_projection_panel.csv</a>
+              <span>完整省级逐年未来情景面板。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/regional_outputs/region_summary_2050.csv">region_summary_2050.csv</a>
+              <span>七大区 2050 结果。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/regional_outputs/regional_yearly.csv">regional_yearly.csv</a>
+              <span>七大区逐年结果。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/provincial_outputs/province_order_2050.csv">province_order_2050.csv</a>
+              <span>省级排序输出。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/dual_scenario_outputs/dual_scenario_compare_ssp119_vs_ssp585_delta_2050.csv">dual_scenario_compare_ssp119_vs_ssp585_delta_2050.csv</a>
+              <span>默认双情景 2050 差值表。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/figures/figure5_style_main.png">figure5_style_main.png</a>
+              <span>全国主图。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/regional_figures/regional_figure5_grid.png">regional_figure5_grid.png</a>
+              <span>地区结果图。</span>
+            </li>
+            
+            <li>
+              <a href="results/x_driven/provincial_figures/provincial_future_scenario_panel.png">provincial_future_scenario_panel.png</a>
+              <span>省级未来情景图。</span>
+            </li>
+            </ul>
+            </details>
+            
+            <details>
+              <summary>模型与输入来源</summary>
+              <ul class="link-list">
+            <li>
+              <a href="results/model_screening/selected_models_snapshot.csv">selected_models_snapshot.csv</a>
+              <span>四个 role 的模型快照。</span>
+            </li>
+            
+            <li>
+              <a href="results/model_screening/future_projection_coefficients.csv">future_projection_coefficients.csv</a>
+              <span>用于未来投影的协变量系数。</span>
+            </li>
+            
+            <li>
+              <a href="results/model_screening/covariate_ets_methods_snapshot.csv">covariate_ets_methods_snapshot.csv</a>
+              <span>协变量 ETS 方法快照。</span>
+            </li>
+            
+            <li>
+              <a href="results/common_inputs/rx1day_future_aligned.csv">rx1day_future_aligned.csv</a>
+              <span>偏差订正后的未来 rx1day 路径。</span>
+            </li>
+            
+            <li>
+              <a href="results/common_inputs/rx1day_bias_correction.csv">rx1day_bias_correction.csv</a>
+              <span>历史与外部气候路径的 bias correction 表。</span>
+            </li>
+            
+            <li>
+              <a href="data_processed/province_to_region_7zones.csv">province_to_region_7zones.csv</a>
+              <span>省份到七大区映射表。</span>
+            </li>
+            </ul>
+            </details>
+            
+    </section>
+
+    <div class="footer">Generated at 2026-04-22 22:54:26 · Source: 6 未来情景分析</div>
+  </div>
+</body>
+</html>

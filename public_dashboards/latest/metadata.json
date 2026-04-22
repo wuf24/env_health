@@ -3,8 +3,8 @@
   "slug": "latest",
   "description": "全空间 exhaustive 搜索结果，包含首页、Lancet 子页和横向矩阵。",
   "scope_note": "当前主线发布版本，直接读取 exhaustive_* 结果。",
-  "generated_at": "2026-04-19 17:04:13",
-  "release_tag": "20260419-170413",
+  "generated_at": "2026-04-22 22:55:02",
+  "release_tag": "20260422-225502",
   "source_dir": "2 固定效应模型",
   "builder_script": "tools/build_results_dashboard.py",
   "files": {

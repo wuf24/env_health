@@ -1,0 +1,28 @@
+{
+  "outcome": "AMR_AGG_RAW",
+  "mapping_path": "E:\\MALA\\Code_health\\6 未来情景分析\\data_processed\\province_to_region_7zones.csv",
+  "baseline_modes": [
+    "lancet_ets",
+    "x_driven"
+  ],
+  "end_year": 2050,
+  "mode_outputs": {
+    "lancet_ets": {
+      "regional_historical": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\regional_outputs\\regional_historical.csv",
+      "regional_yearly": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\regional_outputs\\regional_yearly.csv",
+      "region_summary_2050": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\regional_outputs\\region_summary_2050.csv",
+      "regional_figure5_grid": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\regional_figures\\regional_figure5_grid.png",
+      "regional_delta_heatmap": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\regional_figures\\regional_delta_2050_heatmap.png"
+    },
+    "x_driven": {
+      "regional_historical": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\regional_outputs\\regional_historical.csv",
+      "regional_yearly": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\regional_outputs\\regional_yearly.csv",
+      "region_summary_2050": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\regional_outputs\\region_summary_2050.csv",
+      "regional_figure5_grid": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\regional_figures\\regional_figure5_grid.png",
+      "regional_delta_heatmap": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\regional_figures\\regional_delta_2050_heatmap.png"
+    }
+  },
+  "compare_summary": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\baseline_mode_compare\\regional_summary_2050_compare.csv",
+  "log_path": "E:\\MALA\\Code_health\\6 未来情景分析\\logs\\run_regional_future_figure5_20260422_003928.log",
+  "region_count": 7
+}

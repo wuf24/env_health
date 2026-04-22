@@ -1,0 +1,125 @@
+2026-04-19 21:08:48,682 | INFO | Output directory: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day
+2026-04-19 21:08:48,683 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\download_cckp_rx1day_20260419_210848.log
+2026-04-19 21:08:48,683 | INFO | Preferred format order: xlsx -> json
+2026-04-19 21:08:48,683 | INFO | Expected combinations: 60
+2026-04-19 21:08:48,683 | INFO | [DRY-RUN] ssp119 | median | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_median_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,684 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_median_2020-2039.xlsx
+2026-04-19 21:08:48,696 | INFO | [DRY-RUN] ssp119 | median | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_median_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,696 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_median_2040-2059.xlsx
+2026-04-19 21:08:48,697 | INFO | [DRY-RUN] ssp119 | median | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_median_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,697 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_median_2060-2079.xlsx
+2026-04-19 21:08:48,697 | INFO | [DRY-RUN] ssp119 | median | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_median_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,697 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_median_2080-2099.xlsx
+2026-04-19 21:08:48,698 | INFO | [DRY-RUN] ssp119 | p10 | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_p10_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,698 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_p10_2020-2039.xlsx
+2026-04-19 21:08:48,698 | INFO | [DRY-RUN] ssp119 | p10 | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_p10_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,698 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_p10_2040-2059.xlsx
+2026-04-19 21:08:48,698 | INFO | [DRY-RUN] ssp119 | p10 | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_p10_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,698 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_p10_2060-2079.xlsx
+2026-04-19 21:08:48,699 | INFO | [DRY-RUN] ssp119 | p10 | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_p10_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,699 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_p10_2080-2099.xlsx
+2026-04-19 21:08:48,699 | INFO | [DRY-RUN] ssp119 | p90 | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_p90_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,699 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_p90_2020-2039.xlsx
+2026-04-19 21:08:48,700 | INFO | [DRY-RUN] ssp119 | p90 | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_p90_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,700 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_p90_2040-2059.xlsx
+2026-04-19 21:08:48,700 | INFO | [DRY-RUN] ssp119 | p90 | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_p90_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,700 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_p90_2060-2079.xlsx
+2026-04-19 21:08:48,701 | INFO | [DRY-RUN] ssp119 | p90 | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_p90_ssp119_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,701 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp119_p90_2080-2099.xlsx
+2026-04-19 21:08:48,701 | INFO | [DRY-RUN] ssp126 | median | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_median_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,701 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_median_2020-2039.xlsx
+2026-04-19 21:08:48,702 | INFO | [DRY-RUN] ssp126 | median | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_median_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,702 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_median_2040-2059.xlsx
+2026-04-19 21:08:48,702 | INFO | [DRY-RUN] ssp126 | median | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_median_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,702 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_median_2060-2079.xlsx
+2026-04-19 21:08:48,702 | INFO | [DRY-RUN] ssp126 | median | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_median_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,702 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_median_2080-2099.xlsx
+2026-04-19 21:08:48,703 | INFO | [DRY-RUN] ssp126 | p10 | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_p10_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,703 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_p10_2020-2039.xlsx
+2026-04-19 21:08:48,703 | INFO | [DRY-RUN] ssp126 | p10 | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_p10_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,703 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_p10_2040-2059.xlsx
+2026-04-19 21:08:48,704 | INFO | [DRY-RUN] ssp126 | p10 | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_p10_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,704 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_p10_2060-2079.xlsx
+2026-04-19 21:08:48,704 | INFO | [DRY-RUN] ssp126 | p10 | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_p10_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,704 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_p10_2080-2099.xlsx
+2026-04-19 21:08:48,705 | INFO | [DRY-RUN] ssp126 | p90 | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_p90_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,705 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_p90_2020-2039.xlsx
+2026-04-19 21:08:48,705 | INFO | [DRY-RUN] ssp126 | p90 | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_p90_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,705 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_p90_2040-2059.xlsx
+2026-04-19 21:08:48,705 | INFO | [DRY-RUN] ssp126 | p90 | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_p90_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,705 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_p90_2060-2079.xlsx
+2026-04-19 21:08:48,706 | INFO | [DRY-RUN] ssp126 | p90 | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_p90_ssp126_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,706 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp126_p90_2080-2099.xlsx
+2026-04-19 21:08:48,706 | INFO | [DRY-RUN] ssp245 | median | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_median_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,706 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_median_2020-2039.xlsx
+2026-04-19 21:08:48,707 | INFO | [DRY-RUN] ssp245 | median | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_median_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,707 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_median_2040-2059.xlsx
+2026-04-19 21:08:48,707 | INFO | [DRY-RUN] ssp245 | median | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_median_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,707 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_median_2060-2079.xlsx
+2026-04-19 21:08:48,708 | INFO | [DRY-RUN] ssp245 | median | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_median_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,708 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_median_2080-2099.xlsx
+2026-04-19 21:08:48,708 | INFO | [DRY-RUN] ssp245 | p10 | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_p10_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,708 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_p10_2020-2039.xlsx
+2026-04-19 21:08:48,708 | INFO | [DRY-RUN] ssp245 | p10 | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_p10_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,708 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_p10_2040-2059.xlsx
+2026-04-19 21:08:48,709 | INFO | [DRY-RUN] ssp245 | p10 | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_p10_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,709 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_p10_2060-2079.xlsx
+2026-04-19 21:08:48,709 | INFO | [DRY-RUN] ssp245 | p10 | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_p10_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,709 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_p10_2080-2099.xlsx
+2026-04-19 21:08:48,710 | INFO | [DRY-RUN] ssp245 | p90 | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_p90_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,710 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_p90_2020-2039.xlsx
+2026-04-19 21:08:48,710 | INFO | [DRY-RUN] ssp245 | p90 | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_p90_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,710 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_p90_2040-2059.xlsx
+2026-04-19 21:08:48,711 | INFO | [DRY-RUN] ssp245 | p90 | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_p90_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,711 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_p90_2060-2079.xlsx
+2026-04-19 21:08:48,711 | INFO | [DRY-RUN] ssp245 | p90 | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_p90_ssp245_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,711 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp245_p90_2080-2099.xlsx
+2026-04-19 21:08:48,711 | INFO | [DRY-RUN] ssp370 | median | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_median_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,711 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_median_2020-2039.xlsx
+2026-04-19 21:08:48,712 | INFO | [DRY-RUN] ssp370 | median | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_median_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,712 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_median_2040-2059.xlsx
+2026-04-19 21:08:48,712 | INFO | [DRY-RUN] ssp370 | median | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_median_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,712 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_median_2060-2079.xlsx
+2026-04-19 21:08:48,712 | INFO | [DRY-RUN] ssp370 | median | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_median_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,713 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_median_2080-2099.xlsx
+2026-04-19 21:08:48,713 | INFO | [DRY-RUN] ssp370 | p10 | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_p10_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,713 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_p10_2020-2039.xlsx
+2026-04-19 21:08:48,713 | INFO | [DRY-RUN] ssp370 | p10 | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_p10_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,713 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_p10_2040-2059.xlsx
+2026-04-19 21:08:48,714 | INFO | [DRY-RUN] ssp370 | p10 | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_p10_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,714 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_p10_2060-2079.xlsx
+2026-04-19 21:08:48,714 | INFO | [DRY-RUN] ssp370 | p10 | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_p10_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,714 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_p10_2080-2099.xlsx
+2026-04-19 21:08:48,715 | INFO | [DRY-RUN] ssp370 | p90 | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_p90_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,715 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_p90_2020-2039.xlsx
+2026-04-19 21:08:48,715 | INFO | [DRY-RUN] ssp370 | p90 | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_p90_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,715 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_p90_2040-2059.xlsx
+2026-04-19 21:08:48,715 | INFO | [DRY-RUN] ssp370 | p90 | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_p90_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,715 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_p90_2060-2079.xlsx
+2026-04-19 21:08:48,716 | INFO | [DRY-RUN] ssp370 | p90 | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_p90_ssp370_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,716 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp370_p90_2080-2099.xlsx
+2026-04-19 21:08:48,716 | INFO | [DRY-RUN] ssp585 | median | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_median_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,716 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_median_2020-2039.xlsx
+2026-04-19 21:08:48,717 | INFO | [DRY-RUN] ssp585 | median | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_median_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,717 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_median_2040-2059.xlsx
+2026-04-19 21:08:48,717 | INFO | [DRY-RUN] ssp585 | median | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_median_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,717 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_median_2060-2079.xlsx
+2026-04-19 21:08:48,717 | INFO | [DRY-RUN] ssp585 | median | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_median_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,717 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_median_2080-2099.xlsx
+2026-04-19 21:08:48,718 | INFO | [DRY-RUN] ssp585 | p10 | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_p10_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,718 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_p10_2020-2039.xlsx
+2026-04-19 21:08:48,718 | INFO | [DRY-RUN] ssp585 | p10 | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_p10_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,718 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_p10_2040-2059.xlsx
+2026-04-19 21:08:48,719 | INFO | [DRY-RUN] ssp585 | p10 | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_p10_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,719 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_p10_2060-2079.xlsx
+2026-04-19 21:08:48,719 | INFO | [DRY-RUN] ssp585 | p10 | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_p10_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,719 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_p10_2080-2099.xlsx
+2026-04-19 21:08:48,720 | INFO | [DRY-RUN] ssp585 | p90 | 2020-2039 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2020-2039_p90_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,720 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_p90_2020-2039.xlsx
+2026-04-19 21:08:48,720 | INFO | [DRY-RUN] ssp585 | p90 | 2040-2059 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2040-2059_p90_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,720 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_p90_2040-2059.xlsx
+2026-04-19 21:08:48,720 | INFO | [DRY-RUN] ssp585 | p90 | 2060-2079 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2060-2079_p90_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,721 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_p90_2060-2079.xlsx
+2026-04-19 21:08:48,721 | INFO | [DRY-RUN] ssp585 | p90 | 2080-2099 -> https://cckpapi.worldbank.org/api/v1/cmip6-x0.25_climatology_rx1day_climatology_annual_2080-2099_p90_ssp585_ensemble_all_mean/CHN.@?_format=xlsx
+2026-04-19 21:08:48,721 | INFO | [DRY-RUN] target: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day\rx1day_CHNprov_ssp585_p90_2080-2099.xlsx
+2026-04-19 21:08:48,721 | INFO | Summary: {'downloaded': 0, 'skipped': 0, 'failed': 0, 'dry-run': 60}

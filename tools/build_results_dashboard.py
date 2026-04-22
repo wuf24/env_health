@@ -258,8 +258,18 @@ def build_payload() -> dict[str, Any]:
         full = summary_map[rec["model_id"]]
         family_map = parse_family_selection(full.get("family_selection"))
         source_group = rec.get("scheme_source")
-        temperature_proxy = family_map.get("temperature_proxy") or ("人工方案" if source_group == "curated" else "未标注")
-        pollution_proxy = family_map.get("pollution_proxy") or ("人工方案" if source_group == "curated" else "未标注")
+        temperature_proxy = (
+            full.get("temperature_proxy")
+            or rec.get("temperature_proxy")
+            or family_map.get("temperature_proxy")
+            or ("人工方案" if source_group == "curated" else "未标注")
+        )
+        pollution_proxy = (
+            full.get("pollution_proxy")
+            or rec.get("pollution_proxy")
+            or family_map.get("pollution_proxy")
+            or ("人工方案" if source_group == "curated" else "未标注")
+        )
         family_pairs = [
             {"label": FAMILY_LABELS.get(key, key), "value": value}
             for key, value in family_map.items()
@@ -573,6 +583,8 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
           <select class="control-select" id="temperatureSelect"></select>
           <div class="sub" style="color:var(--muted);font-size:12px;margin:16px 0 8px">污染代理</div>
           <select class="control-select" id="pollutionSelect"></select>
+          <div class="sub" style="color:var(--muted);font-size:12px;margin:16px 0 8px">PM2.5 快筛</div>
+          <div class="filters" id="pm25OnlyFilters"></div>
           <div class="sub" style="color:var(--muted);font-size:12px;margin:16px 0 8px">变量数</div>
           <select class="control-select" id="nVarSelect"></select>
           <div class="sub" style="color:var(--muted);font-size:12px;margin:16px 0 8px">搜索</div>
@@ -625,6 +637,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       fe: '全部',
       temperature: '全部',
       pollution: '全部',
+      pm25Only: '全部',
       nvars: '全部',
       search: '',
       selected: data.ranking[0] ? data.ranking[0].model_id : null,
@@ -680,6 +693,18 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       if (n < 0.05) return '*';
       return '';
     };
+    const yesNo = (v) => v ? 'Yes' : 'No';
+    const screeningSummary = (model, includeN = false) => {
+      const bits = [
+        `stage ${html(model.screening_stage || '—')}`,
+        `core ${yesNo(model.core_joint_pass)}`,
+        `temp ${yesNo(model.temperature_gate_pass)}`,
+        `R² ${num(model.r2_model)}`,
+        `PM2.5 pref ${yesNo(model.pollution_preferred)}`
+      ];
+      if (includeN) bits.push(`n=${html(model.nobs)}`);
+      return bits.join(' · ');
+    };
 
     function filteredBase() {
       return data.ranking.filter(row =>
@@ -687,6 +712,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
         (state.fe === '全部' || row.fe_label === state.fe) &&
         (state.temperature === '全部' || row.temperature_proxy === state.temperature) &&
         (state.pollution === '全部' || row.pollution_proxy === state.pollution) &&
+        (state.pm25Only === '全部' || row.pollution_proxy === 'PM2.5') &&
         (state.nvars === '全部' || row.n_vars_label === state.nvars) &&
         (!state.search || String(row.search_text || '').includes(state.search.toLowerCase()))
       );
@@ -749,14 +775,27 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       };
       mk(['全部', ...data.source_labels], state.source, 'source', document.getElementById('schemeFilters'));
       mk(['全部', ...data.fe_labels], state.fe, 'fe', document.getElementById('feFilters'));
+      mk(['全部', '只看 PM2.5'], state.pm25Only, 'pm25Only', document.getElementById('pm25OnlyFilters'));
       const fillSelect = (id, values, current) => {
         const target = document.getElementById(id);
         target.innerHTML = ['全部', ...values].map(v => `<option value="${html(v)}" ${v === current ? 'selected' : ''}>${html(v)}</option>`).join('');
       };
       fillSelect('temperatureSelect', data.temperature_labels, state.temperature);
-      fillSelect('pollutionSelect', data.pollution_labels, state.pollution);
+      const pollutionValues = state.pm25Only === '只看 PM2.5'
+        ? data.pollution_labels.filter(v => v === 'PM2.5')
+        : data.pollution_labels;
+      if (state.pm25Only === '只看 PM2.5' && !['全部', 'PM2.5'].includes(state.pollution)) {
+        state.pollution = '全部';
+      }
+      fillSelect('pollutionSelect', pollutionValues, state.pollution);
       fillSelect('nVarSelect', data.n_var_labels, state.nvars);
-      document.querySelectorAll('.filter').forEach(btn => btn.onclick = () => { state[btn.dataset.kind] = btn.dataset.value; renderAll(); });
+      document.querySelectorAll('.filter').forEach(btn => btn.onclick = () => {
+        state[btn.dataset.kind] = btn.dataset.value;
+        if (btn.dataset.kind === 'pm25Only' && btn.dataset.value === '只看 PM2.5' && !['全部', 'PM2.5'].includes(state.pollution)) {
+          state.pollution = '全部';
+        }
+        renderAll();
+      });
       document.getElementById('temperatureSelect').onchange = (e) => { state.temperature = e.target.value; renderAll(false); };
       document.getElementById('pollutionSelect').onchange = (e) => { state.pollution = e.target.value; renderAll(false); };
       document.getElementById('nVarSelect').onchange = (e) => { state.nvars = e.target.value; renderAll(false); };
@@ -847,7 +886,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       target.innerHTML = `
         <div class="score-strip">
           <div class="panel"><div class="eyebrow" style="color:var(--muted)">Selected Model</div><h3>${label(model.model_id)}</h3><p style="margin:10px 0 0;color:var(--muted);line-height:1.7">${html(model.scheme_note || '该 systematic 方案来自 family 组合。')}</p><div class="chips" style="margin-top:12px"><span class="chip ${sourceCls(model.source_group)}">${html(model.source_group)}</span><span class="chip">${html(model.fe_label)}</span><span class="chip soft">Rank ${model.performance_rank}</span><span class="chip soft">${html(model.n_vars_label)}</span>${model.counterfactual_anchor ? '<span class="chip scheme">反事实锚点</span>' : ''}</div><div class="bar"><span style="width:${pct}%"></span></div></div>
-          <div class="panel"><div class="eyebrow" style="color:var(--muted)">Composite Score</div><div class="big">${num(model.performance_score)}</div><div style="font-size:12px;color:var(--muted);margin-top:8px">core ${num(model.core_signal_score)} · fit ${num(model.fit_score)} · vif ${num(model.vif_score)}</div></div>
+          <div class="panel"><div class="eyebrow" style="color:var(--muted)">Screening Score</div><div class="big">${num(model.performance_score)}</div><div style="font-size:12px;color:var(--muted);margin-top:8px">${screeningSummary(model)}</div></div>
         </div>
         <div class="metric-grid">
           <div class="metric"><div class="k">R-squared</div><div class="v">${num(model.r2_model)}</div></div>
@@ -896,7 +935,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       target.innerHTML = `
         <div class="score-strip">
           <div class="panel"><div class="eyebrow" style="color:var(--muted)">Selected Model</div><h3>${label(model.model_id)}</h3><p style="margin:10px 0 0;color:var(--muted);line-height:1.62">${html(model.scheme_note || '该 systematic 方案来自 family 组合。')}</p><div class="chips" style="margin-top:12px"><span class="chip ${sourceCls(model.source_group)}">${html(model.source_group)}</span><span class="chip">${html(model.fe_label)}</span><span class="chip soft">Rank ${model.performance_rank}</span><span class="chip soft">${html(model.n_vars_label)}</span></div><div class="bar"><span style="width:${pct}%"></span></div></div>
-          <div class="panel"><div class="eyebrow" style="color:var(--muted)">Composite Score</div><div class="big">${num(model.performance_score)}</div><div style="font-size:12px;color:var(--muted);margin-top:8px">core ${num(model.core_signal_score)} · fit ${num(model.fit_score)} · vif ${num(model.vif_score)} · n=${html(model.nobs)}</div><div class="pills compact" style="margin-top:14px"><a class="pill" href="${lancetLink}">看完整 Lancet 表</a><a class="pill" href="results_dashboard_matrix.html">去横向矩阵页</a></div></div>
+          <div class="panel"><div class="eyebrow" style="color:var(--muted)">Screening Score</div><div class="big">${num(model.performance_score)}</div><div style="font-size:12px;color:var(--muted);margin-top:8px">${screeningSummary(model, true)}</div><div class="pills compact" style="margin-top:14px"><a class="pill" href="${lancetLink}">看完整 Lancet 表</a><a class="pill" href="results_dashboard_matrix.html">去横向矩阵页</a></div></div>
         </div>
         <div class="metric-grid">
           <div class="metric"><div class="k">R-squared</div><div class="v">${num(model.r2_model)}</div></div>
@@ -958,9 +997,9 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
             <div class="bar"><span style="width:${pct}%"></span></div>
           </div>
           <div class="panel">
-            <div class="eyebrow" style="color:var(--muted)">Composite Score</div>
+            <div class="eyebrow" style="color:var(--muted)">Screening Score</div>
             <div class="big">${num(model.performance_score)}</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:8px">core ${num(model.core_signal_score)} · fit ${num(model.fit_score)} · vif ${num(model.vif_score)} · n=${html(model.nobs)}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:8px">${screeningSummary(model, true)}</div>
             <div class="pills compact" style="margin-top:14px">
               <a class="pill" href="${lancetLink}">打开 Lancet 页</a>
               <a class="pill" href="results_dashboard_matrix.html">打开横向矩阵页</a>
@@ -1037,9 +1076,9 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
             <div class="bar"><span style="width:${pct}%"></span></div>
           </div>
           <div class="panel">
-            <div class="eyebrow" style="color:var(--muted)">Composite Score</div>
+            <div class="eyebrow" style="color:var(--muted)">Screening Score</div>
             <div class="big">${num(model.performance_score)}</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:8px">core ${num(model.core_signal_score)} · fit ${num(model.fit_score)} · vif ${num(model.vif_score)} · n=${html(model.nobs)}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:8px">${screeningSummary(model, true)}</div>
             <div class="pills compact" style="margin-top:14px">
               <a class="pill" href="${lancetLink}">打开 Lancet 页</a>
               <a class="pill" href="results_dashboard_matrix.html">打开横向矩阵页</a>

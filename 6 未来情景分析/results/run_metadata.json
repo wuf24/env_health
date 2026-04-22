@@ -1,0 +1,47 @@
+{
+  "outcome": "AMR_AGG_RAW",
+  "outcome_label": "AMR_AGG_raw_mean",
+  "outcome_note": "13 个 AMR 指标原始百分比直接取行均值，近似 aggregate antibiotic resistance。",
+  "start_year": 2024,
+  "end_year": 2050,
+  "selected_roles": [
+    "main_model",
+    "robust_low_vif",
+    "robust_systematic",
+    "robust_strict_fe"
+  ],
+  "model_source_outcome": "AMR_AGG",
+  "baseline_modes": [
+    "lancet_ets",
+    "x_driven"
+  ],
+  "common_outputs": {
+    "coefficient_path": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\model_screening\\future_projection_coefficients.csv",
+    "selected_models_snapshot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\model_screening\\selected_models_snapshot.csv",
+    "covariate_ets_methods_snapshot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\model_screening\\covariate_ets_methods_snapshot.csv",
+    "rx1day_future_aligned": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\common_inputs\\rx1day_future_aligned.csv",
+    "rx1day_bias_correction": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\common_inputs\\rx1day_bias_correction.csv"
+  },
+  "compare_outputs": {
+    "national_yearly_compare": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\baseline_mode_compare\\national_yearly_compare.csv",
+    "end_summary_compare": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\baseline_mode_compare\\scenario_summary_2050_compare.csv",
+    "main_model_end_compare": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\baseline_mode_compare\\main_model_2050_compare.csv",
+    "comparison_note": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\baseline_mode_compare\\baseline_mode_comparison.md"
+  },
+  "mode_outputs": {
+    "lancet_ets": {
+      "mode_dir": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets",
+      "projection_panel": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\projection_outputs\\future_scenario_projection_panel.csv",
+      "notes": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\projection_notes.md",
+      "metadata": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\run_metadata.json",
+      "figure5_style_main": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\figures\\figure5_style_main.png"
+    },
+    "x_driven": {
+      "mode_dir": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven",
+      "projection_panel": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\projection_outputs\\future_scenario_projection_panel.csv",
+      "notes": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\projection_notes.md",
+      "metadata": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\run_metadata.json",
+      "figure5_style_main": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\figures\\figure5_style_main.png"
+    }
+  }
+}

@@ -129,6 +129,9 @@ FAMILY_SPECS = [
     },
 ]
 
+FAMILY_CHOICE_MAP = {spec["family"]: list(spec["choices"]) for spec in FAMILY_SPECS}
+PREFERRED_POLLUTION_PROXY = "PM2.5"
+
 
 def to_float(s: pd.Series) -> pd.Series:
     return pd.to_numeric(s, errors="coerce").astype(float)
@@ -197,6 +200,99 @@ def minmax01(s: pd.Series) -> pd.Series:
     if np.isclose(s.max(), s.min()):
         return pd.Series(np.ones(len(s)), index=s.index)
     return (s - s.min()) / (s.max() - s.min())
+
+
+def split_variables(text: str) -> list[str]:
+    if not isinstance(text, str) or not text.strip():
+        return []
+    return [item.strip() for item in text.split(" | ") if item and item.strip()]
+
+
+def pick_family_choice(variables: list[str] | str, family: str) -> str | None:
+    values = split_variables(variables) if isinstance(variables, str) else list(variables)
+    for choice in FAMILY_CHOICE_MAP.get(family, []):
+        if choice in values:
+            return choice
+    return None
+
+
+def enrich_summary_for_screening(summary_df: pd.DataFrame, coef_df: pd.DataFrame) -> pd.DataFrame:
+    summary_df = summary_df.copy()
+    summary_df = summary_df.drop(
+        columns=[
+            "temperature_proxy",
+            "pollution_proxy",
+            "coef_temperature_proxy",
+            "p_temperature_proxy",
+            "coef_pollution_proxy",
+            "p_pollution_proxy",
+            "core_joint_pass",
+            "temperature_positive",
+            "temperature_gate_pass",
+            "pollution_preferred",
+            "screening_stage",
+        ],
+        errors="ignore",
+    )
+    summary_df["variables_list"] = summary_df["variables"].map(split_variables)
+    summary_df["temperature_proxy"] = summary_df["variables_list"].map(
+        lambda values: pick_family_choice(values, "temperature_proxy")
+    )
+    summary_df["pollution_proxy"] = summary_df["variables_list"].map(
+        lambda values: pick_family_choice(values, "pollution_proxy")
+    )
+
+    coef_lookup = coef_df[["model_id", "predictor", "coef", "p_value"]].drop_duplicates(
+        subset=["model_id", "predictor"]
+    )
+    temp_lookup = coef_lookup.rename(
+        columns={
+            "predictor": "temperature_proxy",
+            "coef": "coef_temperature_proxy",
+            "p_value": "p_temperature_proxy",
+        }
+    )
+    pollution_lookup = coef_lookup.rename(
+        columns={
+            "predictor": "pollution_proxy",
+            "coef": "coef_pollution_proxy",
+            "p_value": "p_pollution_proxy",
+        }
+    )
+
+    summary_df = summary_df.merge(
+        temp_lookup[["model_id", "temperature_proxy", "coef_temperature_proxy", "p_temperature_proxy"]],
+        on=["model_id", "temperature_proxy"],
+        how="left",
+    )
+    summary_df = summary_df.merge(
+        pollution_lookup[["model_id", "pollution_proxy", "coef_pollution_proxy", "p_pollution_proxy"]],
+        on=["model_id", "pollution_proxy"],
+        how="left",
+    )
+
+    summary_df["core_joint_pass"] = (
+        (summary_df["coef_R1xday"] > 0)
+        & (summary_df["p_R1xday"] < 0.05)
+        & (summary_df["coef_AMC"] > 0)
+        & (summary_df["p_AMC"] < 0.05)
+    )
+    summary_df["temperature_positive"] = summary_df["coef_temperature_proxy"] > 0
+    summary_df["temperature_gate_pass"] = summary_df["core_joint_pass"] & summary_df["temperature_positive"]
+    summary_df["pollution_preferred"] = summary_df["pollution_proxy"].eq(PREFERRED_POLLUTION_PROXY)
+    summary_df["screening_stage"] = np.select(
+        [
+            summary_df["temperature_gate_pass"],
+            summary_df["core_joint_pass"],
+        ],
+        [
+            "核心变量通过 + 温度为正",
+            "仅核心变量通过",
+        ],
+        default="未通过核心门槛",
+    )
+    summary_df = summary_df.drop(columns=["variables_list"])
+    return summary_df
 
 
 def load_analysis_frame() -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -457,34 +553,54 @@ def build_ranking(summary_df: pd.DataFrame) -> pd.DataFrame:
     summary_df["core_sig_count_p_lt_0_05"] = (
         (summary_df["p_R1xday"] < 0.05).astype(int) + (summary_df["p_AMC"] < 0.05).astype(int)
     )
-    summary_df["core_signal_score"] = (
-        minmax01(summary_df["r1xday_support_raw"]) + minmax01(summary_df["amc_support_raw"])
-    ) / 2
-    summary_df["fit_score"] = (
-        minmax01(summary_df["r2_model"]) + minmax01(summary_df["r2_overall"]) + minmax01(summary_df["r2_within"])
-    ) / 3
+    summary_df["core_signal_score"] = summary_df["core_joint_pass"].astype(float)
+    summary_df["temperature_score"] = summary_df["temperature_positive"].astype(float)
+    summary_df["temperature_gate_score"] = summary_df["temperature_gate_pass"].astype(float)
+    summary_df["fit_score"] = minmax01(summary_df["r2_model"])
+    summary_df["r2_overall_score"] = minmax01(summary_df["r2_overall"])
+    summary_df["r2_within_score"] = minmax01(summary_df["r2_within"])
+    summary_df["pollution_score"] = summary_df["pollution_preferred"].astype(float)
     summary_df["vif_score"] = 1 - minmax01(np.log1p(summary_df["max_vif_z"]))
-    summary_df["performance_score"] = (
-        0.45 * summary_df["core_signal_score"] + 0.35 * summary_df["fit_score"] + 0.20 * summary_df["vif_score"]
+    summary_df["performance_score_raw"] = (
+        100.0 * summary_df["core_signal_score"]
+        + 10.0 * summary_df["temperature_gate_score"]
+        + summary_df["fit_score"]
+        + 1e-7 * summary_df["pollution_score"]
+        + 1e-8 * summary_df["r2_overall_score"]
+        + 1e-9 * summary_df["r2_within_score"]
+        + 1e-10 * summary_df["vif_score"]
     )
-    summary_df["performance_rank"] = (
-        summary_df["performance_score"].rank(method="dense", ascending=False).astype(int)
+    summary_df["performance_score"] = (
+        summary_df["performance_score_raw"] / summary_df["performance_score_raw"].max()
     )
 
     ranking_df = (
         summary_df[
             [
-                "performance_rank",
                 "model_id",
                 "scheme_id",
                 "scheme_source",
                 "fe_label",
+                "screening_stage",
                 "performance_score",
                 "core_signal_score",
+                "temperature_score",
+                "temperature_gate_score",
                 "fit_score",
+                "pollution_score",
                 "vif_score",
+                "core_joint_pass",
                 "core_positive_count",
                 "core_sig_count_p_lt_0_05",
+                "temperature_positive",
+                "temperature_gate_pass",
+                "temperature_proxy",
+                "coef_temperature_proxy",
+                "p_temperature_proxy",
+                "pollution_proxy",
+                "coef_pollution_proxy",
+                "p_pollution_proxy",
+                "pollution_preferred",
                 "coef_R1xday",
                 "p_R1xday",
                 "coef_AMC",
@@ -496,8 +612,25 @@ def build_ranking(summary_df: pd.DataFrame) -> pd.DataFrame:
                 "sig_predictors_p_lt_0_05",
             ]
         ]
-        .sort_values(["performance_rank", "performance_score"], ascending=[True, False])
+        .sort_values(
+            [
+                "core_joint_pass",
+                "temperature_gate_pass",
+                "r2_model",
+                "pollution_preferred",
+                "r2_overall",
+                "r2_within",
+                "vif_score",
+                "model_id",
+            ],
+            ascending=[False, False, False, False, False, False, False, True],
+        )
         .reset_index(drop=True)
+    )
+    ranking_df.insert(0, "performance_rank", np.arange(1, len(ranking_df) + 1))
+    summary_df = summary_df.drop(columns=["performance_rank"], errors="ignore")
+    summary_df["performance_rank"] = summary_df["model_id"].map(
+        ranking_df.set_index("model_id")["performance_rank"]
     )
     return summary_df, ranking_df
 
@@ -505,6 +638,10 @@ def build_ranking(summary_df: pd.DataFrame) -> pd.DataFrame:
 def build_horizontal_top(summary_df: pd.DataFrame, ranking_df: pd.DataFrame) -> pd.DataFrame:
     top_ids = ranking_df["model_id"].head(TOP_N_HORIZONTAL).tolist()
     metric_cols = [
+        "core_joint_pass",
+        "temperature_positive",
+        "temperature_gate_pass",
+        "pollution_preferred",
         "r2_model",
         "r2_overall",
         "r2_within",
@@ -572,6 +709,7 @@ def main() -> None:
     print(f"[info] scientific_rules: keep core vars {CORE_VARS}, one proxy per conceptual family, and preserve curated schemes.")
 
     summary_df, coef_df, vif_df, lancet_df = fit_model_space(catalog_df, panel)
+    summary_df = enrich_summary_for_screening(summary_df, coef_df)
     summary_df, ranking_df = build_ranking(summary_df)
     horizontal_top_df = build_horizontal_top(summary_df, ranking_df)
     save_outputs(catalog_df, summary_df, ranking_df, coef_df, vif_df, lancet_df, horizontal_top_df)

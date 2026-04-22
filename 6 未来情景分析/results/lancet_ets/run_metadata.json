@@ -1,0 +1,56 @@
+{
+  "outcome": "AMR_AGG_RAW",
+  "outcome_label": "AMR_AGG_raw_mean",
+  "baseline_mode": "lancet_ets",
+  "baseline_mode_label": "Lancet-like ETS baseline",
+  "baseline_mode_description": "Use ETS on the outcome itself as the future baseline, then add scenario deltas from future R1xday paths.",
+  "start_year": 2024,
+  "end_year": 2050,
+  "selected_roles": [
+    "main_model",
+    "robust_low_vif",
+    "robust_systematic",
+    "robust_strict_fe"
+  ],
+  "model_source_outcome": "AMR_AGG",
+  "scenario_ids": [
+    "baseline_ets",
+    "ssp119",
+    "ssp126",
+    "ssp245",
+    "ssp370",
+    "ssp585"
+  ],
+  "rx1day_scenarios": [
+    "ssp119",
+    "ssp126",
+    "ssp245",
+    "ssp370",
+    "ssp585"
+  ],
+  "rx1day_statistics": [
+    "median",
+    "p10",
+    "p90"
+  ],
+  "controlled_future_variables": [
+    "R1xday"
+  ],
+  "province_map_size": 34,
+  "outputs": {
+    "projection_panel": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\projection_outputs\\future_scenario_projection_panel.csv",
+    "baseline_method_snapshot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\model_screening\\baseline_method_snapshot.csv",
+    "notes": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\projection_notes.md",
+    "national_plot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\figures\\national_yearly_main_model.png",
+    "delta_plot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\figures\\scenario_delta_2050_main_model.png",
+    "figure5_style_main": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\figures\\figure5_style_main.png",
+    "mortality_note": null
+  },
+  "common_outputs": {
+    "coefficient_path": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\model_screening\\future_projection_coefficients.csv",
+    "selected_models_snapshot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\model_screening\\selected_models_snapshot.csv",
+    "covariate_ets_methods_snapshot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\model_screening\\covariate_ets_methods_snapshot.csv",
+    "rx1day_future_aligned": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\common_inputs\\rx1day_future_aligned.csv",
+    "rx1day_bias_correction": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\common_inputs\\rx1day_bias_correction.csv"
+  }
+}

@@ -1,0 +1,125 @@
+2026-04-19 21:09:06,177 | INFO | Output directory: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day
+2026-04-19 21:09:06,177 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\download_cckp_rx1day_20260419_210906.log
+2026-04-19 21:09:06,177 | INFO | Preferred format order: xlsx -> json
+2026-04-19 21:09:06,177 | INFO | Expected combinations: 60
+2026-04-19 21:09:06,178 | INFO | [TRY] ssp119 | median | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:09:07,583 | INFO | [OK] ssp119 | median | 2020-2039 -> rx1day_CHNprov_ssp119_median_2020-2039.xlsx
+2026-04-19 21:09:08,584 | INFO | [TRY] ssp119 | median | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:09:08,930 | INFO | [OK] ssp119 | median | 2040-2059 -> rx1day_CHNprov_ssp119_median_2040-2059.xlsx
+2026-04-19 21:09:09,932 | INFO | [TRY] ssp119 | median | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:09:10,620 | INFO | [OK] ssp119 | median | 2060-2079 -> rx1day_CHNprov_ssp119_median_2060-2079.xlsx
+2026-04-19 21:09:11,621 | INFO | [TRY] ssp119 | median | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:09:11,990 | INFO | [OK] ssp119 | median | 2080-2099 -> rx1day_CHNprov_ssp119_median_2080-2099.xlsx
+2026-04-19 21:09:12,992 | INFO | [TRY] ssp119 | p10 | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:09:13,366 | INFO | [OK] ssp119 | p10 | 2020-2039 -> rx1day_CHNprov_ssp119_p10_2020-2039.xlsx
+2026-04-19 21:09:14,367 | INFO | [TRY] ssp119 | p10 | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:09:14,733 | INFO | [OK] ssp119 | p10 | 2040-2059 -> rx1day_CHNprov_ssp119_p10_2040-2059.xlsx
+2026-04-19 21:09:15,734 | INFO | [TRY] ssp119 | p10 | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:09:16,083 | INFO | [OK] ssp119 | p10 | 2060-2079 -> rx1day_CHNprov_ssp119_p10_2060-2079.xlsx
+2026-04-19 21:09:17,084 | INFO | [TRY] ssp119 | p10 | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:09:17,433 | INFO | [OK] ssp119 | p10 | 2080-2099 -> rx1day_CHNprov_ssp119_p10_2080-2099.xlsx
+2026-04-19 21:09:18,433 | INFO | [TRY] ssp119 | p90 | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:09:18,745 | INFO | [OK] ssp119 | p90 | 2020-2039 -> rx1day_CHNprov_ssp119_p90_2020-2039.xlsx
+2026-04-19 21:09:19,747 | INFO | [TRY] ssp119 | p90 | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:09:20,131 | INFO | [OK] ssp119 | p90 | 2040-2059 -> rx1day_CHNprov_ssp119_p90_2040-2059.xlsx
+2026-04-19 21:09:21,133 | INFO | [TRY] ssp119 | p90 | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:09:21,675 | INFO | [OK] ssp119 | p90 | 2060-2079 -> rx1day_CHNprov_ssp119_p90_2060-2079.xlsx
+2026-04-19 21:09:22,677 | INFO | [TRY] ssp119 | p90 | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:09:23,044 | INFO | [OK] ssp119 | p90 | 2080-2099 -> rx1day_CHNprov_ssp119_p90_2080-2099.xlsx
+2026-04-19 21:09:24,045 | INFO | [TRY] ssp126 | median | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:09:24,430 | INFO | [OK] ssp126 | median | 2020-2039 -> rx1day_CHNprov_ssp126_median_2020-2039.xlsx
+2026-04-19 21:09:25,431 | INFO | [TRY] ssp126 | median | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:09:25,838 | INFO | [OK] ssp126 | median | 2040-2059 -> rx1day_CHNprov_ssp126_median_2040-2059.xlsx
+2026-04-19 21:09:26,839 | INFO | [TRY] ssp126 | median | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:09:27,247 | INFO | [OK] ssp126 | median | 2060-2079 -> rx1day_CHNprov_ssp126_median_2060-2079.xlsx
+2026-04-19 21:09:28,249 | INFO | [TRY] ssp126 | median | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:09:28,621 | INFO | [OK] ssp126 | median | 2080-2099 -> rx1day_CHNprov_ssp126_median_2080-2099.xlsx
+2026-04-19 21:09:29,622 | INFO | [TRY] ssp126 | p10 | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:09:29,926 | INFO | [OK] ssp126 | p10 | 2020-2039 -> rx1day_CHNprov_ssp126_p10_2020-2039.xlsx
+2026-04-19 21:09:30,926 | INFO | [TRY] ssp126 | p10 | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:09:31,316 | INFO | [OK] ssp126 | p10 | 2040-2059 -> rx1day_CHNprov_ssp126_p10_2040-2059.xlsx
+2026-04-19 21:09:32,317 | INFO | [TRY] ssp126 | p10 | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:09:32,696 | INFO | [OK] ssp126 | p10 | 2060-2079 -> rx1day_CHNprov_ssp126_p10_2060-2079.xlsx
+2026-04-19 21:09:33,697 | INFO | [TRY] ssp126 | p10 | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:09:34,055 | INFO | [OK] ssp126 | p10 | 2080-2099 -> rx1day_CHNprov_ssp126_p10_2080-2099.xlsx
+2026-04-19 21:09:35,056 | INFO | [TRY] ssp126 | p90 | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:09:35,373 | INFO | [OK] ssp126 | p90 | 2020-2039 -> rx1day_CHNprov_ssp126_p90_2020-2039.xlsx
+2026-04-19 21:09:36,374 | INFO | [TRY] ssp126 | p90 | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:09:36,787 | INFO | [OK] ssp126 | p90 | 2040-2059 -> rx1day_CHNprov_ssp126_p90_2040-2059.xlsx
+2026-04-19 21:09:37,788 | INFO | [TRY] ssp126 | p90 | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:09:38,165 | INFO | [OK] ssp126 | p90 | 2060-2079 -> rx1day_CHNprov_ssp126_p90_2060-2079.xlsx
+2026-04-19 21:09:39,167 | INFO | [TRY] ssp126 | p90 | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:09:39,554 | INFO | [OK] ssp126 | p90 | 2080-2099 -> rx1day_CHNprov_ssp126_p90_2080-2099.xlsx
+2026-04-19 21:09:40,554 | INFO | [TRY] ssp245 | median | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:09:40,875 | INFO | [OK] ssp245 | median | 2020-2039 -> rx1day_CHNprov_ssp245_median_2020-2039.xlsx
+2026-04-19 21:09:41,877 | INFO | [TRY] ssp245 | median | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:09:42,265 | INFO | [OK] ssp245 | median | 2040-2059 -> rx1day_CHNprov_ssp245_median_2040-2059.xlsx
+2026-04-19 21:09:43,266 | INFO | [TRY] ssp245 | median | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:09:43,679 | INFO | [OK] ssp245 | median | 2060-2079 -> rx1day_CHNprov_ssp245_median_2060-2079.xlsx
+2026-04-19 21:09:44,681 | INFO | [TRY] ssp245 | median | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:09:45,087 | INFO | [OK] ssp245 | median | 2080-2099 -> rx1day_CHNprov_ssp245_median_2080-2099.xlsx
+2026-04-19 21:09:46,088 | INFO | [TRY] ssp245 | p10 | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:09:46,460 | INFO | [OK] ssp245 | p10 | 2020-2039 -> rx1day_CHNprov_ssp245_p10_2020-2039.xlsx
+2026-04-19 21:09:47,462 | INFO | [TRY] ssp245 | p10 | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:09:47,850 | INFO | [OK] ssp245 | p10 | 2040-2059 -> rx1day_CHNprov_ssp245_p10_2040-2059.xlsx
+2026-04-19 21:09:48,851 | INFO | [TRY] ssp245 | p10 | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:09:49,244 | INFO | [OK] ssp245 | p10 | 2060-2079 -> rx1day_CHNprov_ssp245_p10_2060-2079.xlsx
+2026-04-19 21:09:50,245 | INFO | [TRY] ssp245 | p10 | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:09:50,680 | INFO | [OK] ssp245 | p10 | 2080-2099 -> rx1day_CHNprov_ssp245_p10_2080-2099.xlsx
+2026-04-19 21:09:51,681 | INFO | [TRY] ssp245 | p90 | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:09:52,175 | INFO | [OK] ssp245 | p90 | 2020-2039 -> rx1day_CHNprov_ssp245_p90_2020-2039.xlsx
+2026-04-19 21:09:53,177 | INFO | [TRY] ssp245 | p90 | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:09:53,571 | INFO | [OK] ssp245 | p90 | 2040-2059 -> rx1day_CHNprov_ssp245_p90_2040-2059.xlsx
+2026-04-19 21:09:54,573 | INFO | [TRY] ssp245 | p90 | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:09:55,027 | INFO | [OK] ssp245 | p90 | 2060-2079 -> rx1day_CHNprov_ssp245_p90_2060-2079.xlsx
+2026-04-19 21:09:56,028 | INFO | [TRY] ssp245 | p90 | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:09:56,397 | INFO | [OK] ssp245 | p90 | 2080-2099 -> rx1day_CHNprov_ssp245_p90_2080-2099.xlsx
+2026-04-19 21:09:57,399 | INFO | [TRY] ssp370 | median | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:09:57,788 | INFO | [OK] ssp370 | median | 2020-2039 -> rx1day_CHNprov_ssp370_median_2020-2039.xlsx
+2026-04-19 21:09:58,789 | INFO | [TRY] ssp370 | median | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:09:59,178 | INFO | [OK] ssp370 | median | 2040-2059 -> rx1day_CHNprov_ssp370_median_2040-2059.xlsx
+2026-04-19 21:10:00,180 | INFO | [TRY] ssp370 | median | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:10:00,553 | INFO | [OK] ssp370 | median | 2060-2079 -> rx1day_CHNprov_ssp370_median_2060-2079.xlsx
+2026-04-19 21:10:01,555 | INFO | [TRY] ssp370 | median | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:10:01,961 | INFO | [OK] ssp370 | median | 2080-2099 -> rx1day_CHNprov_ssp370_median_2080-2099.xlsx
+2026-04-19 21:10:02,963 | INFO | [TRY] ssp370 | p10 | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:10:03,292 | INFO | [OK] ssp370 | p10 | 2020-2039 -> rx1day_CHNprov_ssp370_p10_2020-2039.xlsx
+2026-04-19 21:10:04,293 | INFO | [TRY] ssp370 | p10 | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:10:04,733 | INFO | [OK] ssp370 | p10 | 2040-2059 -> rx1day_CHNprov_ssp370_p10_2040-2059.xlsx
+2026-04-19 21:10:05,734 | INFO | [TRY] ssp370 | p10 | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:10:06,111 | INFO | [OK] ssp370 | p10 | 2060-2079 -> rx1day_CHNprov_ssp370_p10_2060-2079.xlsx
+2026-04-19 21:10:07,112 | INFO | [TRY] ssp370 | p10 | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:10:07,512 | INFO | [OK] ssp370 | p10 | 2080-2099 -> rx1day_CHNprov_ssp370_p10_2080-2099.xlsx
+2026-04-19 21:10:08,513 | INFO | [TRY] ssp370 | p90 | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:10:08,873 | INFO | [OK] ssp370 | p90 | 2020-2039 -> rx1day_CHNprov_ssp370_p90_2020-2039.xlsx
+2026-04-19 21:10:09,875 | INFO | [TRY] ssp370 | p90 | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:10:10,350 | INFO | [OK] ssp370 | p90 | 2040-2059 -> rx1day_CHNprov_ssp370_p90_2040-2059.xlsx
+2026-04-19 21:10:11,352 | INFO | [TRY] ssp370 | p90 | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:10:11,725 | INFO | [OK] ssp370 | p90 | 2060-2079 -> rx1day_CHNprov_ssp370_p90_2060-2079.xlsx
+2026-04-19 21:10:12,726 | INFO | [TRY] ssp370 | p90 | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:10:13,132 | INFO | [OK] ssp370 | p90 | 2080-2099 -> rx1day_CHNprov_ssp370_p90_2080-2099.xlsx
+2026-04-19 21:10:14,134 | INFO | [TRY] ssp585 | median | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:10:14,459 | INFO | [OK] ssp585 | median | 2020-2039 -> rx1day_CHNprov_ssp585_median_2020-2039.xlsx
+2026-04-19 21:10:15,459 | INFO | [TRY] ssp585 | median | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:10:15,880 | INFO | [OK] ssp585 | median | 2040-2059 -> rx1day_CHNprov_ssp585_median_2040-2059.xlsx
+2026-04-19 21:10:16,881 | INFO | [TRY] ssp585 | median | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:10:17,312 | INFO | [OK] ssp585 | median | 2060-2079 -> rx1day_CHNprov_ssp585_median_2060-2079.xlsx
+2026-04-19 21:10:18,314 | INFO | [TRY] ssp585 | median | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:10:18,717 | INFO | [OK] ssp585 | median | 2080-2099 -> rx1day_CHNprov_ssp585_median_2080-2099.xlsx
+2026-04-19 21:10:19,718 | INFO | [TRY] ssp585 | p10 | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:10:20,038 | INFO | [OK] ssp585 | p10 | 2020-2039 -> rx1day_CHNprov_ssp585_p10_2020-2039.xlsx
+2026-04-19 21:10:21,039 | INFO | [TRY] ssp585 | p10 | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:10:21,404 | INFO | [OK] ssp585 | p10 | 2040-2059 -> rx1day_CHNprov_ssp585_p10_2040-2059.xlsx
+2026-04-19 21:10:22,405 | INFO | [TRY] ssp585 | p10 | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:10:22,769 | INFO | [OK] ssp585 | p10 | 2060-2079 -> rx1day_CHNprov_ssp585_p10_2060-2079.xlsx
+2026-04-19 21:10:23,770 | INFO | [TRY] ssp585 | p10 | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:10:24,152 | INFO | [OK] ssp585 | p10 | 2080-2099 -> rx1day_CHNprov_ssp585_p10_2080-2099.xlsx
+2026-04-19 21:10:25,153 | INFO | [TRY] ssp585 | p90 | 2020-2039 | format=xlsx | attempt=1/3
+2026-04-19 21:10:25,457 | INFO | [OK] ssp585 | p90 | 2020-2039 -> rx1day_CHNprov_ssp585_p90_2020-2039.xlsx
+2026-04-19 21:10:26,457 | INFO | [TRY] ssp585 | p90 | 2040-2059 | format=xlsx | attempt=1/3
+2026-04-19 21:10:26,863 | INFO | [OK] ssp585 | p90 | 2040-2059 -> rx1day_CHNprov_ssp585_p90_2040-2059.xlsx
+2026-04-19 21:10:27,864 | INFO | [TRY] ssp585 | p90 | 2060-2079 | format=xlsx | attempt=1/3
+2026-04-19 21:10:28,235 | INFO | [OK] ssp585 | p90 | 2060-2079 -> rx1day_CHNprov_ssp585_p90_2060-2079.xlsx
+2026-04-19 21:10:29,236 | INFO | [TRY] ssp585 | p90 | 2080-2099 | format=xlsx | attempt=1/3
+2026-04-19 21:10:29,607 | INFO | [OK] ssp585 | p90 | 2080-2099 -> rx1day_CHNprov_ssp585_p90_2080-2099.xlsx
+2026-04-19 21:10:30,608 | INFO | Summary: {'downloaded': 60, 'skipped': 0, 'failed': 0, 'dry-run': 0}

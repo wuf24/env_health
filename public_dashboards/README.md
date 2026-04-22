@@ -14,10 +14,12 @@ public_dashboards/
   index.html
   manifest.json
   latest/
+  legacy-exhaustive-20260419/
   legacy-12models/
+  future-scenario-analysis/
   bayes-analysis/
   counterfactual-amr-agg/
-  releases/20260419-170413/
+  releases/20260422-225502/
 ```
 
 ## 维护命令
@@ -43,7 +45,9 @@ python -X utf8 tools/deploy_public_dashboards.py --retain-releases 12
 ## 上游维护入口
 
 - latest builder：`tools/build_results_dashboard.py`
+- legacy-exhaustive-20260419 builder：`tools/build_results_dashboard.py`
 - legacy-12models builder：`2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py`
+- future-scenario-analysis builder：`tools/build_future_scenario_dashboard_report.py`
 - bayes-analysis builder：`tools/build_bayes_analysis_dashboard.py`
 - counterfactual-amr-agg builder：`5 反事实推演/build_counterfactual_dashboard.py`
 
@@ -72,6 +76,6 @@ python -X utf8 tools/deploy_public_dashboards.py --retain-releases 12
 
 ## 说明
 
-- `latest/` 和 `legacy-12models/` 始终覆盖为最近一次部署后的稳定版本。
+- 各个稳定 bundle 目录始终覆盖为最近一次部署后的稳定版本。
 - `releases/<timestamp>/` 会保留部署当时的归档快照，方便对照和回滚。
 - 每个 bundle 目录下都有 `metadata.json`，可用于排查来源和生成脚本。

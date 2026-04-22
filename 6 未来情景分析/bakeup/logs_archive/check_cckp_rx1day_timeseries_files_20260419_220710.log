@@ -1,0 +1,9 @@
+2026-04-19 22:07:10,436 | INFO | Scanning directory: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day_timeseries
+2026-04-19 22:07:10,436 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\check_cckp_rx1day_timeseries_files_20260419_220710.log
+2026-04-19 22:07:10,436 | INFO | Unavailable statistics currently excluded from downloads: mean
+2026-04-19 22:07:10,448 | INFO | Status summary saved to: E:\MALA\Code_health\6 未来情景分析\logs\cckp_rx1day_timeseries_download_status.csv
+2026-04-19 22:07:10,448 | INFO | Total expected combinations: 15
+2026-04-19 22:07:10,449 | INFO | OK combinations: 15
+2026-04-19 22:07:10,449 | INFO | Missing combinations: 0
+2026-04-19 22:07:10,451 | INFO | Duplicate combinations: 0
+2026-04-19 22:07:10,452 | INFO | Invalid combinations: 0

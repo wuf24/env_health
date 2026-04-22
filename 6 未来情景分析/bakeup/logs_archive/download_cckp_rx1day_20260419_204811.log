@@ -1,0 +1,5 @@
+2026-04-19 20:48:11,426 | INFO | Output directory: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day
+2026-04-19 20:48:11,426 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\download_cckp_rx1day_20260419_204811.log
+2026-04-19 20:48:11,426 | INFO | Preferred format order: xlsx -> json
+2026-04-19 20:48:11,426 | INFO | Expected combinations: 60
+2026-04-19 20:48:11,427 | ERROR | BASE_URL is empty. Paste the exact CCKP URL copied from the webpage into '6 未来情景分析/scripts/config_cckp_rx1day.py' before running the downloader.

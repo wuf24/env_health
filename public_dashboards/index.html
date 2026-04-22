@@ -231,9 +231,9 @@
       <h1>AMR Dashboard 发布入口</h1>
       <p>这里是长期维护用的静态发布目录。研究目录继续保存原始分析结果，<code>public_dashboards/</code> 负责对外访问、稳定链接和版本归档。</p>
       <div class="stats">
-        <div class="stat"><div class="k">生成时间</div><div class="v">2026-04-19 17:04:13</div><div class="h">这次部署完成的时间戳</div></div>
-        <div class="stat"><div class="k">发布版本</div><div class="v">20260419-170413</div><div class="h">归档快照目录名</div></div>
-        <div class="stat"><div class="k">稳定入口</div><div class="v">4</div><div class="h">当前维护中的 dashboard 套数</div></div>
+        <div class="stat"><div class="k">生成时间</div><div class="v">2026-04-22 22:55:02</div><div class="h">这次部署完成的时间戳</div></div>
+        <div class="stat"><div class="k">发布版本</div><div class="v">20260422-225502</div><div class="h">归档快照目录名</div></div>
+        <div class="stat"><div class="k">稳定入口</div><div class="v">6</div><div class="h">当前维护中的 dashboard 套数</div></div>
         <div class="stat"><div class="k">发布根目录</div><div class="v">public</div><div class="h"><code>public_dashboards</code></div></div>
       </div>
     </section>
@@ -262,6 +262,19 @@
       </section>
     
       <section class="panel">
+        <div class="eyebrow">legacy-exhaustive-20260419</div>
+        <h2>Legacy Public Exhaustive Dashboard</h2>
+        <p>保留 2026-04-19 对外发布的 exhaustive dashboard，作为更新筛选逻辑前的公开快照。</p>
+        <div class="meta">
+          <span>Scope: 来源于 public_dashboards/releases/20260419-170413/latest，用于回看之前的 public latest 版本。</span>
+          <span>Builder: <code>tools/build_results_dashboard.py</code></span>
+        </div>
+        <div class="links">
+          <a class="btn primary" href="./legacy-exhaustive-20260419/index.html">Open home</a><a class="btn" href="./legacy-exhaustive-20260419/results_dashboard_lancet.html">Lancet subpage</a><a class="btn" href="./legacy-exhaustive-20260419/results_dashboard_matrix.html">Matrix view</a><a class="btn ghost" href="./legacy-exhaustive-20260419/metadata.json">metadata.json</a>
+        </div>
+      </section>
+    
+      <section class="panel">
         <div class="eyebrow">legacy-12models</div>
         <h2>Legacy 12-Model Dashboard</h2>
         <p>旧版 4 套人工方案 × 3 种固定效应，共 12 个模型的三页式备份。</p>
@@ -271,6 +284,19 @@
         </div>
         <div class="links">
           <a class="btn primary" href="./legacy-12models/index.html">Open home</a><a class="btn" href="./legacy-12models/results_dashboard_legacy_12models_lancet.html">Lancet subpage</a><a class="btn" href="./legacy-12models/results_dashboard_legacy_12models_matrix.html">Matrix view</a><a class="btn ghost" href="./legacy-12models/metadata.json">metadata.json</a>
+        </div>
+      </section>
+    
+      <section class="panel">
+        <div class="eyebrow">future-scenario-analysis</div>
+        <h2>Future Scenario Analysis Dashboard</h2>
+        <p>双 baseline 的未来情景总览页，整合全国、地区、省级结果、模型来源和文件入口。</p>
+        <div class="meta">
+          <span>Scope: 对应 6 未来情景分析/index.html，并随 results/、docs/ 与关键映射表一起发布。</span>
+          <span>Builder: <code>tools/build_future_scenario_dashboard_report.py</code></span>
+        </div>
+        <div class="links">
+          <a class="btn primary" href="./future-scenario-analysis/index.html">Open dashboard</a><a class="btn" href="./future-scenario-analysis/README.md">README</a><a class="btn" href="./future-scenario-analysis/results/baseline_mode_compare/scenario_summary_2050_compare.csv">2050 compare CSV</a><a class="btn ghost" href="./future-scenario-analysis/metadata.json">metadata.json</a>
         </div>
       </section>
     
@@ -308,10 +334,10 @@
         <div>
           <div class="eyebrow" style="color: var(--muted);">Release Snapshot</div>
           <h2>本次归档快照</h2>
-          <p>每次部署都会把当前版本复制到 <code>releases/20260419-170413</code>，方便以后回看或回滚。</p>
+          <p>每次部署都会把当前版本复制到 <code>releases/20260422-225502</code>，方便以后回看或回滚。</p>
         </div>
         <div class="links">
-          <a class="btn primary" href="./releases/20260419-170413/index.html">打开本次快照</a>
+          <a class="btn primary" href="./releases/20260422-225502/index.html">打开本次快照</a>
           <a class="btn ghost" href="./manifest.json">manifest.json</a>
         </div>
       </div>
@@ -326,7 +352,20 @@
           <span>Builder: <code>tools/build_results_dashboard.py</code></span>
         </div>
         <div class="links">
-          <a class="btn primary" href="./releases/20260419-170413/latest/index.html">Open home</a><a class="btn" href="./releases/20260419-170413/latest/results_dashboard_lancet.html">Lancet subpage</a><a class="btn" href="./releases/20260419-170413/latest/results_dashboard_matrix.html">Matrix view</a><a class="btn ghost" href="./releases/20260419-170413/latest/metadata.json">metadata.json</a>
+          <a class="btn primary" href="./releases/20260422-225502/latest/index.html">Open home</a><a class="btn" href="./releases/20260422-225502/latest/results_dashboard_lancet.html">Lancet subpage</a><a class="btn" href="./releases/20260422-225502/latest/results_dashboard_matrix.html">Matrix view</a><a class="btn ghost" href="./releases/20260422-225502/latest/metadata.json">metadata.json</a>
+        </div>
+      </section>
+    
+      <section class="panel">
+        <div class="eyebrow">legacy-exhaustive-20260419</div>
+        <h2>Legacy Public Exhaustive Dashboard</h2>
+        <p>保留 2026-04-19 对外发布的 exhaustive dashboard，作为更新筛选逻辑前的公开快照。</p>
+        <div class="meta">
+          <span>Scope: 来源于 public_dashboards/releases/20260419-170413/latest，用于回看之前的 public latest 版本。</span>
+          <span>Builder: <code>tools/build_results_dashboard.py</code></span>
+        </div>
+        <div class="links">
+          <a class="btn primary" href="./releases/20260422-225502/legacy-exhaustive-20260419/index.html">Open home</a><a class="btn" href="./releases/20260422-225502/legacy-exhaustive-20260419/results_dashboard_lancet.html">Lancet subpage</a><a class="btn" href="./releases/20260422-225502/legacy-exhaustive-20260419/results_dashboard_matrix.html">Matrix view</a><a class="btn ghost" href="./releases/20260422-225502/legacy-exhaustive-20260419/metadata.json">metadata.json</a>
         </div>
       </section>
     
@@ -339,7 +378,20 @@
           <span>Builder: <code>2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py</code></span>
         </div>
         <div class="links">
-          <a class="btn primary" href="./releases/20260419-170413/legacy-12models/index.html">Open home</a><a class="btn" href="./releases/20260419-170413/legacy-12models/results_dashboard_legacy_12models_lancet.html">Lancet subpage</a><a class="btn" href="./releases/20260419-170413/legacy-12models/results_dashboard_legacy_12models_matrix.html">Matrix view</a><a class="btn ghost" href="./releases/20260419-170413/legacy-12models/metadata.json">metadata.json</a>
+          <a class="btn primary" href="./releases/20260422-225502/legacy-12models/index.html">Open home</a><a class="btn" href="./releases/20260422-225502/legacy-12models/results_dashboard_legacy_12models_lancet.html">Lancet subpage</a><a class="btn" href="./releases/20260422-225502/legacy-12models/results_dashboard_legacy_12models_matrix.html">Matrix view</a><a class="btn ghost" href="./releases/20260422-225502/legacy-12models/metadata.json">metadata.json</a>
+        </div>
+      </section>
+    
+      <section class="panel">
+        <div class="eyebrow">future-scenario-analysis</div>
+        <h2>Future Scenario Analysis Dashboard</h2>
+        <p>双 baseline 的未来情景总览页，整合全国、地区、省级结果、模型来源和文件入口。</p>
+        <div class="meta">
+          <span>Scope: 对应 6 未来情景分析/index.html，并随 results/、docs/ 与关键映射表一起发布。</span>
+          <span>Builder: <code>tools/build_future_scenario_dashboard_report.py</code></span>
+        </div>
+        <div class="links">
+          <a class="btn primary" href="./releases/20260422-225502/future-scenario-analysis/index.html">Open dashboard</a><a class="btn" href="./releases/20260422-225502/future-scenario-analysis/README.md">README</a><a class="btn" href="./releases/20260422-225502/future-scenario-analysis/results/baseline_mode_compare/scenario_summary_2050_compare.csv">2050 compare CSV</a><a class="btn ghost" href="./releases/20260422-225502/future-scenario-analysis/metadata.json">metadata.json</a>
         </div>
       </section>
     
@@ -352,7 +404,7 @@
           <span>Builder: <code>tools/build_bayes_analysis_dashboard.py</code></span>
         </div>
         <div class="links">
-          <a class="btn primary" href="./releases/20260419-170413/bayes-analysis/index.html">Open home</a><a class="btn" href="./releases/20260419-170413/bayes-analysis/data/focus_primary_summary.csv">Primary summary CSV</a><a class="btn" href="./releases/20260419-170413/bayes-analysis/data/focus_variant_bridge_summary.csv">Variant bridge CSV</a><a class="btn ghost" href="./releases/20260419-170413/bayes-analysis/data/combined_diagnostics.csv">Diagnostics CSV</a>
+          <a class="btn primary" href="./releases/20260422-225502/bayes-analysis/index.html">Open home</a><a class="btn" href="./releases/20260422-225502/bayes-analysis/data/focus_primary_summary.csv">Primary summary CSV</a><a class="btn" href="./releases/20260422-225502/bayes-analysis/data/focus_variant_bridge_summary.csv">Variant bridge CSV</a><a class="btn ghost" href="./releases/20260422-225502/bayes-analysis/data/combined_diagnostics.csv">Diagnostics CSV</a>
         </div>
       </section>
     
@@ -365,7 +417,7 @@
           <span>Builder: <code>5 反事实推演/build_counterfactual_dashboard.py</code></span>
         </div>
         <div class="links">
-          <a class="btn primary" href="./releases/20260419-170413/counterfactual-amr-agg/index.html">Open dashboard</a><a class="btn" href="./releases/20260419-170413/counterfactual-amr-agg/model_screening/selected_models.csv">Model screening</a><a class="btn" href="./releases/20260419-170413/counterfactual-amr-agg/counterfactual_outputs/national_overall.csv">National summary</a><a class="btn ghost" href="./releases/20260419-170413/counterfactual-amr-agg/selection_and_writeup_notes.md">Write-up notes</a>
+          <a class="btn primary" href="./releases/20260422-225502/counterfactual-amr-agg/index.html">Open dashboard</a><a class="btn" href="./releases/20260422-225502/counterfactual-amr-agg/model_screening/selected_models.csv">Model screening</a><a class="btn" href="./releases/20260422-225502/counterfactual-amr-agg/counterfactual_outputs/national_overall.csv">National summary</a><a class="btn ghost" href="./releases/20260422-225502/counterfactual-amr-agg/selection_and_writeup_notes.md">Write-up notes</a>
         </div>
       </section>
     

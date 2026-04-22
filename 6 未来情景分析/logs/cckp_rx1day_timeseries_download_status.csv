@@ -1,0 +1,16 @@
+﻿scenario,statistic,status,file_count,extensions,files,validation
+ssp119,median,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp119_median_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp119_median_2015-2100.xlsx:ok
+ssp119,p10,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp119_p10_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp119_p10_2015-2100.xlsx:ok
+ssp119,p90,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp119_p90_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp119_p90_2015-2100.xlsx:ok
+ssp126,median,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp126_median_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp126_median_2015-2100.xlsx:ok
+ssp126,p10,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp126_p10_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp126_p10_2015-2100.xlsx:ok
+ssp126,p90,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp126_p90_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp126_p90_2015-2100.xlsx:ok
+ssp245,median,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp245_median_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp245_median_2015-2100.xlsx:ok
+ssp245,p10,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp245_p10_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp245_p10_2015-2100.xlsx:ok
+ssp245,p90,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp245_p90_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp245_p90_2015-2100.xlsx:ok
+ssp370,median,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp370_median_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp370_median_2015-2100.xlsx:ok
+ssp370,p10,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp370_p10_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp370_p10_2015-2100.xlsx:ok
+ssp370,p90,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp370_p90_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp370_p90_2015-2100.xlsx:ok
+ssp585,median,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp585_median_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp585_median_2015-2100.xlsx:ok
+ssp585,p10,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp585_p10_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp585_p10_2015-2100.xlsx:ok
+ssp585,p90,ok,1,xlsx,rx1day_timeseries_CHNprov_ssp585_p90_2015-2100.xlsx,rx1day_timeseries_CHNprov_ssp585_p90_2015-2100.xlsx:ok

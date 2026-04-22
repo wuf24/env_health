@@ -1,0 +1,9 @@
+﻿role_id,role_label,model_id,scheme_id,scheme_source,fe_label,variables
+main_model,主模型,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes,"省平均气温 | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
+-猪年底头数"
+robust_low_vif,稳健性模型 1,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes,"TA（°C） | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
+-猪年底头数 | 主要城市日照时数"
+robust_systematic,稳健性模型 2,SYS_09556 | Province: No / Year: Yes,SYS_09556,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | GDP | 城市用水普及率 | 牲畜饲养
+-猪年底头数 | 主要城市降水量 | 食品消费量"
+robust_strict_fe,稳健性模型 3,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes,"省平均气温 | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
+-猪年底头数"

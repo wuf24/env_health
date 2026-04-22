@@ -1,0 +1,4 @@
+2026-04-22 18:43:46,166 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\run_dual_scenario_compare_figure_20260422_184346.log
+2026-04-22 18:43:48,170 | INFO | Dual-scenario figure completed for lancet_ets
+2026-04-22 18:43:50,085 | INFO | Dual-scenario figure completed for x_driven
+2026-04-22 18:43:50,086 | INFO | Dual-scenario metadata: E:\MALA\Code_health\6 未来情景分析\results\baseline_mode_compare\dual_scenario_run_metadata_ssp119_vs_ssp585_delta.json

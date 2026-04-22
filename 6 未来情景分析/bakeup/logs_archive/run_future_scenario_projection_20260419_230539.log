@@ -1,0 +1,3 @@
+2026-04-19 23:05:39,040 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\run_future_scenario_projection_20260419_230539.log
+2026-04-19 23:05:39,059 | INFO | Selected model roles: ['main_model', 'robust_low_vif', 'robust_systematic', 'robust_strict_fe']
+2026-04-19 23:05:39,059 | INFO | Union variables: ['GDP', 'PM2.5', 'R1xday', 'TA（°C）', '主要城市日照时数', '主要城市降水量', '人均日生活用水量(升)', '城市用水普及率', '抗菌药物使用强度', '文盲比例', '牲畜饲养\n-猪年底头数', '省平均气温', '食品消费量']

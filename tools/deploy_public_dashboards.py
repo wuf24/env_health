@@ -58,6 +58,26 @@ LATEST_BUNDLE = DashboardBundle(
     ),
 )
 
+LEGACY_PUBLIC_EXHAUSTIVE_BUNDLE = DashboardBundle(
+    slug="legacy-exhaustive-20260419",
+    label="Legacy Public Exhaustive Dashboard",
+    description="保留 2026-04-19 对外发布的 exhaustive dashboard，作为更新筛选逻辑前的公开快照。",
+    scope_note="来源于 public_dashboards/releases/20260419-170413/latest，用于回看之前的 public latest 版本。",
+    source_dir=PUBLIC_DIR / "releases" / "20260419-170413" / "latest",
+    builder_script=ROOT / "tools" / "build_results_dashboard.py",
+    files={
+        "home": "results_dashboard.html",
+        "lancet": "results_dashboard_lancet.html",
+        "matrix": "results_dashboard_matrix.html",
+    },
+    links=(
+        BundleLink(label="Open home", target="index.html", tone="primary"),
+        BundleLink(label="Lancet subpage", target="results_dashboard_lancet.html"),
+        BundleLink(label="Matrix view", target="results_dashboard_matrix.html"),
+        BundleLink(label="metadata.json", target="metadata.json", tone="ghost"),
+    ),
+)
+
 LEGACY_BUNDLE = DashboardBundle(
     slug="legacy-12models",
     label="Legacy 12-Model Dashboard",
@@ -81,6 +101,25 @@ LEGACY_BUNDLE = DashboardBundle(
         BundleLink(label="Matrix view", target="results_dashboard_legacy_12models_matrix.html"),
         BundleLink(label="metadata.json", target="metadata.json", tone="ghost"),
     ),
+)
+
+FUTURE_SCENARIO_BUNDLE = DashboardBundle(
+    slug="future-scenario-analysis",
+    label="Future Scenario Analysis Dashboard",
+    description="双 baseline 的未来情景总览页，整合全国、地区、省级结果、模型来源和文件入口。",
+    scope_note="对应 6 未来情景分析/index.html，并随 results/、docs/ 与关键映射表一起发布。",
+    source_dir=ROOT / "6 未来情景分析",
+    builder_script=ROOT / "tools" / "build_future_scenario_dashboard_report.py",
+    files={
+        "home": "index.html",
+    },
+    links=(
+        BundleLink(label="Open dashboard", target="index.html", tone="primary"),
+        BundleLink(label="README", target="README.md"),
+        BundleLink(label="2050 compare CSV", target="results/baseline_mode_compare/scenario_summary_2050_compare.csv"),
+        BundleLink(label="metadata.json", target="metadata.json", tone="ghost"),
+    ),
+    copy_paths=("results", "docs", "README.md", "data_processed/province_to_region_7zones.csv"),
 )
 
 BAYES_BUNDLE = DashboardBundle(
@@ -141,6 +180,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-legacy",
         action="store_true",
         help="Do not publish the legacy 12-model dashboard bundle.",
+    )
+    parser.add_argument(
+        "--skip-future-scenario",
+        action="store_true",
+        help="Do not publish the future scenario analysis dashboard bundle.",
     )
     parser.add_argument(
         "--skip-bayes",
@@ -735,7 +779,7 @@ def build_release_index_html(manifest: dict[str, Any]) -> str:
     <section class="card">
       <div class="eyebrow">Release Snapshot</div>
       <h1>{escape(manifest['release_tag'])}</h1>
-      <p>这是这一次部署的归档版本。稳定入口仍然在 <code>../../index.html</code> 对应的 <code>latest/</code> 与 <code>legacy-12models/</code> 目录，这里保留的是可回看的静态快照。</p>
+      <p>这是这一次部署的归档版本。稳定入口仍然在 <code>../../index.html</code> 对应的各个 bundle 目录中，这里保留的是可回看的静态快照。</p>
       <div class="links">
         <a class="btn primary" href="../../index.html">返回发布入口</a>
         <a class="btn" href="./manifest.json">查看快照 manifest</a>
@@ -827,7 +871,7 @@ def build_public_readme(manifest: dict[str, Any]) -> str:
         "",
         "## 说明",
         "",
-        "- `latest/` 和 `legacy-12models/` 始终覆盖为最近一次部署后的稳定版本。",
+        "- 各个稳定 bundle 目录始终覆盖为最近一次部署后的稳定版本。",
         "- `releases/<timestamp>/` 会保留部署当时的归档快照，方便对照和回滚。",
         "- 每个 bundle 目录下都有 `metadata.json`，可用于排查来源和生成脚本。",
         "",
@@ -890,8 +934,11 @@ def main() -> None:
     bundles: list[DashboardBundle] = []
     if not args.skip_latest:
         bundles.append(LATEST_BUNDLE)
+        bundles.append(LEGACY_PUBLIC_EXHAUSTIVE_BUNDLE)
     if not args.skip_legacy:
         bundles.append(LEGACY_BUNDLE)
+    if not args.skip_future_scenario:
+        bundles.append(FUTURE_SCENARIO_BUNDLE)
     if not args.skip_bayes:
         bundles.append(BAYES_BUNDLE)
     if not args.skip_counterfactual:
@@ -902,8 +949,12 @@ def main() -> None:
         )
 
     if not args.skip_build:
+        built_scripts: set[Path] = set()
         for bundle in bundles:
+            if bundle.builder_script in built_scripts:
+                continue
             run_builder(bundle.builder_script)
+            built_scripts.add(bundle.builder_script)
 
     for bundle in bundles:
         ensure_sources(bundle)

@@ -1,0 +1,25 @@
+2026-04-19 23:06:43,448 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\run_future_scenario_projection_20260419_230643.log
+2026-04-19 23:06:43,467 | INFO | Selected model roles: ['main_model', 'robust_low_vif', 'robust_systematic', 'robust_strict_fe']
+2026-04-19 23:06:43,467 | INFO | Union variables: ['GDP', 'PM2.5', 'R1xday', 'TA（°C）', '主要城市日照时数', '主要城市降水量', '人均日生活用水量(升)', '城市用水普及率', '抗菌药物使用强度', '文盲比例', '牲畜饲养\n-猪年底头数', '省平均气温', '食品消费量']
+2026-04-19 23:06:43,663 | INFO | Forecasted GDP for 31 provinces
+2026-04-19 23:06:43,820 | INFO | Forecasted PM2.5 for 31 provinces
+2026-04-19 23:06:43,972 | INFO | Forecasted R1xday for 31 provinces
+2026-04-19 23:06:44,122 | INFO | Forecasted TA（°C） for 31 provinces
+2026-04-19 23:06:44,258 | INFO | Forecasted 主要城市日照时数 for 31 provinces
+2026-04-19 23:06:44,439 | INFO | Forecasted 主要城市降水量 for 31 provinces
+2026-04-19 23:06:44,615 | INFO | Forecasted 人均日生活用水量(升) for 31 provinces
+2026-04-19 23:06:44,777 | INFO | Forecasted 城市用水普及率 for 31 provinces
+2026-04-19 23:06:44,928 | INFO | Forecasted 抗菌药物使用强度 for 31 provinces
+2026-04-19 23:06:45,083 | INFO | Forecasted 文盲比例 for 31 provinces
+2026-04-19 23:06:45,215 | INFO | Forecasted 牲畜饲养
+-猪年底头数 for 31 provinces
+2026-04-19 23:06:45,360 | INFO | Forecasted 省平均气温 for 31 provinces
+2026-04-19 23:06:45,536 | INFO | Forecasted 食品消费量 for 31 provinces
+2026-04-19 23:06:45,623 | INFO | Aligned external rx1day by province/scenario/statistic with mean-bias correction; overlap groups=465
+2026-04-19 23:06:45,847 | INFO | Forecasted value for 31 provinces
+2026-04-19 23:06:46,167 | INFO | Forecasted value for 31 provinces
+2026-04-19 23:06:46,510 | INFO | Forecasted value for 31 provinces
+2026-04-19 23:06:46,859 | INFO | Forecasted value for 31 provinces
+2026-04-19 23:06:48,363 | INFO | Projection panel rows: 53568
+2026-04-19 23:06:48,363 | INFO | National plot: E:\MALA\Code_health\6 未来情景分析\results\AMR_AGG\figures\national_yearly_main_model.png
+2026-04-19 23:06:48,363 | INFO | Metadata: E:\MALA\Code_health\6 未来情景分析\results\AMR_AGG\run_metadata.json

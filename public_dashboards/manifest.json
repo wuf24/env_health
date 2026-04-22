@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-19 17:04:13",
-  "release_tag": "20260419-170413",
+  "generated_at": "2026-04-22 22:55:02",
+  "release_tag": "20260422-225502",
   "public_dir": "public_dashboards",
   "bundles": [
     {
@@ -8,8 +8,8 @@
       "slug": "latest",
       "description": "全空间 exhaustive 搜索结果，包含首页、Lancet 子页和横向矩阵。",
       "scope_note": "当前主线发布版本，直接读取 exhaustive_* 结果。",
-      "generated_at": "2026-04-19 17:04:13",
-      "release_tag": "20260419-170413",
+      "generated_at": "2026-04-22 22:55:02",
+      "release_tag": "20260422-225502",
       "source_dir": "2 固定效应模型",
       "builder_script": "tools/build_results_dashboard.py",
       "files": {
@@ -41,17 +41,59 @@
         }
       ],
       "stable_dir": "public_dashboards/latest",
-      "release_dir": "public_dashboards/releases/20260419-170413/latest",
+      "release_dir": "public_dashboards/releases/20260422-225502/latest",
       "stable_home": "latest/index.html",
-      "release_home": "releases/20260419-170413/latest/index.html"
+      "release_home": "releases/20260422-225502/latest/index.html"
+    },
+    {
+      "label": "Legacy Public Exhaustive Dashboard",
+      "slug": "legacy-exhaustive-20260419",
+      "description": "保留 2026-04-19 对外发布的 exhaustive dashboard，作为更新筛选逻辑前的公开快照。",
+      "scope_note": "来源于 public_dashboards/releases/20260419-170413/latest，用于回看之前的 public latest 版本。",
+      "generated_at": "2026-04-22 22:55:02",
+      "release_tag": "20260422-225502",
+      "source_dir": "public_dashboards/releases/20260419-170413/latest",
+      "builder_script": "tools/build_results_dashboard.py",
+      "files": {
+        "home": "results_dashboard.html",
+        "directory_index": "index.html",
+        "lancet": "results_dashboard_lancet.html",
+        "matrix": "results_dashboard_matrix.html"
+      },
+      "links": [
+        {
+          "label": "Open home",
+          "target": "index.html",
+          "tone": "primary"
+        },
+        {
+          "label": "Lancet subpage",
+          "target": "results_dashboard_lancet.html",
+          "tone": ""
+        },
+        {
+          "label": "Matrix view",
+          "target": "results_dashboard_matrix.html",
+          "tone": ""
+        },
+        {
+          "label": "metadata.json",
+          "target": "metadata.json",
+          "tone": "ghost"
+        }
+      ],
+      "stable_dir": "public_dashboards/legacy-exhaustive-20260419",
+      "release_dir": "public_dashboards/releases/20260422-225502/legacy-exhaustive-20260419",
+      "stable_home": "legacy-exhaustive-20260419/index.html",
+      "release_home": "releases/20260422-225502/legacy-exhaustive-20260419/index.html"
     },
     {
       "label": "Legacy 12-Model Dashboard",
       "slug": "legacy-12models",
       "description": "旧版 4 套人工方案 × 3 种固定效应，共 12 个模型的三页式备份。",
       "scope_note": "用于和当前 exhaustive 版并排对照的历史快照。",
-      "generated_at": "2026-04-19 17:04:13",
-      "release_tag": "20260419-170413",
+      "generated_at": "2026-04-22 22:55:02",
+      "release_tag": "20260422-225502",
       "source_dir": "2 固定效应模型/backups/legacy_12models_dashboard_20260417",
       "builder_script": "2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py",
       "files": {
@@ -83,17 +125,57 @@
         }
       ],
       "stable_dir": "public_dashboards/legacy-12models",
-      "release_dir": "public_dashboards/releases/20260419-170413/legacy-12models",
+      "release_dir": "public_dashboards/releases/20260422-225502/legacy-12models",
       "stable_home": "legacy-12models/index.html",
-      "release_home": "releases/20260419-170413/legacy-12models/index.html"
+      "release_home": "releases/20260422-225502/legacy-12models/index.html"
+    },
+    {
+      "label": "Future Scenario Analysis Dashboard",
+      "slug": "future-scenario-analysis",
+      "description": "双 baseline 的未来情景总览页，整合全国、地区、省级结果、模型来源和文件入口。",
+      "scope_note": "对应 6 未来情景分析/index.html，并随 results/、docs/ 与关键映射表一起发布。",
+      "generated_at": "2026-04-22 22:55:02",
+      "release_tag": "20260422-225502",
+      "source_dir": "6 未来情景分析",
+      "builder_script": "tools/build_future_scenario_dashboard_report.py",
+      "files": {
+        "home": "index.html",
+        "directory_index": "index.html"
+      },
+      "links": [
+        {
+          "label": "Open dashboard",
+          "target": "index.html",
+          "tone": "primary"
+        },
+        {
+          "label": "README",
+          "target": "README.md",
+          "tone": ""
+        },
+        {
+          "label": "2050 compare CSV",
+          "target": "results/baseline_mode_compare/scenario_summary_2050_compare.csv",
+          "tone": ""
+        },
+        {
+          "label": "metadata.json",
+          "target": "metadata.json",
+          "tone": "ghost"
+        }
+      ],
+      "stable_dir": "public_dashboards/future-scenario-analysis",
+      "release_dir": "public_dashboards/releases/20260422-225502/future-scenario-analysis",
+      "stable_home": "future-scenario-analysis/index.html",
+      "release_home": "releases/20260422-225502/future-scenario-analysis/index.html"
     },
     {
       "label": "Bayesian Analysis Dashboard",
       "slug": "bayes-analysis",
       "description": "Bayesian model-grid dashboard with one-page interpretation plus downloadable summaries and diagnostics.",
       "scope_note": "Tracks the six Bayesian variants and publishes the CSV summaries alongside the page.",
-      "generated_at": "2026-04-19 17:04:13",
-      "release_tag": "20260419-170413",
+      "generated_at": "2026-04-22 22:55:02",
+      "release_tag": "20260422-225502",
       "source_dir": "public_dashboards/bayes-analysis",
       "builder_script": "tools/build_bayes_analysis_dashboard.py",
       "files": {
@@ -123,17 +205,17 @@
         }
       ],
       "stable_dir": "public_dashboards/bayes-analysis",
-      "release_dir": "public_dashboards/releases/20260419-170413/bayes-analysis",
+      "release_dir": "public_dashboards/releases/20260422-225502/bayes-analysis",
       "stable_home": "bayes-analysis/index.html",
-      "release_home": "releases/20260419-170413/bayes-analysis/index.html"
+      "release_home": "releases/20260422-225502/bayes-analysis/index.html"
     },
     {
       "label": "Counterfactual Simulation Dashboard",
       "slug": "counterfactual-amr-agg",
       "description": "AMR_AGG 的反事实推演入口，包含模型筛选、推演方程、单模型聚焦分析和分省结果。",
       "scope_note": "基于已筛选固定效应模型开展 counterfactual simulation，并打包 figures、CSV 和写作说明。",
-      "generated_at": "2026-04-19 17:04:13",
-      "release_tag": "20260419-170413",
+      "generated_at": "2026-04-22 22:55:02",
+      "release_tag": "20260422-225502",
       "source_dir": "5 反事实推演/results/AMR_AGG",
       "builder_script": "5 反事实推演/build_counterfactual_dashboard.py",
       "files": {
@@ -163,9 +245,9 @@
         }
       ],
       "stable_dir": "public_dashboards/counterfactual-amr-agg",
-      "release_dir": "public_dashboards/releases/20260419-170413/counterfactual-amr-agg",
+      "release_dir": "public_dashboards/releases/20260422-225502/counterfactual-amr-agg",
       "stable_home": "counterfactual-amr-agg/index.html",
-      "release_home": "releases/20260419-170413/counterfactual-amr-agg/index.html"
+      "release_home": "releases/20260422-225502/counterfactual-amr-agg/index.html"
     }
   ]
 }

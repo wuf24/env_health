@@ -1,0 +1,38 @@
+{
+  "label": "Legacy Public Exhaustive Dashboard",
+  "slug": "legacy-exhaustive-20260419",
+  "description": "保留 2026-04-19 对外发布的 exhaustive dashboard，作为更新筛选逻辑前的公开快照。",
+  "scope_note": "来源于 public_dashboards/releases/20260419-170413/latest，用于回看之前的 public latest 版本。",
+  "generated_at": "2026-04-22 22:55:02",
+  "release_tag": "20260422-225502",
+  "source_dir": "public_dashboards/releases/20260419-170413/latest",
+  "builder_script": "tools/build_results_dashboard.py",
+  "files": {
+    "home": "results_dashboard.html",
+    "directory_index": "index.html",
+    "lancet": "results_dashboard_lancet.html",
+    "matrix": "results_dashboard_matrix.html"
+  },
+  "links": [
+    {
+      "label": "Open home",
+      "target": "index.html",
+      "tone": "primary"
+    },
+    {
+      "label": "Lancet subpage",
+      "target": "results_dashboard_lancet.html",
+      "tone": ""
+    },
+    {
+      "label": "Matrix view",
+      "target": "results_dashboard_matrix.html",
+      "tone": ""
+    },
+    {
+      "label": "metadata.json",
+      "target": "metadata.json",
+      "tone": "ghost"
+    }
+  ]
+}

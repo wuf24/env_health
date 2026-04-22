@@ -1,0 +1,8 @@
+2026-04-19 21:10:40,690 | INFO | Scanning directory: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day
+2026-04-19 21:10:40,690 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\check_cckp_files_20260419_211040.log
+2026-04-19 21:10:41,343 | INFO | Status summary saved to: E:\MALA\Code_health\6 未来情景分析\logs\cckp_rx1day_download_status.csv
+2026-04-19 21:10:41,343 | INFO | Total expected combinations: 60
+2026-04-19 21:10:41,344 | INFO | OK combinations: 60
+2026-04-19 21:10:41,344 | INFO | Missing combinations: 0
+2026-04-19 21:10:41,345 | INFO | Duplicate combinations: 0
+2026-04-19 21:10:41,345 | INFO | Invalid combinations: 0

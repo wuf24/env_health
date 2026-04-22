@@ -1,0 +1,10 @@
+2026-04-19 22:06:57,467 | INFO | Output directory: E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_rx1day_timeseries
+2026-04-19 22:06:57,467 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\download_cckp_rx1day_timeseries_20260419_220657.log
+2026-04-19 22:06:57,467 | INFO | Preferred format order: xlsx -> json
+2026-04-19 22:06:57,467 | INFO | Scenarios: ssp119
+2026-04-19 22:06:57,467 | INFO | Statistics: median
+2026-04-19 22:06:57,467 | INFO | Unavailable statistics currently excluded from downloads: mean
+2026-04-19 22:06:57,468 | INFO | Expected combinations: 1
+2026-04-19 22:06:57,469 | INFO | [TRY] ssp119 | median | format=xlsx | attempt=1/3
+2026-04-19 22:06:58,464 | INFO | [OK] ssp119 | median -> rx1day_timeseries_CHNprov_ssp119_median_2015-2100.xlsx
+2026-04-19 22:06:59,465 | INFO | Summary: {'downloaded': 1, 'skipped': 0, 'failed': 0, 'dry-run': 0}

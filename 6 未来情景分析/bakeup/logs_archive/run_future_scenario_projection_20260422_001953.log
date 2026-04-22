@@ -1,0 +1,32 @@
+2026-04-22 00:19:53,911 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\run_future_scenario_projection_20260422_001953.log
+2026-04-22 00:19:53,979 | INFO | Selected model roles: ['main_model', 'robust_low_vif', 'robust_systematic', 'robust_strict_fe']
+2026-04-22 00:19:53,979 | INFO | Union variables: ['GDP', 'PM2.5', 'R1xday', 'TA（°C）', '主要城市日照时数', '主要城市降水量', '人均日生活用水量(升)', '城市用水普及率', '抗菌药物使用强度', '文盲比例', '牲畜饲养\n-猪年底头数', '省平均气温', '食品消费量']
+2026-04-22 00:19:53,980 | INFO | Baseline modes: ['lancet_ets', 'x_driven']
+2026-04-22 00:19:54,494 | INFO | Forecasted GDP for 31 provinces
+2026-04-22 00:19:55,153 | INFO | Forecasted PM2.5 for 31 provinces
+2026-04-22 00:19:55,773 | INFO | Forecasted R1xday for 31 provinces
+2026-04-22 00:19:56,312 | INFO | Forecasted TA（°C） for 31 provinces
+2026-04-22 00:19:56,744 | INFO | Forecasted 主要城市日照时数 for 31 provinces
+2026-04-22 00:19:57,375 | INFO | Forecasted 主要城市降水量 for 31 provinces
+2026-04-22 00:19:57,954 | INFO | Forecasted 人均日生活用水量(升) for 31 provinces
+2026-04-22 00:19:58,515 | INFO | Forecasted 城市用水普及率 for 31 provinces
+2026-04-22 00:19:59,090 | INFO | Forecasted 抗菌药物使用强度 for 31 provinces
+2026-04-22 00:19:59,672 | INFO | Forecasted 文盲比例 for 31 provinces
+2026-04-22 00:20:00,142 | INFO | Forecasted 牲畜饲养
+-猪年底头数 for 31 provinces
+2026-04-22 00:20:00,684 | INFO | Forecasted 省平均气温 for 31 provinces
+2026-04-22 00:20:01,252 | INFO | Forecasted 食品消费量 for 31 provinces
+2026-04-22 00:20:01,443 | INFO | Aligned external rx1day by province/scenario/statistic with mean-bias correction; overlap groups=465
+2026-04-22 00:20:02,205 | INFO | Running baseline mode: lancet_ets
+2026-04-22 00:20:02,717 | INFO | Forecasted value for 31 provinces
+2026-04-22 00:20:03,579 | INFO | Forecasted value for 31 provinces
+2026-04-22 00:20:04,474 | INFO | Forecasted value for 31 provinces
+2026-04-22 00:20:05,382 | INFO | Forecasted value for 31 provinces
+2026-04-22 00:20:12,014 | INFO | Completed baseline mode lancet_ets with 53568 rows
+2026-04-22 00:20:12,014 | INFO | Running baseline mode: x_driven
+2026-04-22 00:20:12,065 | INFO | Built x-driven baseline for main_model using 8 variables; time-effect method=ets_add_damped
+2026-04-22 00:20:12,536 | INFO | Built x-driven baseline for robust_low_vif using 9 variables; time-effect method=ets_add_damped
+2026-04-22 00:20:13,240 | INFO | Built x-driven baseline for robust_systematic using 9 variables; time-effect method=ets_add_damped
+2026-04-22 00:20:13,757 | INFO | Built x-driven baseline for robust_strict_fe using 8 variables; time-effect method=ets_add_damped
+2026-04-22 00:20:19,583 | INFO | Completed baseline mode x_driven with 53568 rows
+2026-04-22 00:20:19,664 | INFO | Top-level metadata: E:\MALA\Code_health\6 未来情景分析\results\AMR_AGG_RAW\run_metadata.json
