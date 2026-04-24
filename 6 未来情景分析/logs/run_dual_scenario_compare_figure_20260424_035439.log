@@ -1,0 +1,4 @@
+2026-04-24 03:54:39,435 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\run_dual_scenario_compare_figure_20260424_035439.log
+2026-04-24 03:54:41,850 | INFO | Dual-scenario figure completed for lancet_ets
+2026-04-24 03:54:44,048 | INFO | Dual-scenario figure completed for x_driven
+2026-04-24 03:54:44,050 | INFO | Dual-scenario metadata: E:\MALA\Code_health\6 未来情景分析\results\baseline_mode_compare\dual_scenario_run_metadata_temperature_province_tas_main_model_ssp119_vs_ssp585_delta.json

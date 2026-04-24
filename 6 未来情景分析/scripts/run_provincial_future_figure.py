@@ -27,6 +27,8 @@ from future_scenario_common import configure_logger
 
 SECTION_DIR = Path(__file__).resolve().parents[1]
 REGION_MAPPING_PATH = SECTION_DIR / "data_processed" / "province_to_region_7zones.csv"
+TA_COL = "TA（°C）"
+PROVINCE_TAS_COL = "省平均气温"
 
 
 sns.set_theme(style="white", font="Microsoft YaHei", rc={"axes.unicode_minus": False})
@@ -63,6 +65,17 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_BASELINE_MODES,
         help="Baseline modes to render.",
     )
+    parser.add_argument(
+        "--metric-family",
+        choices=["amr", "temperature"],
+        default="amr",
+        help="Metric family to render. `amr` reproduces the current province-scale AMR panel; `temperature` renders the temperature channel itself.",
+    )
+    parser.add_argument(
+        "--role-id",
+        default="main_model",
+        help="Role id used for plotting. For TA figures, `strict_main_model` is the usual choice.",
+    )
     parser.add_argument("--start-year", type=int, default=FUTURE_START_YEAR, help="First future year to include.")
     parser.add_argument("--end-year", type=int, default=FUTURE_END_YEAR, help="Last future year to include.")
     return parser.parse_args()
@@ -82,15 +95,73 @@ def load_region_mapping(path: Path = REGION_MAPPING_PATH) -> pd.DataFrame:
     return mapping.sort_values(["region_order", "province"]).reset_index(drop=True)
 
 
+def format_temperature_proxy_label(proxy_variable: str | None) -> str:
+    if not proxy_variable:
+        return "Temperature"
+    proxy_variable = str(proxy_variable).strip()
+    if "TA" in proxy_variable:
+        return "Temperature anomaly (TA)"
+    if "省平均气温" in proxy_variable:
+        return "Province mean temperature"
+    return proxy_variable
+
+
+def build_metric_tag(metric_family: str, role_id: str, proxy_variable: str | None) -> str:
+    if metric_family == "amr":
+        return ""
+    if proxy_variable and "TA" in str(proxy_variable):
+        return f"temperature_ta_{role_id}"
+    if proxy_variable and "省平均气温" in str(proxy_variable):
+        return f"temperature_province_tas_{role_id}"
+    return f"temperature_{role_id}"
+
+
+def with_metric_suffix(base_name: str, metric_tag: str) -> str:
+    if not metric_tag:
+        return base_name
+    stem, suffix = base_name.rsplit(".", 1)
+    return f"{stem}_{metric_tag}.{suffix}"
+
+
+def detect_temperature_proxy_variable(projection_panel: pd.DataFrame, role_id: str) -> str | None:
+    rows = (
+        projection_panel.loc[projection_panel["role_id"].eq(role_id), "temperature_proxy_variable"]
+        .dropna()
+        .astype(str)
+        .str.strip()
+    )
+    if rows.empty:
+        return None
+    return rows.iloc[0]
+
+
+def get_metric_meta(metric_family: str, proxy_variable: str | None = None) -> dict[str, str]:
+    if metric_family == "temperature":
+        proxy_label = format_temperature_proxy_label(proxy_variable)
+        return {
+            "delta_col": "temperature_delta",
+            "delta_label": f"Δ{proxy_label} vs baseline (°C)",
+            "top_label": f"Mean Δ{proxy_label} vs baseline\n(°C)",
+            "title_label": proxy_label,
+        }
+    return {
+        "delta_col": "delta_vs_baseline",
+        "delta_label": "ΔAMR vs baseline (percentage points)",
+        "top_label": "Mean ΔAMR vs baseline\n(percentage points)",
+        "title_label": "AMR",
+    }
+
+
 def prepare_provincial_panel(
     projection_panel: pd.DataFrame,
     region_mapping: pd.DataFrame,
+    role_id: str,
     start_year: int,
     end_year: int,
 ) -> pd.DataFrame:
     keep_statistics = {RX1DAY_MAIN_STATISTIC, "p10", "p90"}
     plot_df = projection_panel[
-        projection_panel["role_id"].eq("main_model")
+        projection_panel["role_id"].eq(role_id)
         & projection_panel["scenario_id"].isin(RX1DAY_SCENARIOS)
         & projection_panel["statistic"].isin(keep_statistics)
         & projection_panel["Year"].between(start_year, end_year)
@@ -108,14 +179,15 @@ def prepare_provincial_panel(
     return plot_df.sort_values(["region_order", "Province", "scenario_id", "statistic", "Year"]).reset_index(drop=True)
 
 
-def build_province_order(plot_df: pd.DataFrame, end_year: int) -> pd.DataFrame:
+def build_province_order(plot_df: pd.DataFrame, end_year: int, metric_meta: dict[str, str]) -> pd.DataFrame:
+    value_col = metric_meta["delta_col"]
     order_df = (
         plot_df[plot_df["statistic"].eq(RX1DAY_MAIN_STATISTIC) & plot_df["Year"].eq(end_year)]
         .groupby(["Province", "region", "region_en", "region_order"], dropna=False)
         .agg(
-            delta_mean_2050=("delta_vs_baseline", "mean"),
-            delta_max_2050=("delta_vs_baseline", "max"),
-            delta_min_2050=("delta_vs_baseline", "min"),
+            delta_mean_2050=(value_col, "mean"),
+            delta_max_2050=(value_col, "max"),
+            delta_min_2050=(value_col, "min"),
             scenario_pred_mean_2050=("scenario_pred", "mean"),
         )
         .reset_index()
@@ -144,10 +216,10 @@ def build_region_guides(province_order_df: pd.DataFrame) -> tuple[list[float], l
     return boundaries[:-1], centers
 
 
-def summarize_national_delta(plot_df: pd.DataFrame) -> pd.DataFrame:
+def summarize_national_delta(plot_df: pd.DataFrame, metric_meta: dict[str, str]) -> pd.DataFrame:
     return (
         plot_df.groupby(["scenario_id", "statistic", "Year"], dropna=False)
-        .agg(delta_mean=("delta_vs_baseline", "mean"))
+        .agg(delta_mean=(metric_meta["delta_col"], "mean"))
         .reset_index()
         .sort_values(["scenario_id", "statistic", "Year"])
         .reset_index(drop=True)
@@ -159,16 +231,19 @@ def plot_provincial_panel(
     province_order_df: pd.DataFrame,
     output_path: Path,
     baseline_label: str,
+    role_label: str,
+    metric_meta: dict[str, str],
     start_year: int,
     end_year: int,
 ) -> Path:
     years = list(range(start_year, end_year + 1))
     provinces = province_order_df["Province"].tolist()
     region_boundaries, region_centers = build_region_guides(province_order_df)
-    national = summarize_national_delta(plot_df)
+    national = summarize_national_delta(plot_df, metric_meta=metric_meta)
     median_df = plot_df[plot_df["statistic"].eq(RX1DAY_MAIN_STATISTIC)].copy()
+    value_col = metric_meta["delta_col"]
 
-    abs_limit = float(median_df["delta_vs_baseline"].abs().max())
+    abs_limit = float(median_df[value_col].abs().max())
     abs_limit = max(abs_limit, 1e-6)
     norm = TwoSlopeNorm(vmin=-abs_limit, vcenter=0.0, vmax=abs_limit)
     cmap = mpl.colormaps["RdBu_r"]
@@ -216,7 +291,7 @@ def plot_provincial_panel(
 
     ax_top.axhline(0, color="#475569", linestyle="--", linewidth=1.1, alpha=0.9)
     ax_top.set_xlim(start_year, end_year)
-    ax_top.set_ylabel("Mean \u0394AMR vs baseline\n(percentage points)")
+    ax_top.set_ylabel(metric_meta["top_label"])
     ax_top.set_xlabel("")
     ax_top.legend(loc="upper left", ncol=5, frameon=False, bbox_to_anchor=(0, 1.15))
     ax_top.spines["top"].set_visible(False)
@@ -263,7 +338,7 @@ def plot_provincial_panel(
     for ax, scenario_id in zip(heat_axes, RX1DAY_SCENARIOS):
         scenario_df = median_df[median_df["scenario_id"].eq(scenario_id)].copy()
         matrix = (
-            scenario_df.pivot_table(index="Province", columns="Year", values="delta_vs_baseline", aggfunc="mean")
+            scenario_df.pivot_table(index="Province", columns="Year", values=value_col, aggfunc="mean")
             .reindex(index=provinces, columns=years)
         )
 
@@ -292,10 +367,10 @@ def plot_provincial_panel(
             ax.set_yticks([])
 
     colorbar = fig.colorbar(im, cax=colorbar_ax)
-    colorbar.set_label("\u0394AMR vs baseline (percentage points)")
+    colorbar.set_label(metric_meta["delta_label"])
 
     fig.suptitle(
-        f"\u7701\u7ea7\u5c3a\u5ea6\u672a\u6765\u60c5\u666f\u6a21\u62df | {baseline_label}",
+        f"\u7701\u7ea7\u5c3a\u5ea6\u672a\u6765\u60c5\u666f\u6a21\u62df | {baseline_label} | {role_label} | {metric_meta['title_label']}",
         x=0.06,
         y=0.98,
         ha="left",
@@ -329,6 +404,9 @@ def main() -> int:
     compare_dir.mkdir(parents=True, exist_ok=True)
 
     mode_outputs: dict[str, dict[str, str]] = {}
+    proxy_variable: str | None = None
+    metric_tag = ""
+    metric_meta: dict[str, str] | None = None
 
     for baseline_mode in args.baseline_modes:
         baseline_label = BASELINE_MODE_LABELS[baseline_mode]
@@ -338,27 +416,52 @@ def main() -> int:
             raise FileNotFoundError(f"Projection panel not found for baseline mode {baseline_mode}: {projection_path}")
 
         projection_panel = pd.read_csv(projection_path, encoding="utf-8-sig")
+        if args.metric_family == "temperature" and metric_meta is None:
+            proxy_variable = detect_temperature_proxy_variable(projection_panel, args.role_id)
+            metric_tag = build_metric_tag(args.metric_family, args.role_id, proxy_variable)
+            metric_meta = get_metric_meta(args.metric_family, proxy_variable)
+        elif args.metric_family == "amr" and metric_meta is None:
+            metric_meta = get_metric_meta(args.metric_family)
+
+        if metric_meta is None:
+            raise RuntimeError("Failed to initialize provincial metric metadata.")
+
         plot_df = prepare_provincial_panel(
             projection_panel=projection_panel,
             region_mapping=region_mapping,
+            role_id=args.role_id,
             start_year=args.start_year,
             end_year=args.end_year,
         )
-        province_order_df = build_province_order(plot_df=plot_df, end_year=args.end_year)
+        province_order_df = build_province_order(
+            plot_df=plot_df,
+            end_year=args.end_year,
+            metric_meta=metric_meta,
+        )
 
         provincial_output_dir = mode_dir / "provincial_outputs"
         provincial_figure_dir = mode_dir / "provincial_figures"
         provincial_output_dir.mkdir(parents=True, exist_ok=True)
         provincial_figure_dir.mkdir(parents=True, exist_ok=True)
 
-        order_path = provincial_output_dir / f"province_order_{args.end_year}.csv"
+        order_path = provincial_output_dir / with_metric_suffix(f"province_order_{args.end_year}.csv", metric_tag)
         province_order_df.to_csv(order_path, index=False, encoding="utf-8-sig")
+
+        role_rows = (
+            projection_panel.loc[projection_panel["role_id"].eq(args.role_id), "role_label"]
+            .dropna()
+            .astype(str)
+            .str.strip()
+        )
+        role_label = role_rows.iloc[0] if not role_rows.empty else args.role_id
 
         figure_path = plot_provincial_panel(
             plot_df=plot_df,
             province_order_df=province_order_df,
-            output_path=provincial_figure_dir / "provincial_future_scenario_panel.png",
+            output_path=provincial_figure_dir / with_metric_suffix("provincial_future_scenario_panel.png", metric_tag),
             baseline_label=baseline_label,
+            role_label=role_label,
+            metric_meta=metric_meta,
             start_year=args.start_year,
             end_year=args.end_year,
         )
@@ -367,6 +470,10 @@ def main() -> int:
             "projection_path": str(projection_path),
             "province_order_path": str(order_path),
             "provincial_future_scenario_panel": str(figure_path),
+            "metric_family": args.metric_family,
+            "role_id": args.role_id,
+            "role_label": role_label,
+            "temperature_proxy_variable": proxy_variable,
         }
         logger.info("Provincial figure completed for %s", baseline_mode)
 
@@ -375,11 +482,14 @@ def main() -> int:
         "baseline_modes": args.baseline_modes,
         "start_year": args.start_year,
         "end_year": args.end_year,
+        "metric_family": args.metric_family,
+        "role_id": args.role_id,
+        "temperature_proxy_variable": proxy_variable,
         "mapping_path": str(REGION_MAPPING_PATH),
         "mode_outputs": mode_outputs,
         "log_path": str(log_path),
     }
-    metadata_path = compare_dir / "provincial_run_metadata.json"
+    metadata_path = compare_dir / with_metric_suffix("provincial_run_metadata.json", metric_tag)
     metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
 
     logger.info("Provincial metadata: %s", metadata_path)

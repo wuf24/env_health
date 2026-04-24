@@ -1,0 +1,8 @@
+2026-04-24 03:16:19,934 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\run_dual_scenario_compare_figure_20260424_031619.log
+2026-04-24 03:16:19,963 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\run_dual_scenario_compare_figure_20260424_031619.log
+2026-04-24 03:16:22,280 | INFO | Dual-scenario figure completed for lancet_ets
+2026-04-24 03:16:22,559 | INFO | Dual-scenario figure completed for lancet_ets
+2026-04-24 03:16:24,405 | INFO | Dual-scenario figure completed for x_driven
+2026-04-24 03:16:24,406 | INFO | Dual-scenario metadata: E:\MALA\Code_health\6 未来情景分析\results\baseline_mode_compare\dual_scenario_run_metadata_temperature_ta_strict_main_model_ssp119_vs_ssp585.json
+2026-04-24 03:16:25,059 | INFO | Dual-scenario figure completed for x_driven
+2026-04-24 03:16:25,060 | INFO | Dual-scenario metadata: E:\MALA\Code_health\6 未来情景分析\results\baseline_mode_compare\dual_scenario_run_metadata_temperature_ta_strict_main_model_ssp119_vs_ssp585_delta.json

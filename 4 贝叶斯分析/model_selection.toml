@@ -13,12 +13,8 @@
 
 default_fe_label = "Province: No / Year: Yes"
 
-# If this list is non-empty, the script uses these exact model_ids.
-selected_model_ids = [
-  "方案A_平衡主线组 | Province: No / Year: Yes",
-  "SYS_09556 | Province: No / Year: Yes",
-  "SYS_09557 | Province: No / Year: Yes",
-]
+# Leave this empty to use every row from the current candidate archive.
+selected_model_ids = []
 
 # Optional scheme-level selection. Only used when `selected_model_ids = []`.
 selected_scheme_ids = []

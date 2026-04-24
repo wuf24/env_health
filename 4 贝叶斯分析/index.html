@@ -1,0 +1,3156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>贝叶斯分析 · 12 模型归档</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --panel: rgba(255,255,255,0.92);
+      --panel-strong: #ffffff;
+      --ink: #1b2730;
+      --muted: #5d6b73;
+      --line: rgba(27,39,48,0.10);
+      --accent: #b45332;
+      --accent-2: #1f6a72;
+      --accent-3: #4d7b56;
+      --shadow: 0 18px 48px rgba(27,39,48,0.10);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --sans: "Trebuchet MS", "Segoe UI", sans-serif;
+      --mono: "Cascadia Mono", Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at top left, rgba(180,83,50,0.10), transparent 26%),
+        radial-gradient(circle at top right, rgba(31,106,114,0.12), transparent 24%),
+        linear-gradient(180deg, #faf8f3 0%, #f1eee8 100%);
+    }
+    .page {
+      width: min(1380px, calc(100vw - 26px));
+      margin: 16px auto 28px;
+      display: grid;
+      gap: 18px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+    .hero {
+      padding: 28px;
+      display: grid;
+      gap: 22px;
+    }
+    .hero-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+    h1, h2, h3, h4 {
+      margin: 0;
+      line-height: 1.15;
+    }
+    h1 {
+      font-size: clamp(34px, 4vw, 54px);
+      max-width: 14ch;
+    }
+    .hero p, .section-head p, .model-card p, .note-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+    .hero-copy {
+      display: grid;
+      gap: 14px;
+    }
+    .hero-side {
+      display: grid;
+      gap: 12px;
+    }
+    .hero-note, .note-card {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      display: grid;
+      gap: 8px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .hero-card {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      display: grid;
+      gap: 8px;
+    }
+    .hero-card strong {
+      font-size: 24px;
+    }
+    .nav {
+      position: sticky;
+      top: 10px;
+      z-index: 5;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      backdrop-filter: blur(12px);
+    }
+    .nav a {
+      text-decoration: none;
+      color: var(--ink);
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      background: rgba(31,106,114,0.06);
+    }
+    .section {
+      padding: 24px 26px;
+      display: grid;
+      gap: 18px;
+    }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+      gap: 16px;
+      align-items: end;
+    }
+    .summary-grid, .archive-grid, .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .summary-card, .model-card {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      display: grid;
+      gap: 10px;
+    }
+    .summary-card .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .summary-card .stats div {
+      background: rgba(180,83,50,0.06);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: grid;
+      gap: 4px;
+    }
+    .summary-card .stats strong {
+      font-size: 18px;
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .chip, .chip-row span {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid rgba(27,39,48,0.10);
+      background: rgba(31,106,114,0.08);
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .metric-grid div {
+      display: grid;
+      gap: 4px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background: rgba(27,39,48,0.04);
+    }
+    .metric-grid strong {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--panel-strong);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      font-size: 14px;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #f8f6f1;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 12px;
+      z-index: 1;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    .variant-stack {
+      display: grid;
+      gap: 14px;
+    }
+    .variant-block {
+      display: grid;
+      gap: 12px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .badge.strong {
+      color: #175c36;
+      background: rgba(77,123,86,0.14);
+    }
+    .badge.directional {
+      color: #7a4c12;
+      background: rgba(180,83,50,0.16);
+    }
+    .badge.negative {
+      color: #8d2431;
+      background: rgba(168, 73, 91, 0.14);
+    }
+    .badge.muted {
+      color: var(--muted);
+      background: rgba(27,39,48,0.08);
+    }
+    .stack {
+      display: grid;
+      gap: 2px;
+      color: var(--muted);
+    }
+    .muted {
+      color: var(--muted);
+    }
+    .downloads {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .downloads a {
+      text-decoration: none;
+      color: var(--ink);
+      padding: 10px 13px;
+      border-radius: 999px;
+      background: rgba(31,106,114,0.08);
+      border: 1px solid rgba(31,106,114,0.12);
+      font-weight: 700;
+    }
+    .footer {
+      padding: 0 4px 8px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+    @media (max-width: 1024px) {
+      .hero-top, .section-head {
+        grid-template-columns: 1fr;
+      }
+      .hero-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 720px) {
+      .page {
+        width: calc(100vw - 12px);
+        margin: 8px auto 18px;
+      }
+      .hero, .section {
+        padding: 18px;
+      }
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero panel">
+      <div class="hero-top">
+        <div class="hero-copy">
+          <div class="eyebrow">Bayesian Analysis</div>
+          <h1>把原始主线 4 模型与严筛扩展 8 模型一起镜像到贝叶斯分析里。</h1>
+          <p>这页不再沿用旧的“三方案”写死结构，而是直接围绕当前 12 模型归档展开。先看整体结论，再看每个变体，再追到单模型结果和诊断，这样更适合写结果段和方法补充。</p>
+        </div>
+        <div class="hero-side">
+          <div class="hero-note">
+            <strong>核心读法</strong>
+            <p>如果 Year-only additive 下 R1xday 和 AMC 都稳定为正，说明主效应在贝叶斯框架里被复现；如果 province-only amplification 下交互项抬起，说明“放大效应”更像省际差异控制后的附加证据。</p>
+          </div>
+          <div class="hero-note">
+            <strong>这页接了什么</strong>
+            <p>直接读取 `selected_models.csv` 的 12 模型归档，再对每个模型跑 6 个 Bayesian variants，共 72 个 posterior bridge 结果。</p>
+          </div>
+          <div class="hero-note">
+            <strong>解释边界</strong>
+            <p>贝叶斯页主要回答“频率学主线能否复现”和“交互项有没有抬起来”。它不是新的选模入口，而是对已归档模型的概率化复核。</p>
+          </div>
+        </div>
+      </div>
+      <div class="hero-grid">
+        
+        <article class="hero-card">
+          <div class="eyebrow">Archived models</div>
+          <strong>12</strong>
+          <p>原始主线 4 模型与严筛扩展 8 模型一起进入贝叶斯镜像。</p>
+        </article>
+        
+        <article class="hero-card">
+          <div class="eyebrow">Bayesian variants</div>
+          <strong>6</strong>
+          <p>每个模型都跑 6 个 Bayesian variants。</p>
+        </article>
+        
+        <article class="hero-card">
+          <div class="eyebrow">Year-only robust R1</div>
+          <strong>12/12</strong>
+          <p>Year-only additive 下 R1xday 95% CrI 完全高于 0 的模型数。</p>
+        </article>
+        
+        <article class="hero-card">
+          <div class="eyebrow">Province-only interaction</div>
+          <strong>9/12</strong>
+          <p>Province-only amplification 下交互项 P(&gt;0)≥95% 的模型数。</p>
+        </article>
+        
+        <article class="hero-card">
+          <div class="eyebrow">Two-way compression</div>
+          <strong>0/12</strong>
+          <p>Province + year additive 下 R1xday 还保持高后验支持的模型数。</p>
+        </article>
+        
+        <article class="hero-card">
+          <div class="eyebrow">Max R̂</div>
+          <strong>1.01</strong>
+          <p>用于快速看链是否稳定。</p>
+        </article>
+        
+      </div>
+    </header>
+
+    <nav class="nav panel">
+      <a href="#overview">变体概览</a>
+      <a href="#archive">模型归档</a>
+      <a href="#variants">逐变体结果</a>
+      <a href="#downloads">数据下载</a>
+    </nav>
+
+    <section class="section panel" id="overview">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Variant Overview</div>
+          <h2>先看 6 条贝叶斯镜像线各自复现了什么。</h2>
+        </div>
+        <p>每张卡片都在回答同一件事：这条口径下，R1xday、AMC 和交互项分别有多少模型达到了“稳健正向”或高后验支持。</p>
+      </div>
+      <div class="summary-grid">
+        
+            <article class="summary-card">
+              <div class="eyebrow">Year-only</div>
+              <h3>Year-only additive</h3>
+              <p>最接近主线 Year FE 的贝叶斯镜像，只检验主效应能否稳定复现。</p>
+              <div class="stats">
+                <div><strong>12/12</strong><span>R1xday 稳健正向</span></div>
+                <div><strong>12/12</strong><span>AMC 稳健正向</span></div>
+                <div><strong>0/1</strong><span>交互项 CrI &gt; 0</span></div>
+                <div><strong>0/1</strong><span>交互项 P(&gt;0) ≥ 95%</span></div>
+              </div>
+            </article>
+            
+            <article class="summary-card">
+              <div class="eyebrow">Year-only</div>
+              <h3>Year-only amplification</h3>
+              <p>在 Year-only 口径下增加交互项，检验极端降雨是否会放大 AMC-AMR 关联。</p>
+              <div class="stats">
+                <div><strong>12/12</strong><span>R1xday 稳健正向</span></div>
+                <div><strong>12/12</strong><span>AMC 稳健正向</span></div>
+                <div><strong>0/12</strong><span>交互项 CrI &gt; 0</span></div>
+                <div><strong>0/12</strong><span>交互项 P(&gt;0) ≥ 95%</span></div>
+              </div>
+            </article>
+            
+            <article class="summary-card">
+              <div class="eyebrow">Province-only</div>
+              <h3>Province-only additive</h3>
+              <p>先吸收省际长期差异，再看主效应还能保留多少。</p>
+              <div class="stats">
+                <div><strong>0/12</strong><span>R1xday 稳健正向</span></div>
+                <div><strong>0/12</strong><span>AMC 稳健正向</span></div>
+                <div><strong>0/1</strong><span>交互项 CrI &gt; 0</span></div>
+                <div><strong>0/1</strong><span>交互项 P(&gt;0) ≥ 95%</span></div>
+              </div>
+            </article>
+            
+            <article class="summary-card">
+              <div class="eyebrow">Province-only</div>
+              <h3>Province-only amplification</h3>
+              <p>当前最适合盯放大效应的一条线，看交互项在省际差异控制后是否仍然抬起。</p>
+              <div class="stats">
+                <div><strong>0/12</strong><span>R1xday 稳健正向</span></div>
+                <div><strong>0/12</strong><span>AMC 稳健正向</span></div>
+                <div><strong>4/12</strong><span>交互项 CrI &gt; 0</span></div>
+                <div><strong>9/12</strong><span>交互项 P(&gt;0) ≥ 95%</span></div>
+              </div>
+            </article>
+            
+            <article class="summary-card">
+              <div class="eyebrow">Province + year</div>
+              <h3>Province + year additive</h3>
+              <p>最严格口径下的主效应检查，用来判断核心信号是否被双重控制压缩。</p>
+              <div class="stats">
+                <div><strong>0/12</strong><span>R1xday 稳健正向</span></div>
+                <div><strong>0/12</strong><span>AMC 稳健正向</span></div>
+                <div><strong>0/1</strong><span>交互项 CrI &gt; 0</span></div>
+                <div><strong>0/1</strong><span>交互项 P(&gt;0) ≥ 95%</span></div>
+              </div>
+            </article>
+            
+            <article class="summary-card">
+              <div class="eyebrow">Province + year</div>
+              <h3>Province + year amplification</h3>
+              <p>最严格口径下的交互项检查，方向若还能抬起，解释力最强；若压回零，也最容易理解。</p>
+              <div class="stats">
+                <div><strong>0/12</strong><span>R1xday 稳健正向</span></div>
+                <div><strong>0/12</strong><span>AMC 稳健正向</span></div>
+                <div><strong>0/12</strong><span>交互项 CrI &gt; 0</span></div>
+                <div><strong>0/12</strong><span>交互项 P(&gt;0) ≥ 95%</span></div>
+              </div>
+            </article>
+            
+      </div>
+      <div class="notes-grid">
+        
+            <article class="note-card">
+              <div class="eyebrow">Year-only</div>
+              <h3>Year-only 的读法</h3>
+              <p>这组口径一共覆盖 24 个模型结果。R1xday 后验 P(&gt;0)≥95% 的有 24 个，AMC 对应有 24 个，交互项达到 95% 的有 0/12 个。</p>
+            </article>
+            
+            <article class="note-card">
+              <div class="eyebrow">Province-only</div>
+              <h3>Province-only 的读法</h3>
+              <p>这组口径一共覆盖 24 个模型结果。R1xday 后验 P(&gt;0)≥95% 的有 0 个，AMC 对应有 0 个，交互项达到 95% 的有 9/12 个。</p>
+            </article>
+            
+            <article class="note-card">
+              <div class="eyebrow">Province + year</div>
+              <h3>Province + year 的读法</h3>
+              <p>这组口径一共覆盖 24 个模型结果。R1xday 后验 P(&gt;0)≥95% 的有 0 个，AMC 对应有 0 个，交互项达到 95% 的有 0/12 个。</p>
+            </article>
+            
+      </div>
+    </section>
+
+    <section class="section panel" id="archive">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Archived Models</div>
+          <h2>这 12 个模型就是当前贝叶斯页的完整输入。</h2>
+        </div>
+        <p>这里直接把“原始主线 4 模型 + 严筛扩展 8 模型”的归档摆出来，方便你把频率学筛选、贝叶斯桥接、后续反事实和未来情景的模型来源串成同一条主线。</p>
+      </div>
+      <div class="archive-grid">
+        
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#1 · 严筛主模型</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>SYS_09851</h3>
+              <p>作为严筛主模型进入后续分析。</p>
+              <div class="eyebrow" style="margin-top:6px;">严筛强相关 8 模型</div>
+              <div class="chip-row"><span>R1xday</span><span>抗菌药物使用强度</span><span>TA（°C）</span><span>PM2.5</span><span>医疗水平</span><span>卫生程度
+（日污水处理能力）</span><span>牲畜饲养
+-猪年底头数</span><span>食品消费量</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.129 · p=0.0345</span></div>
+                <div><strong>AMC</strong><span>+0.106 · p=0.0193</span></div>
+                <div><strong>nan</strong><span>+0.104 · p=0.0311</span></div>
+                <div><strong>R²</strong><span>0.428</span></div>
+              </div>
+            </article>
+            
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#2 · 严筛模型 2</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>SYS_10001</h3>
+              <p>作为严筛并列候选 #2，用于稳健性与异质性比较。</p>
+              <div class="eyebrow" style="margin-top:6px;">严筛强相关 8 模型</div>
+              <div class="chip-row"><span>R1xday</span><span>抗菌药物使用强度</span><span>TA（°C）</span><span>PM2.5</span><span>医疗水平</span><span>饮用水
+供水综合生产能力(万立方米/日)</span><span>牲畜饲养
+-猪年底头数</span><span>食品消费量</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.135 · p=0.0316</span></div>
+                <div><strong>AMC</strong><span>+0.106 · p=0.0184</span></div>
+                <div><strong>nan</strong><span>+0.104 · p=0.0298</span></div>
+                <div><strong>R²</strong><span>0.425</span></div>
+              </div>
+            </article>
+            
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#3 · 严筛模型 3</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>SYS_10002</h3>
+              <p>作为严筛并列候选 #3，用于稳健性与异质性比较。</p>
+              <div class="eyebrow" style="margin-top:6px;">严筛强相关 8 模型</div>
+              <div class="chip-row"><span>R1xday</span><span>抗菌药物使用强度</span><span>TA（°C）</span><span>PM2.5</span><span>医疗水平</span><span>饮用水
+供水综合生产能力(万立方米/日)</span><span>牲畜饲养
+-猪年底头数</span><span>文盲比例</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.133 · p=0.0483</span></div>
+                <div><strong>AMC</strong><span>+0.110 · p=0.0152</span></div>
+                <div><strong>nan</strong><span>+0.128 · p=0.0069</span></div>
+                <div><strong>R²</strong><span>0.423</span></div>
+              </div>
+            </article>
+            
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#4 · 严筛模型 4</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>SYS_09941</h3>
+              <p>作为严筛并列候选 #4，用于稳健性与异质性比较。</p>
+              <div class="eyebrow" style="margin-top:6px;">严筛强相关 8 模型</div>
+              <div class="chip-row"><span>R1xday</span><span>抗菌药物使用强度</span><span>TA（°C）</span><span>PM2.5</span><span>医疗水平</span><span>城市用水普及率</span><span>牲畜饲养
+-猪年底头数</span><span>PA（%）</span><span>食品消费量</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.143 · p=0.0486</span></div>
+                <div><strong>AMC</strong><span>+0.122 · p=0.0074</span></div>
+                <div><strong>nan</strong><span>+0.116 · p=0.0162</span></div>
+                <div><strong>R²</strong><span>0.409</span></div>
+              </div>
+            </article>
+            
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#5 · 严筛模型 5</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>SYS_09926</h3>
+              <p>作为严筛并列候选 #5，用于稳健性与异质性比较。</p>
+              <div class="eyebrow" style="margin-top:6px;">严筛强相关 8 模型</div>
+              <div class="chip-row"><span>R1xday</span><span>抗菌药物使用强度</span><span>TA（°C）</span><span>PM2.5</span><span>医疗水平</span><span>城市用水普及率</span><span>牲畜饲养
+-猪年底头数</span><span>食品消费量</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.144 · p=0.0275</span></div>
+                <div><strong>AMC</strong><span>+0.122 · p=0.0074</span></div>
+                <div><strong>nan</strong><span>+0.116 · p=0.0093</span></div>
+                <div><strong>R²</strong><span>0.409</span></div>
+              </div>
+            </article>
+            
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#6 · 严筛模型 6</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>SYS_09927</h3>
+              <p>作为严筛并列候选 #6，用于稳健性与异质性比较。</p>
+              <div class="eyebrow" style="margin-top:6px;">严筛强相关 8 模型</div>
+              <div class="chip-row"><span>R1xday</span><span>抗菌药物使用强度</span><span>TA（°C）</span><span>PM2.5</span><span>医疗水平</span><span>城市用水普及率</span><span>牲畜饲养
+-猪年底头数</span><span>文盲比例</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.143 · p=0.0403</span></div>
+                <div><strong>AMC</strong><span>+0.125 · p=0.0071</span></div>
+                <div><strong>nan</strong><span>+0.141 · p=0.0023</span></div>
+                <div><strong>R²</strong><span>0.408</span></div>
+              </div>
+            </article>
+            
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#7 · 严筛模型 7</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>SYS_09791</h3>
+              <p>作为严筛并列候选 #7，用于稳健性与异质性比较。</p>
+              <div class="eyebrow" style="margin-top:6px;">严筛强相关 8 模型</div>
+              <div class="chip-row"><span>R1xday</span><span>抗菌药物使用强度</span><span>TA（°C）</span><span>PM2.5</span><span>医疗水平</span><span>生活垃圾无害化处理率</span><span>牲畜饲养
+-猪年底头数</span><span>PA（%）</span><span>食品消费量</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.147 · p=0.0446</span></div>
+                <div><strong>AMC</strong><span>+0.121 · p=0.0088</span></div>
+                <div><strong>nan</strong><span>+0.125 · p=0.0198</span></div>
+                <div><strong>R²</strong><span>0.405</span></div>
+              </div>
+            </article>
+            
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#8 · 严筛模型 8</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>SYS_09776</h3>
+              <p>作为严筛并列候选 #8，用于稳健性与异质性比较。</p>
+              <div class="eyebrow" style="margin-top:6px;">严筛强相关 8 模型</div>
+              <div class="chip-row"><span>R1xday</span><span>抗菌药物使用强度</span><span>TA（°C）</span><span>PM2.5</span><span>医疗水平</span><span>生活垃圾无害化处理率</span><span>牲畜饲养
+-猪年底头数</span><span>食品消费量</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.147 · p=0.0241</span></div>
+                <div><strong>AMC</strong><span>+0.121 · p=0.0088</span></div>
+                <div><strong>nan</strong><span>+0.125 · p=0.0108</span></div>
+                <div><strong>R²</strong><span>0.405</span></div>
+              </div>
+            </article>
+            
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#9 · 稳健性模型 2</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>SYS_09556</h3>
+              <p>Used to show the result does not rely only on manually curated bundles.</p>
+              <div class="eyebrow" style="margin-top:6px;">手选 Year FE 4 模型</div>
+              <div class="chip-row"><span>R1xday</span><span>抗菌药物使用强度</span><span>TA（°C）</span><span>PM2.5</span><span>GDP</span><span>城市用水普及率</span><span>牲畜饲养
+-猪年底头数</span><span>主要城市降水量</span><span>食品消费量</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.181 · p=0.0218</span></div>
+                <div><strong>AMC</strong><span>+0.116 · p=0.0054</span></div>
+                <div><strong>TA（°C）</strong><span>+0.082 · p=0.0800</span></div>
+                <div><strong>R²</strong><span>0.362</span></div>
+              </div>
+            </article>
+            
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#10 · 稳健性模型 3</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>SYS_09557</h3>
+              <p>Used as a neighboring high-performing Year FE specification for final comparison.</p>
+              <div class="eyebrow" style="margin-top:6px;">手选 Year FE 4 模型</div>
+              <div class="chip-row"><span>R1xday</span><span>抗菌药物使用强度</span><span>TA（°C）</span><span>PM2.5</span><span>GDP</span><span>城市用水普及率</span><span>牲畜饲养
+-猪年底头数</span><span>主要城市降水量</span><span>文盲比例</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.178 · p=0.0277</span></div>
+                <div><strong>AMC</strong><span>+0.117 · p=0.0049</span></div>
+                <div><strong>TA（°C）</strong><span>+0.084 · p=0.0665</span></div>
+                <div><strong>R²</strong><span>0.361</span></div>
+              </div>
+            </article>
+            
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#11 · 稳健性模型 1</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>方案F_低VIF主线组</h3>
+              <p>Used to test whether the core story depends on a more collinear variable bundle.</p>
+              <div class="eyebrow" style="margin-top:6px;">手选 Year FE 4 模型</div>
+              <div class="chip-row"><span>TA（°C）</span><span>R1xday</span><span>PM2.5</span><span>抗菌药物使用强度</span><span>GDP</span><span>文盲比例</span><span>人均日生活用水量(升)</span><span>牲畜饲养
+-猪年底头数</span><span>主要城市日照时数</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.134 · p=0.0511</span></div>
+                <div><strong>AMC</strong><span>+0.128 · p=0.0034</span></div>
+                <div><strong>TA（°C）</strong><span>+0.090 · p=0.0587</span></div>
+                <div><strong>R²</strong><span>0.345</span></div>
+              </div>
+            </article>
+            
+            <article class="model-card">
+              <div class="card-top">
+                <span class="eyebrow">#12 · 主模型</span>
+                <span class="chip">Province: No / Year: Yes</span>
+              </div>
+              <h3>方案A_平衡主线组</h3>
+              <p>Most directly aligned with the paper&#x27;s main narrative and intended interpretation.</p>
+              <div class="eyebrow" style="margin-top:6px;">手选 Year FE 4 模型</div>
+              <div class="chip-row"><span>省平均气温</span><span>R1xday</span><span>PM2.5</span><span>抗菌药物使用强度</span><span>GDP</span><span>文盲比例</span><span>人均日生活用水量(升)</span><span>牲畜饲养
+-猪年底头数</span></div>
+              <div class="metric-grid">
+                <div><strong>R1xday</strong><span>+0.151 · p=0.0426</span></div>
+                <div><strong>AMC</strong><span>+0.131 · p=0.0034</span></div>
+                <div><strong>省平均气温</strong><span>-0.034 · p=0.7128</span></div>
+                <div><strong>R²</strong><span>0.334</span></div>
+              </div>
+            </article>
+            
+      </div>
+    </section>
+
+    <section class="section panel" id="variants">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Variant Results</div>
+          <h2>逐变体查看 12 模型的 posterior 结果。</h2>
+        </div>
+        <p>表里同时放了频率学系数、贝叶斯 posterior 和收敛诊断，便于直接判断“信号方向”“区间是否跨 0”以及“链是否稳定”。</p>
+      </div>
+      <div class="variant-stack">
+        
+            <section class="variant-block">
+              <div class="section-head">
+                <div>
+                  <div class="eyebrow">Year-only</div>
+                  <h3>Year-only additive</h3>
+                </div>
+                <p>最接近主线 Year FE 的贝叶斯镜像，只检验主效应能否稳定复现。</p>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>模型</th>
+                      <th>R1xday</th>
+                      <th>AMC</th>
+                      <th>Interaction</th>
+                      <th>频率学 / 诊断</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                <tr>
+                  <td>
+                    <strong>SYS_09851</strong><br />
+                    <span class="muted">SYS_09851 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.130</span>
+                      <span>[0.069, 0.189]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.101</span>
+                      <span>[0.047, 0.154]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.129</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10001</strong><br />
+                    <span class="muted">SYS_10001 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.136</span>
+                      <span>[0.078, 0.194]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.100</span>
+                      <span>[0.047, 0.154]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.135</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10002</strong><br />
+                    <span class="muted">SYS_10002 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.123</span>
+                      <span>[0.064, 0.185]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.095</span>
+                      <span>[0.041, 0.151]</span>
+                      <span>P(&gt;0)=99.9%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.133</span>
+                      <span>freq AMC=+0.110</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09941</strong><br />
+                    <span class="muted">SYS_09941 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.134</span>
+                      <span>[0.071, 0.196]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.115</span>
+                      <span>[0.063, 0.168]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09926</strong><br />
+                    <span class="muted">SYS_09926 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.141</span>
+                      <span>[0.082, 0.199]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.115</span>
+                      <span>[0.061, 0.168]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.144</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09927</strong><br />
+                    <span class="muted">SYS_09927 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.125</span>
+                      <span>[0.061, 0.185]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.109</span>
+                      <span>[0.054, 0.164]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.125</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09791</strong><br />
+                    <span class="muted">SYS_09791 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.146</span>
+                      <span>[0.082, 0.210]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.112</span>
+                      <span>[0.059, 0.166]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09776</strong><br />
+                    <span class="muted">SYS_09776 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.153</span>
+                      <span>[0.093, 0.216]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.113</span>
+                      <span>[0.059, 0.169]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09556</strong><br />
+                    <span class="muted">SYS_09556 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.174</span>
+                      <span>[0.103, 0.245]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.115</span>
+                      <span>[0.058, 0.171]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.181</span>
+                      <span>freq AMC=+0.116</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案F_低VIF主线组</strong><br />
+                    <span class="muted">方案F_低VIF主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.115</span>
+                      <span>[0.051, 0.179]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.103</span>
+                      <span>[0.046, 0.159]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.134</span>
+                      <span>freq AMC=+0.128</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.119</span>
+                      <span>[0.044, 0.192]</span>
+                      <span>P(&gt;0)=99.9%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.106</span>
+                      <span>[0.050, 0.164]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.151</span>
+                      <span>freq AMC=+0.131</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: Yes / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.119</span>
+                      <span>[0.044, 0.192]</span>
+                      <span>P(&gt;0)=99.9%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.106</span>
+                      <span>[0.050, 0.164]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=-0.003</span>
+                      <span>freq AMC=+0.009</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            
+            <section class="variant-block">
+              <div class="section-head">
+                <div>
+                  <div class="eyebrow">Year-only</div>
+                  <h3>Year-only amplification</h3>
+                </div>
+                <p>在 Year-only 口径下增加交互项，检验极端降雨是否会放大 AMC-AMR 关联。</p>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>模型</th>
+                      <th>R1xday</th>
+                      <th>AMC</th>
+                      <th>Interaction</th>
+                      <th>频率学 / 诊断</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                <tr>
+                  <td>
+                    <strong>SYS_09851</strong><br />
+                    <span class="muted">SYS_09851 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.128</span>
+                      <span>[0.065, 0.190]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.103</span>
+                      <span>[0.049, 0.158]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge muted">证据不足</span><div class="stack"><span>+0.010</span><span>[-0.042, 0.064]</span><span>P(&gt;0)=64.7%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.129</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10001</strong><br />
+                    <span class="muted">SYS_10001 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.135</span>
+                      <span>[0.074, 0.194]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.101</span>
+                      <span>[0.046, 0.156]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge muted">证据不足</span><div class="stack"><span>+0.008</span><span>[-0.044, 0.060]</span><span>P(&gt;0)=62.1%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.135</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10002</strong><br />
+                    <span class="muted">SYS_10002 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.119</span>
+                      <span>[0.058, 0.180]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.097</span>
+                      <span>[0.043, 0.152]</span>
+                      <span>P(&gt;0)=99.9%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge muted">证据不足</span><div class="stack"><span>+0.014</span><span>[-0.039, 0.067]</span><span>P(&gt;0)=69.9%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.133</span>
+                      <span>freq AMC=+0.110</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09941</strong><br />
+                    <span class="muted">SYS_09941 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.135</span>
+                      <span>[0.072, 0.197]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.116</span>
+                      <span>[0.062, 0.169]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge muted">证据不足</span><div class="stack"><span>+0.005</span><span>[-0.048, 0.058]</span><span>P(&gt;0)=56.5%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09926</strong><br />
+                    <span class="muted">SYS_09926 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.140</span>
+                      <span>[0.076, 0.202]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.117</span>
+                      <span>[0.062, 0.172]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge muted">证据不足</span><div class="stack"><span>+0.005</span><span>[-0.047, 0.059]</span><span>P(&gt;0)=57.0%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.144</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09927</strong><br />
+                    <span class="muted">SYS_09927 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.122</span>
+                      <span>[0.062, 0.185]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.111</span>
+                      <span>[0.055, 0.165]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge muted">证据不足</span><div class="stack"><span>+0.011</span><span>[-0.043, 0.066]</span><span>P(&gt;0)=65.3%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.125</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09791</strong><br />
+                    <span class="muted">SYS_09791 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.144</span>
+                      <span>[0.082, 0.205]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.117</span>
+                      <span>[0.061, 0.172]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge muted">证据不足</span><div class="stack"><span>+0.013</span><span>[-0.040, 0.066]</span><span>P(&gt;0)=68.9%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09776</strong><br />
+                    <span class="muted">SYS_09776 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.151</span>
+                      <span>[0.088, 0.214]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.117</span>
+                      <span>[0.062, 0.171]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge muted">证据不足</span><div class="stack"><span>+0.014</span><span>[-0.035, 0.068]</span><span>P(&gt;0)=69.3%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09556</strong><br />
+                    <span class="muted">SYS_09556 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.174</span>
+                      <span>[0.106, 0.244]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.115</span>
+                      <span>[0.059, 0.173]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge muted">证据不足</span><div class="stack"><span>+0.005</span><span>[-0.050, 0.062]</span><span>P(&gt;0)=56.5%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.181</span>
+                      <span>freq AMC=+0.116</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案F_低VIF主线组</strong><br />
+                    <span class="muted">方案F_低VIF主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.105</span>
+                      <span>[0.038, 0.170]</span>
+                      <span>P(&gt;0)=99.8%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.111</span>
+                      <span>[0.055, 0.167]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.039</span><span>[-0.016, 0.094]</span><span>P(&gt;0)=91.8%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.134</span>
+                      <span>freq AMC=+0.128</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.106</span>
+                      <span>[0.029, 0.184]</span>
+                      <span>P(&gt;0)=99.6%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.112</span>
+                      <span>[0.055, 0.168]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.030</span><span>[-0.025, 0.087]</span><span>P(&gt;0)=84.8%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.151</span>
+                      <span>freq AMC=+0.131</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: Yes / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.106</span>
+                      <span>[0.029, 0.184]</span>
+                      <span>P(&gt;0)=99.6%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge strong">稳健正向</span>
+                    <div class="stack">
+                      <span>+0.112</span>
+                      <span>[0.055, 0.168]</span>
+                      <span>P(&gt;0)=100.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.030</span><span>[-0.025, 0.087]</span><span>P(&gt;0)=84.8%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=-0.003</span>
+                      <span>freq AMC=+0.009</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            
+            <section class="variant-block">
+              <div class="section-head">
+                <div>
+                  <div class="eyebrow">Province-only</div>
+                  <h3>Province-only additive</h3>
+                </div>
+                <p>先吸收省际长期差异，再看主效应还能保留多少。</p>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>模型</th>
+                      <th>R1xday</th>
+                      <th>AMC</th>
+                      <th>Interaction</th>
+                      <th>频率学 / 诊断</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                <tr>
+                  <td>
+                    <strong>SYS_09851</strong><br />
+                    <span class="muted">SYS_09851 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.002</span>
+                      <span>[-0.040, 0.045]</span>
+                      <span>P(&gt;0)=53.6%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.001</span>
+                      <span>[-0.038, 0.040]</span>
+                      <span>P(&gt;0)=52.9%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.129</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10001</strong><br />
+                    <span class="muted">SYS_10001 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.001</span>
+                      <span>[-0.046, 0.043]</span>
+                      <span>P(&gt;0)=49.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.001</span>
+                      <span>[-0.037, 0.040]</span>
+                      <span>P(&gt;0)=52.3%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.135</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10002</strong><br />
+                    <span class="muted">SYS_10002 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.002</span>
+                      <span>[-0.046, 0.040]</span>
+                      <span>P(&gt;0)=46.6%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.004</span>
+                      <span>[-0.036, 0.041]</span>
+                      <span>P(&gt;0)=58.2%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.133</span>
+                      <span>freq AMC=+0.110</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09941</strong><br />
+                    <span class="muted">SYS_09941 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.002</span>
+                      <span>[-0.046, 0.050]</span>
+                      <span>P(&gt;0)=53.6%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.004</span>
+                      <span>[-0.036, 0.042]</span>
+                      <span>P(&gt;0)=57.1%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09926</strong><br />
+                    <span class="muted">SYS_09926 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.002</span>
+                      <span>[-0.041, 0.046]</span>
+                      <span>P(&gt;0)=53.1%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.003</span>
+                      <span>[-0.035, 0.043]</span>
+                      <span>P(&gt;0)=55.3%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.144</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09927</strong><br />
+                    <span class="muted">SYS_09927 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.001</span>
+                      <span>[-0.043, 0.044]</span>
+                      <span>P(&gt;0)=47.9%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.006</span>
+                      <span>[-0.033, 0.044]</span>
+                      <span>P(&gt;0)=62.7%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.125</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09791</strong><br />
+                    <span class="muted">SYS_09791 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.003</span>
+                      <span>[-0.043, 0.050]</span>
+                      <span>P(&gt;0)=55.1%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.012</span>
+                      <span>[-0.026, 0.050]</span>
+                      <span>P(&gt;0)=72.6%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09776</strong><br />
+                    <span class="muted">SYS_09776 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.006</span>
+                      <span>[-0.037, 0.050]</span>
+                      <span>P(&gt;0)=60.5%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.012</span>
+                      <span>[-0.027, 0.049]</span>
+                      <span>P(&gt;0)=72.5%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09556</strong><br />
+                    <span class="muted">SYS_09556 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.002</span>
+                      <span>[-0.046, 0.050]</span>
+                      <span>P(&gt;0)=53.4%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.017</span>
+                      <span>[-0.025, 0.061]</span>
+                      <span>P(&gt;0)=79.4%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.181</span>
+                      <span>freq AMC=+0.116</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案F_低VIF主线组</strong><br />
+                    <span class="muted">方案F_低VIF主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.010</span>
+                      <span>[-0.056, 0.036]</span>
+                      <span>P(&gt;0)=32.8%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge directional">方向性正向</span>
+                    <div class="stack">
+                      <span>+0.020</span>
+                      <span>[-0.020, 0.060]</span>
+                      <span>P(&gt;0)=83.2%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.134</span>
+                      <span>freq AMC=+0.128</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.010</span>
+                      <span>[-0.056, 0.036]</span>
+                      <span>P(&gt;0)=33.7%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.017</span>
+                      <span>[-0.025, 0.056]</span>
+                      <span>P(&gt;0)=79.1%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.151</span>
+                      <span>freq AMC=+0.131</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: Yes / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.010</span>
+                      <span>[-0.056, 0.036]</span>
+                      <span>P(&gt;0)=33.7%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.017</span>
+                      <span>[-0.025, 0.056]</span>
+                      <span>P(&gt;0)=79.1%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=-0.003</span>
+                      <span>freq AMC=+0.009</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            
+            <section class="variant-block">
+              <div class="section-head">
+                <div>
+                  <div class="eyebrow">Province-only</div>
+                  <h3>Province-only amplification</h3>
+                </div>
+                <p>当前最适合盯放大效应的一条线，看交互项在省际差异控制后是否仍然抬起。</p>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>模型</th>
+                      <th>R1xday</th>
+                      <th>AMC</th>
+                      <th>Interaction</th>
+                      <th>频率学 / 诊断</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                <tr>
+                  <td>
+                    <strong>SYS_09851</strong><br />
+                    <span class="muted">SYS_09851 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.013</span>
+                      <span>[-0.059, 0.033]</span>
+                      <span>P(&gt;0)=28.3%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.007</span>
+                      <span>[-0.035, 0.047]</span>
+                      <span>P(&gt;0)=63.9%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.028</span><span>[-0.009, 0.062]</span><span>P(&gt;0)=93.9%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.129</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10001</strong><br />
+                    <span class="muted">SYS_10001 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.015</span>
+                      <span>[-0.062, 0.031]</span>
+                      <span>P(&gt;0)=26.3%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.007</span>
+                      <span>[-0.033, 0.045]</span>
+                      <span>P(&gt;0)=63.5%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.029</span><span>[-0.006, 0.062]</span><span>P(&gt;0)=94.7%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.135</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10002</strong><br />
+                    <span class="muted">SYS_10002 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.017</span>
+                      <span>[-0.063, 0.031]</span>
+                      <span>P(&gt;0)=24.1%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.009</span>
+                      <span>[-0.030, 0.048]</span>
+                      <span>P(&gt;0)=67.2%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.028</span><span>[-0.005, 0.063]</span><span>P(&gt;0)=95.2%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.133</span>
+                      <span>freq AMC=+0.110</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09941</strong><br />
+                    <span class="muted">SYS_09941 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.012</span>
+                      <span>[-0.060, 0.037]</span>
+                      <span>P(&gt;0)=30.7%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.009</span>
+                      <span>[-0.030, 0.046]</span>
+                      <span>P(&gt;0)=67.8%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.030</span><span>[-0.004, 0.064]</span><span>P(&gt;0)=95.3%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09926</strong><br />
+                    <span class="muted">SYS_09926 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.013</span>
+                      <span>[-0.061, 0.034]</span>
+                      <span>P(&gt;0)=29.3%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.009</span>
+                      <span>[-0.031, 0.047]</span>
+                      <span>P(&gt;0)=67.3%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.030</span><span>[-0.005, 0.065]</span><span>P(&gt;0)=95.7%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.144</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09927</strong><br />
+                    <span class="muted">SYS_09927 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.015</span>
+                      <span>[-0.061, 0.032]</span>
+                      <span>P(&gt;0)=25.8%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.010</span>
+                      <span>[-0.028, 0.048]</span>
+                      <span>P(&gt;0)=70.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.029</span><span>[-0.006, 0.063]</span><span>P(&gt;0)=95.0%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.125</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09791</strong><br />
+                    <span class="muted">SYS_09791 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.013</span>
+                      <span>[-0.061, 0.036]</span>
+                      <span>P(&gt;0)=30.6%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge directional">方向性正向</span>
+                    <div class="stack">
+                      <span>+0.019</span>
+                      <span>[-0.020, 0.057]</span>
+                      <span>P(&gt;0)=83.5%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge strong">稳健正向</span><div class="stack"><span>+0.034</span><span>[0.000, 0.068]</span><span>P(&gt;0)=97.5%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09776</strong><br />
+                    <span class="muted">SYS_09776 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.010</span>
+                      <span>[-0.056, 0.036]</span>
+                      <span>P(&gt;0)=35.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge directional">方向性正向</span>
+                    <div class="stack">
+                      <span>+0.018</span>
+                      <span>[-0.020, 0.057]</span>
+                      <span>P(&gt;0)=82.8%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.034</span><span>[-0.002, 0.068]</span><span>P(&gt;0)=96.9%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09556</strong><br />
+                    <span class="muted">SYS_09556 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.017</span>
+                      <span>[-0.069, 0.035]</span>
+                      <span>P(&gt;0)=26.8%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge directional">方向性正向</span>
+                    <div class="stack">
+                      <span>+0.023</span>
+                      <span>[-0.019, 0.066]</span>
+                      <span>P(&gt;0)=86.4%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge strong">稳健正向</span><div class="stack"><span>+0.038</span><span>[0.001, 0.077]</span><span>P(&gt;0)=97.8%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.181</span>
+                      <span>freq AMC=+0.116</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案F_低VIF主线组</strong><br />
+                    <span class="muted">方案F_低VIF主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge negative">方向性负向</span>
+                    <div class="stack">
+                      <span>-0.026</span>
+                      <span>[-0.075, 0.024]</span>
+                      <span>P(&gt;0)=15.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge directional">方向性正向</span>
+                    <div class="stack">
+                      <span>+0.026</span>
+                      <span>[-0.015, 0.066]</span>
+                      <span>P(&gt;0)=89.0%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.033</span><span>[-0.005, 0.070]</span><span>P(&gt;0)=95.5%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.134</span>
+                      <span>freq AMC=+0.128</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge negative">方向性负向</span>
+                    <div class="stack">
+                      <span>-0.028</span>
+                      <span>[-0.077, 0.023]</span>
+                      <span>P(&gt;0)=13.7%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge directional">方向性正向</span>
+                    <div class="stack">
+                      <span>+0.024</span>
+                      <span>[-0.018, 0.065]</span>
+                      <span>P(&gt;0)=87.4%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge strong">稳健正向</span><div class="stack"><span>+0.037</span><span>[0.002, 0.074]</span><span>P(&gt;0)=98.1%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.151</span>
+                      <span>freq AMC=+0.131</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: Yes / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge negative">方向性负向</span>
+                    <div class="stack">
+                      <span>-0.028</span>
+                      <span>[-0.077, 0.023]</span>
+                      <span>P(&gt;0)=13.7%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge directional">方向性正向</span>
+                    <div class="stack">
+                      <span>+0.024</span>
+                      <span>[-0.018, 0.065]</span>
+                      <span>P(&gt;0)=87.4%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge strong">稳健正向</span><div class="stack"><span>+0.037</span><span>[0.002, 0.074]</span><span>P(&gt;0)=98.1%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=-0.003</span>
+                      <span>freq AMC=+0.009</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            
+            <section class="variant-block">
+              <div class="section-head">
+                <div>
+                  <div class="eyebrow">Province + year</div>
+                  <h3>Province + year additive</h3>
+                </div>
+                <p>最严格口径下的主效应检查，用来判断核心信号是否被双重控制压缩。</p>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>模型</th>
+                      <th>R1xday</th>
+                      <th>AMC</th>
+                      <th>Interaction</th>
+                      <th>频率学 / 诊断</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                <tr>
+                  <td>
+                    <strong>SYS_09851</strong><br />
+                    <span class="muted">SYS_09851 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.001</span>
+                      <span>[-0.037, 0.038]</span>
+                      <span>P(&gt;0)=52.1%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.012</span>
+                      <span>[-0.019, 0.043]</span>
+                      <span>P(&gt;0)=77.5%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.129</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10001</strong><br />
+                    <span class="muted">SYS_10001 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.000</span>
+                      <span>[-0.037, 0.038]</span>
+                      <span>P(&gt;0)=50.6%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.007</span>
+                      <span>[-0.023, 0.038]</span>
+                      <span>P(&gt;0)=67.8%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.135</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10002</strong><br />
+                    <span class="muted">SYS_10002 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.000</span>
+                      <span>[-0.037, 0.037]</span>
+                      <span>P(&gt;0)=49.2%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.008</span>
+                      <span>[-0.022, 0.039]</span>
+                      <span>P(&gt;0)=69.9%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.133</span>
+                      <span>freq AMC=+0.110</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09941</strong><br />
+                    <span class="muted">SYS_09941 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.005</span>
+                      <span>[-0.045, 0.035]</span>
+                      <span>P(&gt;0)=40.1%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.008</span>
+                      <span>[-0.023, 0.038]</span>
+                      <span>P(&gt;0)=68.5%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09926</strong><br />
+                    <span class="muted">SYS_09926 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.001</span>
+                      <span>[-0.038, 0.038]</span>
+                      <span>P(&gt;0)=50.5%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.008</span>
+                      <span>[-0.023, 0.038]</span>
+                      <span>P(&gt;0)=69.2%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.144</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09927</strong><br />
+                    <span class="muted">SYS_09927 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.000</span>
+                      <span>[-0.038, 0.037]</span>
+                      <span>P(&gt;0)=48.9%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.008</span>
+                      <span>[-0.023, 0.039]</span>
+                      <span>P(&gt;0)=70.2%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.125</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09791</strong><br />
+                    <span class="muted">SYS_09791 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.005</span>
+                      <span>[-0.045, 0.034]</span>
+                      <span>P(&gt;0)=41.9%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.009</span>
+                      <span>[-0.022, 0.040]</span>
+                      <span>P(&gt;0)=72.0%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09776</strong><br />
+                    <span class="muted">SYS_09776 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.001</span>
+                      <span>[-0.036, 0.040]</span>
+                      <span>P(&gt;0)=52.3%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.008</span>
+                      <span>[-0.023, 0.038]</span>
+                      <span>P(&gt;0)=69.3%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09556</strong><br />
+                    <span class="muted">SYS_09556 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.005</span>
+                      <span>[-0.033, 0.043]</span>
+                      <span>P(&gt;0)=60.1%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.009</span>
+                      <span>[-0.022, 0.040]</span>
+                      <span>P(&gt;0)=71.1%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.181</span>
+                      <span>freq AMC=+0.116</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案F_低VIF主线组</strong><br />
+                    <span class="muted">方案F_低VIF主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.003</span>
+                      <span>[-0.034, 0.040]</span>
+                      <span>P(&gt;0)=55.6%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.010</span>
+                      <span>[-0.023, 0.043]</span>
+                      <span>P(&gt;0)=72.2%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.134</span>
+                      <span>freq AMC=+0.128</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.001</span>
+                      <span>[-0.038, 0.036]</span>
+                      <span>P(&gt;0)=48.1%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.009</span>
+                      <span>[-0.023, 0.042]</span>
+                      <span>P(&gt;0)=71.9%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.151</span>
+                      <span>freq AMC=+0.131</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: Yes / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.001</span>
+                      <span>[-0.038, 0.036]</span>
+                      <span>P(&gt;0)=48.1%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.009</span>
+                      <span>[-0.023, 0.042]</span>
+                      <span>P(&gt;0)=71.9%</span>
+                    </div>
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=-0.003</span>
+                      <span>freq AMC=+0.009</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            
+            <section class="variant-block">
+              <div class="section-head">
+                <div>
+                  <div class="eyebrow">Province + year</div>
+                  <h3>Province + year amplification</h3>
+                </div>
+                <p>最严格口径下的交互项检查，方向若还能抬起，解释力最强；若压回零，也最容易理解。</p>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>模型</th>
+                      <th>R1xday</th>
+                      <th>AMC</th>
+                      <th>Interaction</th>
+                      <th>频率学 / 诊断</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                <tr>
+                  <td>
+                    <strong>SYS_09851</strong><br />
+                    <span class="muted">SYS_09851 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.006</span>
+                      <span>[-0.046, 0.032]</span>
+                      <span>P(&gt;0)=37.8%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge directional">方向性正向</span>
+                    <div class="stack">
+                      <span>+0.015</span>
+                      <span>[-0.014, 0.047]</span>
+                      <span>P(&gt;0)=82.4%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.016</span><span>[-0.011, 0.043]</span><span>P(&gt;0)=86.8%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.129</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10001</strong><br />
+                    <span class="muted">SYS_10001 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.008</span>
+                      <span>[-0.048, 0.032]</span>
+                      <span>P(&gt;0)=35.4%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.010</span>
+                      <span>[-0.021, 0.041]</span>
+                      <span>P(&gt;0)=73.6%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.016</span><span>[-0.012, 0.043]</span><span>P(&gt;0)=86.7%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.135</span>
+                      <span>freq AMC=+0.106</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_10002</strong><br />
+                    <span class="muted">SYS_10002 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.009</span>
+                      <span>[-0.049, 0.031]</span>
+                      <span>P(&gt;0)=32.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.012</span>
+                      <span>[-0.019, 0.043]</span>
+                      <span>P(&gt;0)=77.9%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.017</span><span>[-0.011, 0.044]</span><span>P(&gt;0)=88.3%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.133</span>
+                      <span>freq AMC=+0.110</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09941</strong><br />
+                    <span class="muted">SYS_09941 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.013</span>
+                      <span>[-0.053, 0.027]</span>
+                      <span>P(&gt;0)=26.6%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.011</span>
+                      <span>[-0.020, 0.043]</span>
+                      <span>P(&gt;0)=75.3%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.016</span><span>[-0.011, 0.042]</span><span>P(&gt;0)=87.2%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09926</strong><br />
+                    <span class="muted">SYS_09926 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.007</span>
+                      <span>[-0.047, 0.032]</span>
+                      <span>P(&gt;0)=37.6%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.011</span>
+                      <span>[-0.020, 0.041]</span>
+                      <span>P(&gt;0)=75.1%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.015</span><span>[-0.012, 0.043]</span><span>P(&gt;0)=85.4%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.144</span>
+                      <span>freq AMC=+0.122</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09927</strong><br />
+                    <span class="muted">SYS_09927 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.008</span>
+                      <span>[-0.047, 0.030]</span>
+                      <span>P(&gt;0)=34.0%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.012</span>
+                      <span>[-0.020, 0.044]</span>
+                      <span>P(&gt;0)=77.2%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.016</span><span>[-0.012, 0.044]</span><span>P(&gt;0)=86.8%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.143</span>
+                      <span>freq AMC=+0.125</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09791</strong><br />
+                    <span class="muted">SYS_09791 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.012</span>
+                      <span>[-0.051, 0.029]</span>
+                      <span>P(&gt;0)=28.1%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.012</span>
+                      <span>[-0.019, 0.043]</span>
+                      <span>P(&gt;0)=78.4%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.016</span><span>[-0.011, 0.044]</span><span>P(&gt;0)=87.8%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.01</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09776</strong><br />
+                    <span class="muted">SYS_09776 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.006</span>
+                      <span>[-0.045, 0.034]</span>
+                      <span>P(&gt;0)=37.6%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.011</span>
+                      <span>[-0.021, 0.043]</span>
+                      <span>P(&gt;0)=75.7%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.016</span><span>[-0.012, 0.044]</span><span>P(&gt;0)=86.2%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.147</span>
+                      <span>freq AMC=+0.121</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>SYS_09556</strong><br />
+                    <span class="muted">SYS_09556 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.003</span>
+                      <span>[-0.042, 0.038]</span>
+                      <span>P(&gt;0)=45.2%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.013</span>
+                      <span>[-0.019, 0.046]</span>
+                      <span>P(&gt;0)=77.8%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.017</span><span>[-0.012, 0.045]</span><span>P(&gt;0)=87.8%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.181</span>
+                      <span>freq AMC=+0.116</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案F_低VIF主线组</strong><br />
+                    <span class="muted">方案F_低VIF主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.006</span>
+                      <span>[-0.046, 0.035]</span>
+                      <span>P(&gt;0)=37.3%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.013</span>
+                      <span>[-0.019, 0.044]</span>
+                      <span>P(&gt;0)=79.7%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.019</span><span>[-0.008, 0.047]</span><span>P(&gt;0)=91.5%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.134</span>
+                      <span>freq AMC=+0.128</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: No / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.011</span>
+                      <span>[-0.049, 0.027]</span>
+                      <span>P(&gt;0)=29.4%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.013</span>
+                      <span>[-0.019, 0.046]</span>
+                      <span>P(&gt;0)=79.4%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.020</span><span>[-0.008, 0.049]</span><span>P(&gt;0)=92.0%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=+0.151</span>
+                      <span>freq AMC=+0.131</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <strong>方案A_平衡主线组</strong><br />
+                    <span class="muted">方案A_平衡主线组 | Province: Yes / Year: Yes</span>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>-0.011</span>
+                      <span>[-0.049, 0.027]</span>
+                      <span>P(&gt;0)=29.4%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge muted">证据不足</span>
+                    <div class="stack">
+                      <span>+0.013</span>
+                      <span>[-0.019, 0.046]</span>
+                      <span>P(&gt;0)=79.4%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge directional">方向性正向</span><div class="stack"><span>+0.020</span><span>[-0.008, 0.049]</span><span>P(&gt;0)=92.0%</span></div></td>
+                  <td>
+                    <div class="stack">
+                      <span>freq R1=-0.003</span>
+                      <span>freq AMC=+0.009</span>
+                      <span>max R̂=1.00</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            
+      </div>
+    </section>
+
+    <section class="section panel" id="downloads">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Downloads</div>
+          <h2>网页里的关键表都可以直接继续追到源 CSV。</h2>
+        </div>
+        <p>如果你要写方法补充、核对模型收敛或继续做可视化，优先用下面这些文件。</p>
+      </div>
+      <div class="downloads">
+        <a href="results/model_summaries/focus_primary_summary.csv">focus_primary_summary.csv</a><a href="results/model_summaries/focus_variant_bridge_summary.csv">focus_variant_bridge_summary.csv</a><a href="results/model_summaries/combined_diagnostics.csv">combined_diagnostics.csv</a><a href="../2 固定效应模型/results/model_archive_12/selected_models.csv">selected_models.csv</a>
+      </div>
+    </section>
+
+    <div class="footer">Generated at 2026-04-23 15:49:47 · Source: 4 贝叶斯分析/results/model_summaries</div>
+  </div>
+</body>
+</html>

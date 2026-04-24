@@ -23,16 +23,19 @@ from config_future_scenario_projection import (
     FUTURE_START_YEAR,
     LAST_OBSERVED_YEAR,
     MORTALITY_MODULE,
+    PROVINCE_TAS_VARIABLE_NAME,
     RESULTS_DIR,
     RX1DAY_MAIN_STATISTIC,
     RX1DAY_SCENARIOS,
     RX1DAY_STATISTICS,
     RX1DAY_VARIABLE_NAME,
     SCENARIO_LABELS,
+    TA_VARIABLE_NAME,
     ensure_directories,
     resolve_results_output_dir,
 )
 from future_scenario_common import (
+    align_future_province_tas_to_history,
     align_future_rx1day_to_history,
     build_baseline_covariate_forecasts,
     build_outcome_series,
@@ -41,12 +44,16 @@ from future_scenario_common import (
     fit_panel_association_model,
     forecast_panel_value,
     load_base_frame,
+    load_future_province_tas_panel,
     load_future_rx1day_panel,
+    load_future_ta_panel,
     load_selected_models,
 )
 
 
 sns.set_theme(style="whitegrid", font="Microsoft YaHei", rc={"axes.unicode_minus": False})
+
+TEMPERATURE_VARS = {"主要城市平均气温", PROVINCE_TAS_VARIABLE_NAME, TA_VARIABLE_NAME}
 
 
 def parse_args() -> argparse.Namespace:
@@ -148,10 +155,13 @@ def apply_scenario_overrides(baseline_path: pd.Series, override: dict[str, objec
     return baseline_path.copy()
 
 
-def build_external_rx1day_lookup(future_rx1day_aligned: pd.DataFrame) -> dict[tuple[str, str], pd.Series]:
+def build_external_series_lookup(
+    future_df: pd.DataFrame,
+    value_col: str,
+) -> dict[tuple[str, str], pd.Series]:
     lookup: dict[tuple[str, str], pd.Series] = {}
-    for (scenario, statistic), sub in future_rx1day_aligned.groupby(["scenario", "statistic"], dropna=False):
-        series = sub.set_index(["Province", "Year"])["rx1day_aligned"].sort_index()
+    for (scenario, statistic), sub in future_df.groupby(["scenario", "statistic"], dropna=False):
+        series = sub.set_index(["Province", "Year"])[value_col].sort_index()
         lookup[(str(scenario), str(statistic))] = series
     return lookup
 
@@ -162,6 +172,8 @@ def simulate_future_scenarios(
     baseline_covariate_forecasts: dict[str, pd.Series],
     scenario_lookup: dict[str, dict[str, object]],
     external_rx1day_lookup: dict[tuple[str, str], pd.Series],
+    external_ta_lookup: dict[tuple[str, str], pd.Series],
+    external_province_tas_lookup: dict[tuple[str, str], pd.Series],
 ) -> pd.DataFrame:
     selected_model = fit_bundle["selected_model"]
     result = fit_bundle["result"]
@@ -176,6 +188,9 @@ def simulate_future_scenarios(
             delta_total = pd.Series(0.0, index=base_index, dtype=float)
             rx1day_baseline = None
             rx1day_scenario = None
+            temperature_baseline = None
+            temperature_scenario = None
+            temperature_variable = None
 
             for variable in selected_model.variables:
                 baseline_path = baseline_covariate_forecasts[variable].reindex(base_index)
@@ -183,8 +198,21 @@ def simulate_future_scenarios(
 
                 if variable == RX1DAY_VARIABLE_NAME and scenario_meta.get("rx1day_source_scenario"):
                     external_key = (str(scenario_meta["rx1day_source_scenario"]), str(statistic))
-                    external_path = external_rx1day_lookup[external_key].reindex(base_index)
-                    scenario_path = external_path.fillna(baseline_path)
+                    external_path = external_rx1day_lookup.get(external_key)
+                    if external_path is not None:
+                        scenario_path = external_path.reindex(base_index).fillna(baseline_path)
+
+                if variable == TA_VARIABLE_NAME and scenario_meta.get("tas_source_scenario"):
+                    external_key = (str(scenario_meta["tas_source_scenario"]), str(statistic))
+                    external_path = external_ta_lookup.get(external_key)
+                    if external_path is not None:
+                        scenario_path = external_path.reindex(base_index).fillna(baseline_path)
+
+                if variable == PROVINCE_TAS_VARIABLE_NAME and scenario_meta.get("tas_source_scenario"):
+                    external_key = (str(scenario_meta["tas_source_scenario"]), str(statistic))
+                    external_path = external_province_tas_lookup.get(external_key)
+                    if external_path is not None:
+                        scenario_path = external_path.reindex(base_index).fillna(baseline_path)
 
                 if variable in CONTROLLED_FUTURE_VARIABLES:
                     override = scenario_meta.get("adjustments", {}).get(variable)
@@ -202,6 +230,10 @@ def simulate_future_scenarios(
                 if variable == RX1DAY_VARIABLE_NAME:
                     rx1day_baseline = baseline_path
                     rx1day_scenario = scenario_path
+                if variable in {TA_VARIABLE_NAME, PROVINCE_TAS_VARIABLE_NAME}:
+                    temperature_baseline = baseline_path
+                    temperature_scenario = scenario_path
+                    temperature_variable = variable
 
             scenario_pred = baseline_outcome_future.add(delta_total, fill_value=0.0)
             out = pd.DataFrame(index=base_index).reset_index()
@@ -228,6 +260,15 @@ def simulate_future_scenarios(
                 out["rx1day_baseline"] = pd.NA
                 out["rx1day_scenario"] = pd.NA
                 out["rx1day_delta"] = pd.NA
+            out["temperature_proxy_variable"] = temperature_variable if temperature_variable else pd.NA
+            if temperature_baseline is not None:
+                out["temperature_baseline"] = temperature_baseline.reindex(base_index).values
+                out["temperature_scenario"] = temperature_scenario.reindex(base_index).values
+                out["temperature_delta"] = out["temperature_scenario"] - out["temperature_baseline"]
+            else:
+                out["temperature_baseline"] = pd.NA
+                out["temperature_scenario"] = pd.NA
+                out["temperature_delta"] = pd.NA
             rows.append(out)
 
     projection_panel = pd.concat(rows, ignore_index=True)
@@ -535,6 +576,7 @@ def write_projection_notes(
     baseline_label: str,
     baseline_description: str,
 ) -> Path:
+    roles_text = ", ".join(roles) if roles else "all roles from selected_models.csv"
     if baseline_mode == "lancet_ets":
         baseline_formula = [
             "```text",
@@ -546,7 +588,7 @@ def write_projection_notes(
         ]
         interpretation = [
             "- This version is closest to Lancet 2023: future baseline comes from ETS on AMR itself.",
-            "- Future R1xday scenarios are layered on top of ETS(AMR) as increments.",
+            "- Future climate scenarios are layered on top of ETS(AMR) as increments.",
             "- The curve shape is therefore more strongly influenced by historical AMR inertia.",
         ]
     else:
@@ -555,13 +597,13 @@ def write_projection_notes(
             "Y_it = alpha_i + lambda_t + sum_k beta_k Z_itk + epsilon_it",
             "Y^base_it = alpha_i* + lambda_t* + sum_k beta_k Z^base_itk",
             "Y^scenario_it = alpha_i* + lambda_t* + sum_k beta_k Z^scenario_itk",
-            "If only R1xday is controlled:",
-            "Y^scenario_it = Y^base_it + beta_R * (R1xday^scenario_it - R1xday^base_it)",
+            "If supported climate variables are controlled:",
+            "Y^scenario_it = Y^base_it + sum_{k in climate} beta_k * (Z^scenario_itk - Z^base_itk)",
             "```",
         ]
         interpretation = [
             "- This is a simplified X-driven / Nature-like baseline: future baseline is driven by future covariate paths.",
-            "- R1xday^base_it and other baseline covariates first follow their own ETS extensions, then are plugged back into the historical panel model.",
+            "- Baseline covariates first follow their own ETS extensions, then are plugged back into the historical panel model.",
             "- The future trajectory is therefore more responsive to covariate path divergence.",
         ]
 
@@ -574,9 +616,9 @@ def write_projection_notes(
         f"- meaning: {baseline_description}",
         f"- model source: `5 ?????/results/{model_source_outcome}/model_screening/selected_models.csv`",
         f"- projection window: `{start_year}-{end_year}`",
-        f"- roles: `{', '.join(roles)}`",
-        "- external scenario variable: `R1xday`",
-        "- climate scenarios: annual CCKP `rx1day` for `ssp119 / ssp126 / ssp245 / ssp370 / ssp585`",
+        f"- roles: `{roles_text}`",
+        "- external scenario variables: `R1xday`, plus `TA（°C）` / `省平均气温` when present in the model",
+        "- climate scenarios: annual CCKP `rx1day` and `tas` for `ssp119 / ssp126 / ssp245 / ssp370 / ssp585`",
         "- uncertainty paths: `median / p10 / p90`",
         "- national result rule: project province-level AMR first, then take arithmetic mean across provinces without weighting.",
         "",
@@ -584,7 +626,7 @@ def write_projection_notes(
         "",
         "1. Reuse the selected historical province-year models from `5 ?????`.",
         "2. Re-estimate the historical panel coefficients and keep the historical scaling of covariates.",
-        "3. Only let `R1xday` vary by future scenario; all other covariates follow baseline paths.",
+        "3. Let supported climate variables (`R1xday`, `TA（°C）`, `省平均气温`) vary by future scenario when present; all other covariates follow baseline paths.",
         "4. Project AMR province by province, then average across provinces to obtain national trajectories and Figure-5-style outputs.",
         "",
         "## Formula",
@@ -610,6 +652,268 @@ def write_projection_notes(
     return output_path
 
 
+def projection_fmt(value: object, digits: int = 3) -> str:
+    if value is None or pd.isna(value):
+        return "NA"
+    return f"{float(value):.{digits}f}"
+
+
+def projection_fmt_signed(value: object, digits: int = 3) -> str:
+    if value is None or pd.isna(value):
+        return "NA"
+    return f"{float(value):+.{digits}f}"
+
+
+def projection_clean_label(value: object) -> str:
+    return str(value).replace("\n", "").strip()
+
+
+def projection_join_top(values: pd.Series, n: int = 3) -> str:
+    items = [
+        projection_clean_label(item)
+        for item in values.tolist()
+        if projection_clean_label(item)
+    ]
+    return "、".join(items[:n]) if items else "NA"
+
+
+def get_projection_coef(
+    coefficient_df: pd.DataFrame,
+    role_id: str,
+    predictor: str | None,
+) -> float | None:
+    if not predictor:
+        return None
+    subset = coefficient_df[
+        coefficient_df["role_id"].eq(role_id) & coefficient_df["predictor"].eq(predictor)
+    ]
+    if subset.empty:
+        return None
+    return float(subset.iloc[0]["coef"])
+
+
+def build_projection_model_detail_df(
+    selected_models_snapshot: pd.DataFrame,
+    coefficient_df: pd.DataFrame,
+    national_yearly_df: pd.DataFrame,
+    scenario_summary_end_df: pd.DataFrame,
+    province_end_df: pd.DataFrame,
+) -> pd.DataFrame:
+    detail_rows: list[dict[str, object]] = []
+
+    for _, model in selected_models_snapshot.iterrows():
+        role_id = str(model["role_id"])
+        variables = [
+            projection_clean_label(item)
+            for item in str(model["variables"]).split(" | ")
+            if projection_clean_label(item)
+        ]
+        temp_vars = [item for item in variables if item in TEMPERATURE_VARS]
+        temp_proxy = temp_vars[0] if temp_vars else None
+
+        yearly_role = national_yearly_df[national_yearly_df["role_id"].eq(role_id)].copy()
+        end_role = scenario_summary_end_df[scenario_summary_end_df["role_id"].eq(role_id)].copy()
+        province_role = province_end_df[province_end_df["role_id"].eq(role_id)].copy()
+        if yearly_role.empty or end_role.empty:
+            continue
+
+        baseline_row = end_role[end_role["scenario_id"].eq("baseline_ets")].iloc[0]
+        median_rows = end_role[
+            ~end_role["scenario_id"].eq("baseline_ets") & end_role["statistic"].eq(RX1DAY_MAIN_STATISTIC)
+        ].copy()
+        if median_rows.empty:
+            continue
+
+        strongest = median_rows.sort_values("delta_vs_baseline_mean", ascending=False).iloc[0]
+        weakest = median_rows.sort_values("delta_vs_baseline_mean", ascending=True).iloc[0]
+
+        baseline_yearly = yearly_role[yearly_role["scenario_id"].eq("baseline_ets")].sort_values("Year")
+        baseline_start = float(baseline_yearly.iloc[0]["scenario_pred_mean"])
+        baseline_end = float(baseline_yearly.iloc[-1]["scenario_pred_mean"])
+        baseline_change = baseline_end - baseline_start
+
+        strongest_province = province_role[
+            province_role["scenario_id"].eq(strongest["scenario_id"]) & province_role["statistic"].eq(RX1DAY_MAIN_STATISTIC)
+        ].copy()
+
+        all_predictors = coefficient_df[coefficient_df["role_id"].eq(role_id)].copy()
+        if all_predictors.empty:
+            top_predictor = None
+            top_predictor_coef = None
+        else:
+            all_predictors["coef_abs"] = all_predictors["coef"].abs()
+            top_row = all_predictors.sort_values(["coef_abs", "predictor"], ascending=[False, True]).iloc[0]
+            top_predictor = projection_clean_label(top_row["predictor"])
+            top_predictor_coef = float(top_row["coef"])
+
+        detail_rows.append(
+            {
+                "role_id": role_id,
+                "role_label": projection_clean_label(model["role_label"]),
+                "model_id": model["model_id"],
+                "scheme_id": model["scheme_id"],
+                "scheme_source": model["scheme_source"],
+                "fe_label": model["fe_label"],
+                "variables": " | ".join(variables),
+                "variable_count": len(variables),
+                "temperature_proxy": temp_proxy if temp_proxy else pd.NA,
+                "coef_r1xday": get_projection_coef(coefficient_df, role_id, "R1xday"),
+                "coef_amc": get_projection_coef(coefficient_df, role_id, "抗菌药物使用强度"),
+                "coef_temperature_proxy": get_projection_coef(coefficient_df, role_id, temp_proxy),
+                "largest_abs_predictor": top_predictor if top_predictor else pd.NA,
+                "largest_abs_predictor_coef": top_predictor_coef,
+                "baseline_pred_start": baseline_start,
+                "baseline_pred_end": baseline_end,
+                "baseline_pred_change": baseline_change,
+                "baseline_vs_last_observed": float(baseline_row["delta_vs_last_observed"]),
+                "strongest_scenario_id": strongest["scenario_id"],
+                "strongest_scenario_label": strongest["scenario_label"],
+                "strongest_scenario_delta": float(strongest["delta_vs_baseline_mean"]),
+                "weakest_scenario_id": weakest["scenario_id"],
+                "weakest_scenario_label": weakest["scenario_label"],
+                "weakest_scenario_delta": float(weakest["delta_vs_baseline_mean"]),
+                "delta_spread_2050": float(
+                    strongest["delta_vs_baseline_mean"] - weakest["delta_vs_baseline_mean"]
+                ),
+                "scenario_count": int(median_rows.shape[0]),
+                "top_provinces_under_strongest": projection_join_top(
+                    strongest_province.sort_values("delta_vs_baseline", ascending=False)["Province"]
+                ),
+                "bottom_provinces_under_strongest": projection_join_top(
+                    strongest_province.sort_values("delta_vs_baseline", ascending=True)["Province"]
+                ),
+            }
+        )
+
+    return pd.DataFrame(detail_rows)
+
+
+def write_projection_notes_current(
+    output_dir: Path,
+    outcome_label: str,
+    model_source_outcome: str,
+    roles: list[str],
+    start_year: int,
+    end_year: int,
+    baseline_mode: str,
+    baseline_label: str,
+    baseline_description: str,
+    model_detail_df: pd.DataFrame,
+) -> Path:
+    roles_text = ", ".join(roles) if roles else "all roles from selected_models.csv"
+    lines = [
+        f"# {outcome_label} future projection notes",
+        "",
+        f"## Version: {baseline_label}",
+        "",
+        f"- baseline_mode: `{baseline_mode}`",
+        f"- meaning: {baseline_description}",
+        f"- model source: `5 反事实推演/results/{model_source_outcome}/model_screening/selected_models.csv`",
+        f"- projection window: `{start_year}-{end_year}`",
+        f"- roles: `{roles_text}`",
+        "- current scope: reuse the current 12-model archive instead of discussing only `main_model`",
+        "- external scenario variables: `R1xday`, plus `TA（°C）` / `省平均气温` when present in the model",
+        "- climate scenarios: annual CCKP `rx1day` and `tas` for `ssp119 / ssp126 / ssp245 / ssp370 / ssp585`",
+        "- uncertainty paths: `median / p10 / p90`",
+        "- national result rule: project province-level AMR first, then take arithmetic mean across provinces without weighting.",
+        "",
+        "## 12-model archive",
+        "",
+        "- The future workflow now inherits the same 12 archived model roles used by the counterfactual module.",
+        "- Detailed per-model interpretation is written to `model_role_detailed_analysis.md`; each role is discussed separately rather than only extending `main_model`.",
+        "",
+        "## Key role summary",
+        "",
+        model_detail_df[
+            [
+                "role_label",
+                "scheme_id",
+                "coef_r1xday",
+                "baseline_pred_end",
+                "strongest_scenario_label",
+                "strongest_scenario_delta",
+                "delta_spread_2050",
+            ]
+        ]
+        .rename(
+            columns={
+                "role_label": "model",
+                "scheme_id": "scheme",
+                "coef_r1xday": "coef_r1xday",
+                "baseline_pred_end": f"baseline_{end_year}",
+                "strongest_scenario_label": "strongest_scenario",
+                "strongest_scenario_delta": "strongest_delta",
+                "delta_spread_2050": f"spread_{end_year}",
+            }
+        )
+        .to_markdown(index=False),
+        "",
+    ]
+
+    output_path = output_dir / "projection_notes.md"
+    output_path.write_text("\n".join(lines), encoding="utf-8")
+    return output_path
+
+
+def write_projection_model_detail_notes(
+    output_dir: Path,
+    outcome_label: str,
+    baseline_label: str,
+    end_year: int,
+    model_detail_df: pd.DataFrame,
+) -> Path:
+    lines = [
+        f"# {outcome_label} {baseline_label}：12 模型逐一详细分析",
+        "",
+        f"这里固定围绕 {end_year} 年的未来情景结果解读 12 个归档模型。",
+        "每个模型都单独报告变量结构、关键系数、baseline 轨迹、最敏感情景和省级热点，不再只延伸主模型。",
+        "",
+    ]
+
+    for _, row in model_detail_df.iterrows():
+        lines.extend(
+            [
+                f"## {row['role_label']}：{row['scheme_id']}",
+                "",
+                f"- 识别口径：`{row['fe_label']}`，来源为 `{row['scheme_source']}`。",
+                f"- 变量结构：`{row['variables']}`。温度代理为 `{row['temperature_proxy']}`。",
+                (
+                    f"- 关键系数：`R1xday` = {projection_fmt(row['coef_r1xday'])}，"
+                    f"`抗菌药物使用强度` = {projection_fmt(row['coef_amc'])}，"
+                    f"温度代理系数 = {projection_fmt(row['coef_temperature_proxy'])}。"
+                ),
+                (
+                    f"- baseline 轨迹：从 {projection_fmt(row['baseline_pred_start'])} 变化到 "
+                    f"{projection_fmt(row['baseline_pred_end'])}，期间变化 "
+                    f"{projection_fmt_signed(row['baseline_pred_change'])}；相对最后观测值的差异为 "
+                    f"{projection_fmt_signed(row['baseline_vs_last_observed'])}。"
+                ),
+                (
+                    f"- 情景敏感性：{end_year} 年最强的是“{row['strongest_scenario_label']}”"
+                    f"({projection_fmt_signed(row['strongest_scenario_delta'])})，"
+                    f"最弱的是“{row['weakest_scenario_label']}”"
+                    f"({projection_fmt_signed(row['weakest_scenario_delta'])})；情景 spread 为 "
+                    f"{projection_fmt(row['delta_spread_2050'])}。"
+                ),
+                (
+                    f"- 省级热点：在最强情景下，差值较高的省份主要是 "
+                    f"{row['top_provinces_under_strongest']}，差值较低的省份主要是 "
+                    f"{row['bottom_provinces_under_strongest']}。"
+                ),
+                (
+                    f"- 写作提示：该模型里绝对系数最大的变量是 `{row['largest_abs_predictor']}` "
+                    f"({projection_fmt_signed(row['largest_abs_predictor_coef'])})，"
+                    "因此正文解释时可以优先说明它与主要气候通道的相对权重。"
+                ),
+                "",
+            ]
+        )
+
+    output_path = output_dir / "model_role_detailed_analysis.md"
+    output_path.write_text("\n".join(lines), encoding="utf-8")
+    return output_path
+
+
 def write_baseline_comparison_notes(
     output_dir: Path,
     outcome_label: str,
@@ -626,18 +930,19 @@ def write_baseline_comparison_notes(
         "",
         "## Core difference",
         "",
-        "- `lancet_ets`: future baseline comes from ETS on AMR itself, then future R1xday deltas are added.",
+        "- `lancet_ets`: future baseline comes from ETS on AMR itself, then future climate deltas are added.",
         "- `x_driven`: future baseline comes from future covariate paths plugged back into the historical panel model.",
         "",
         "## When to look at which version",
         "",
         "- Use `lancet_ets` when you want the closest implementation of the Lancet phrase 'baseline scenario continued at current rates, as estimated by ETS models'.",
-        "- Use `x_driven` when you want future R1xday paths to play a larger role in shaping future AMR trajectories.",
+        "- Use `x_driven` when you want future climate paths to play a larger role in shaping future AMR trajectories.",
         "",
         "## Current scope",
         "",
         f"- projection window: `{start_year}-{end_year}`",
-        "- only `R1xday` is varied by future scenario at this stage",
+        "- future scenarios now vary `R1xday`, and also `TA（°C）` / `省平均气温` when those variables are present in a model",
+        "- comparison should no longer be limited to `main_model`; use `model_role_2050_compare.csv` for the 12-role digest",
         "- national results remain arithmetic means across province-level AMR projections",
         "- the x-driven version is still a simplified Nature-like baseline rather than the full spatiotemporal Bayesian model",
     ]
@@ -703,9 +1008,10 @@ def main() -> int:
     base_df = load_base_frame()
     outcome_series, outcome_meta = build_outcome_series(base_df, args.outcome, args.single_outcome_scale)
     selected_models = load_selected_models(args.model_source_outcome, roles=args.roles)
+    selected_roles_used = [model.role_id for model in selected_models]
 
     union_vars = sorted({var for model in selected_models for var in model.variables})
-    logger.info("Selected model roles: %s", [model.role_id for model in selected_models])
+    logger.info("Selected model roles: %s", selected_roles_used)
     logger.info("Union variables: %s", union_vars)
     logger.info("Baseline modes: %s", requested_modes)
 
@@ -728,7 +1034,27 @@ def main() -> int:
     future_rx1day_aligned = future_rx1day_aligned[
         future_rx1day_aligned["Year"].between(args.start_year, args.end_year)
     ].copy()
-    external_rx1day_lookup = build_external_rx1day_lookup(future_rx1day_aligned)
+    external_rx1day_lookup = build_external_series_lookup(future_rx1day_aligned, "rx1day_aligned")
+
+    future_ta_panel = load_future_ta_panel()
+    future_ta_panel = future_ta_panel[
+        future_ta_panel["Year"].between(args.start_year, args.end_year)
+    ].copy()
+    external_ta_lookup = build_external_series_lookup(future_ta_panel, TA_VARIABLE_NAME)
+
+    future_province_tas_raw = load_future_province_tas_panel()
+    future_province_tas_aligned, province_tas_bias_table = align_future_province_tas_to_history(
+        future_df=future_province_tas_raw,
+        historical_df=base_df,
+        logger=logger,
+    )
+    future_province_tas_aligned = future_province_tas_aligned[
+        future_province_tas_aligned["Year"].between(args.start_year, args.end_year)
+    ].copy()
+    external_province_tas_lookup = build_external_series_lookup(
+        future_province_tas_aligned,
+        f"{PROVINCE_TAS_VARIABLE_NAME}_aligned",
+    )
 
     fit_records: list[dict[str, object]] = []
     coefficient_rows: list[pd.DataFrame] = []
@@ -780,8 +1106,20 @@ def main() -> int:
         rx1day_bias_path = common_input_dir / "rx1day_bias_correction.csv"
         rx1day_bias_table.to_csv(rx1day_bias_path, index=False, encoding="utf-8-sig")
 
+    ta_future_panel_path = common_input_dir / "ta_future_panel.csv"
+    future_ta_panel.to_csv(ta_future_panel_path, index=False, encoding="utf-8-sig")
+
+    province_tas_future_aligned_path = common_input_dir / "province_tas_future_aligned.csv"
+    future_province_tas_aligned.to_csv(province_tas_future_aligned_path, index=False, encoding="utf-8-sig")
+
+    province_tas_bias_path = None
+    if not province_tas_bias_table.empty:
+        province_tas_bias_path = common_input_dir / "province_tas_bias_correction.csv"
+        province_tas_bias_table.to_csv(province_tas_bias_path, index=False, encoding="utf-8-sig")
+
     compare_national_yearly: list[pd.DataFrame] = []
     compare_end_summary: list[pd.DataFrame] = []
+    compare_role_detail: list[pd.DataFrame] = []
     mode_output_lookup: dict[str, dict[str, str | None]] = {}
 
     for baseline_mode in requested_modes:
@@ -816,6 +1154,8 @@ def main() -> int:
                 baseline_covariate_forecasts=baseline_covariate_forecasts,
                 scenario_lookup=scenario_lookup,
                 external_rx1day_lookup=external_rx1day_lookup,
+                external_ta_lookup=external_ta_lookup,
+                external_province_tas_lookup=external_province_tas_lookup,
             )
             mode_projection["baseline_mode"] = baseline_mode
             mode_projection["baseline_mode_label"] = baseline_label
@@ -836,6 +1176,22 @@ def main() -> int:
 
         for name, df in summaries.items():
             df.to_csv(projection_output_dir / f"{name}.csv", index=False, encoding="utf-8-sig")
+
+        model_detail_df = build_projection_model_detail_df(
+            selected_models_snapshot=selected_models_snapshot,
+            coefficient_df=coefficient_df,
+            national_yearly_df=summaries["national_yearly"],
+            scenario_summary_end_df=summaries[f"scenario_summary_{args.end_year}"],
+            province_end_df=summaries[f"province_projection_{args.end_year}"],
+        )
+        model_detail_path = mode_dir / "model_role_detail_summary.csv"
+        model_detail_df.to_csv(model_detail_path, index=False, encoding="utf-8-sig")
+        compare_role_detail.append(
+            model_detail_df.assign(
+                baseline_mode=baseline_mode,
+                baseline_mode_label=baseline_label,
+            )
+        )
 
         baseline_method_snapshot = pd.concat(baseline_method_tables, ignore_index=True)
         baseline_method_path = mode_model_dir / "baseline_method_snapshot.csv"
@@ -865,16 +1221,24 @@ def main() -> int:
             last_observed_year=LAST_OBSERVED_YEAR,
             baseline_label=baseline_label,
         )
-        notes_path = write_projection_notes(
+        notes_path = write_projection_notes_current(
             output_dir=mode_dir,
             outcome_label=outcome_meta["outcome_label"],
             model_source_outcome=args.model_source_outcome,
-            roles=args.roles,
+            roles=selected_roles_used,
             start_year=args.start_year,
             end_year=args.end_year,
             baseline_mode=baseline_mode,
             baseline_label=baseline_label,
             baseline_description=baseline_description,
+            model_detail_df=model_detail_df,
+        )
+        detail_notes_path = write_projection_model_detail_notes(
+            output_dir=mode_dir,
+            outcome_label=outcome_meta["outcome_label"],
+            baseline_label=baseline_label,
+            end_year=args.end_year,
+            model_detail_df=model_detail_df,
         )
         mortality_note_path = maybe_run_mortality_scaffold(logger, projection_output_dir)
 
@@ -886,7 +1250,7 @@ def main() -> int:
             "baseline_mode_description": baseline_description,
             "start_year": args.start_year,
             "end_year": args.end_year,
-            "selected_roles": args.roles,
+            "selected_roles": selected_roles_used,
             "model_source_outcome": args.model_source_outcome,
             "scenario_ids": list(scenario_lookup.keys()),
             "rx1day_scenarios": RX1DAY_SCENARIOS,
@@ -897,6 +1261,8 @@ def main() -> int:
                 "projection_panel": str(projection_panel_path),
                 "baseline_method_snapshot": str(baseline_method_path),
                 "notes": str(notes_path),
+                "model_role_detail_summary": str(model_detail_path),
+                "model_role_detail_notes": str(detail_notes_path),
                 "national_plot": str(national_plot),
                 "delta_plot": str(delta_plot),
                 "figure5_style_main": str(figure5_plot),
@@ -908,6 +1274,9 @@ def main() -> int:
                 "covariate_ets_methods_snapshot": str(covariate_ets_path),
                 "rx1day_future_aligned": str(rx1day_future_aligned_path),
                 "rx1day_bias_correction": str(rx1day_bias_path) if rx1day_bias_path else None,
+                "ta_future_panel": str(ta_future_panel_path),
+                "province_tas_future_aligned": str(province_tas_future_aligned_path),
+                "province_tas_bias_correction": str(province_tas_bias_path) if province_tas_bias_path else None,
             },
         }
         mode_metadata_path = mode_dir / "run_metadata.json"
@@ -919,6 +1288,8 @@ def main() -> int:
             "mode_dir": str(mode_dir),
             "projection_panel": str(projection_panel_path),
             "notes": str(notes_path),
+            "model_role_detail_summary": str(model_detail_path),
+            "model_role_detail_notes": str(detail_notes_path),
             "metadata": str(mode_metadata_path),
             "figure5_style_main": str(figure5_plot),
         }
@@ -932,6 +1303,10 @@ def main() -> int:
     end_summary_compare = pd.concat(compare_end_summary, ignore_index=True)
     end_summary_compare_path = compare_dir / f"scenario_summary_{args.end_year}_compare.csv"
     end_summary_compare.to_csv(end_summary_compare_path, index=False, encoding="utf-8-sig")
+
+    role_detail_compare = pd.concat(compare_role_detail, ignore_index=True)
+    role_detail_compare_path = compare_dir / f"model_role_{args.end_year}_compare.csv"
+    role_detail_compare.to_csv(role_detail_compare_path, index=False, encoding="utf-8-sig")
 
     main_model_end_compare = end_summary_compare[
         end_summary_compare["role_id"].eq("main_model") & end_summary_compare["statistic"].eq(RX1DAY_MAIN_STATISTIC)
@@ -953,7 +1328,7 @@ def main() -> int:
         "outcome_note": outcome_meta["outcome_note"],
         "start_year": args.start_year,
         "end_year": args.end_year,
-        "selected_roles": args.roles,
+        "selected_roles": selected_roles_used,
         "model_source_outcome": args.model_source_outcome,
         "baseline_modes": requested_modes,
         "common_outputs": {
@@ -962,11 +1337,15 @@ def main() -> int:
             "covariate_ets_methods_snapshot": str(covariate_ets_path),
             "rx1day_future_aligned": str(rx1day_future_aligned_path),
             "rx1day_bias_correction": str(rx1day_bias_path) if rx1day_bias_path else None,
+            "ta_future_panel": str(ta_future_panel_path),
+            "province_tas_future_aligned": str(province_tas_future_aligned_path),
+            "province_tas_bias_correction": str(province_tas_bias_path) if province_tas_bias_path else None,
         },
         "compare_outputs": {
             "national_yearly_compare": str(national_yearly_compare_path),
             "end_summary_compare": str(end_summary_compare_path),
             "main_model_end_compare": str(main_model_end_compare_path),
+            "model_role_end_compare": str(role_detail_compare_path),
             "comparison_note": str(comparison_note_path),
         },
         "mode_outputs": mode_output_lookup,

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from html import escape
+import json
 from pathlib import Path
 import sys
 
@@ -12,8 +13,11 @@ if str(ROOT) not in sys.path:
 from tools.build_future_scenario_dashboard import OUT_FILE, build_data
 
 
-ROLE_ORDER = ["main_model", "robust_low_vif", "robust_systematic", "robust_strict_fe"]
 SCENARIO_ORDER = ["ssp119", "ssp126", "ssp245", "ssp370", "ssp585"]
+ROLE_ALIASES = {
+    "robust_systematic_2": ["robust_strict_fe"],
+    "robust_strict_fe": ["robust_systematic_2"],
+}
 
 
 def num(value: object) -> float:
@@ -50,6 +54,29 @@ def role_label(data: dict, role_id: str) -> str:
     return role_id
 
 
+def role_ids(data: dict) -> list[str]:
+    ordered = list(data.get("role_order", []))
+    if ordered:
+        return ordered
+    return [str(item["id"]) for item in data.get("roles", [])]
+
+
+def primary_role_id(data: dict) -> str:
+    ids = role_ids(data)
+    if "main_model" in ids:
+        return "main_model"
+    if not ids:
+        raise KeyError("No role ids found in future-scenario dashboard data.")
+    return ids[0]
+
+
+def archive_mix_counts(data: dict) -> tuple[int, int]:
+    ids = role_ids(data)
+    legacy_count = sum(1 for role_id in ids if role_id == "main_model" or role_id.startswith("robust_"))
+    strict_count = sum(1 for role_id in ids if role_id.startswith("strict_"))
+    return legacy_count, strict_count
+
+
 def first_row(rows: list[dict], **filters: str) -> dict:
     for row in rows:
         if all(str(row.get(key, "")) == str(value) for key, value in filters.items()):
@@ -69,11 +96,46 @@ def rel(path: str) -> str:
     return path.replace("\\", "/")
 
 
-def build_mode_story(data: dict, mode_id: str) -> dict:
+def resolve_role_id(rows: list[dict], desired_role_id: str, **filters: str) -> str:
+    candidates = [desired_role_id] + ROLE_ALIASES.get(desired_role_id, [])
+    for candidate in candidates:
+        matched = rows_where(rows, role_id=candidate, **filters)
+        if matched:
+            return candidate
+    return desired_role_id
+
+
+def build_mode_story(data: dict, mode_id: str, role_id: str | None = None) -> dict:
+    target_role = role_id or primary_role_id(data)
+    national_role = resolve_role_id(
+        data["national_yearly"],
+        target_role,
+        baseline_mode=mode_id,
+        scenario_id="baseline_ets",
+    )
+    scenario_role = resolve_role_id(
+        data["scenario_summary_2050"],
+        target_role,
+        baseline_mode=mode_id,
+        scenario_id="ssp119",
+        statistic="median",
+    )
+    regional_role = resolve_role_id(
+        data["regional_summary_2050"],
+        target_role,
+        baseline_mode=mode_id,
+        scenario_id="ssp119",
+    )
+    provincial_role = resolve_role_id(
+        data["province_projection_2050"],
+        target_role,
+        baseline_mode=mode_id,
+        scenario_id="ssp585",
+    )
     national_rows = rows_where(
         data["national_yearly"],
         baseline_mode=mode_id,
-        role_id="main_model",
+        role_id=national_role,
         scenario_id="baseline_ets",
     )
     national_rows = sorted(national_rows, key=lambda row: int(row["Year"]))
@@ -84,7 +146,7 @@ def build_mode_story(data: dict, mode_id: str) -> dict:
         first_row(
             data["scenario_summary_2050"],
             baseline_mode=mode_id,
-            role_id="main_model",
+            role_id=scenario_role,
             scenario_id=scenario_id,
             statistic="median",
         )
@@ -98,7 +160,7 @@ def build_mode_story(data: dict, mode_id: str) -> dict:
         rows_where(
             data["regional_summary_2050"],
             baseline_mode=mode_id,
-            role_id="main_model",
+            role_id=regional_role,
             scenario_id="ssp119",
         ),
         key=lambda row: num(row["delta_vs_baseline_mean"]),
@@ -107,7 +169,7 @@ def build_mode_story(data: dict, mode_id: str) -> dict:
         rows_where(
             data["regional_summary_2050"],
             baseline_mode=mode_id,
-            role_id="main_model",
+            role_id=regional_role,
             scenario_id="ssp585",
         ),
         key=lambda row: num(row["delta_vs_baseline_mean"]),
@@ -117,7 +179,7 @@ def build_mode_story(data: dict, mode_id: str) -> dict:
         rows_where(
             data["province_projection_2050"],
             baseline_mode=mode_id,
-            role_id="main_model",
+            role_id=provincial_role,
             scenario_id="ssp585",
         ),
         key=lambda row: num(row["delta_vs_baseline"]),
@@ -127,7 +189,7 @@ def build_mode_story(data: dict, mode_id: str) -> dict:
         for row in rows_where(
             data["province_projection_2050"],
             baseline_mode=mode_id,
-            role_id="main_model",
+            role_id=provincial_role,
             scenario_id="ssp119",
         )
     }
@@ -148,7 +210,7 @@ def build_mode_story(data: dict, mode_id: str) -> dict:
     dual_gap_rows.sort(key=lambda row: row["gap"], reverse=True)
 
     role_rows = []
-    for role_id in ROLE_ORDER:
+    for role_id in role_ids(data):
         ssp119 = first_row(
             data["scenario_summary_2050"],
             baseline_mode=mode_id,
@@ -171,9 +233,12 @@ def build_mode_story(data: dict, mode_id: str) -> dict:
             statistic="baseline",
         )
         r1 = next(
-            num(row["coef"])
-            for row in data["coefficients"]
-            if row["role_id"] == role_id and row["predictor"] == "R1xday"
+            (
+                num(row["coef"])
+                for row in data["coefficients"]
+                if row["role_id"] == role_id and row["predictor"] == "R1xday"
+            ),
+            0.0,
         )
         role_rows.append(
             {
@@ -191,6 +256,8 @@ def build_mode_story(data: dict, mode_id: str) -> dict:
     return {
         "mode_id": mode_id,
         "mode_short": mode_short(data, mode_id),
+        "role_id": target_role,
+        "role_label": role_label(data, target_role),
         "baseline_2024": baseline_2024,
         "baseline_2050": baseline_2050,
         "baseline_change": baseline_2050 - baseline_2024,
@@ -241,7 +308,7 @@ def bullet_items(items: list[str]) -> str:
     return "".join(f"<li>{item}</li>" for item in items)
 
 
-def build_summary_table(data: dict, stories: dict[str, dict]) -> str:
+def build_summary_table(data: dict, stories: dict[str, dict], role_id: str) -> str:
     rows = []
     for scenario_id in SCENARIO_ORDER:
         l_row = next(row for row in stories["lancet_ets"]["scenario_rows"] if row["scenario_id"] == scenario_id)
@@ -249,14 +316,14 @@ def build_summary_table(data: dict, stories: dict[str, dict]) -> str:
         p10 = first_row(
             data["scenario_summary_2050"],
             baseline_mode="lancet_ets",
-            role_id="main_model",
+            role_id=role_id,
             scenario_id=scenario_id,
             statistic="p10",
         )
         p90 = first_row(
             data["scenario_summary_2050"],
             baseline_mode="lancet_ets",
-            role_id="main_model",
+            role_id=role_id,
             scenario_id=scenario_id,
             statistic="p90",
         )
@@ -393,10 +460,10 @@ def build_province_table(rows: list[dict], mode: str, table_type: str) -> str:
     """
 
 
-def build_robustness_table(role_rows: list[dict]) -> str:
+def build_robustness_table(role_rows: list[dict], active_role_id: str | None = None) -> str:
     rows = "".join(
         f"""
-        <tr>
+        <tr class="{'active-row' if row['role_id'] == active_role_id else ''}">
           <td><strong>{escape(row['role_label'])}</strong></td>
           <td>{fmt(row['baseline_2050'])}</td>
           <td>{fmt_signed(row['ssp119_delta'])}</td>
@@ -426,7 +493,7 @@ def build_robustness_table(role_rows: list[dict]) -> str:
     """
 
 
-def build_model_cards(data: dict) -> str:
+def build_model_cards(data: dict, active_role_id: str | None = None) -> str:
     cards = []
     for role in data["roles"]:
         coeffs = [row for row in data["coefficients"] if row["role_id"] == role["id"]]
@@ -437,7 +504,7 @@ def build_model_cards(data: dict) -> str:
         variable_chips = "".join(f"<span>{escape(var)}</span>" for var in role["variables"])
         cards.append(
             f"""
-            <article class="model-card">
+            <article class="model-card {'active' if role['id'] == active_role_id else ''}">
               <div class="eyebrow">{escape(role['label'])}</div>
               <h3>{escape(role['scheme_id'])}</h3>
               <p><span class="inline-code">{escape(role['fe_label'])}</span></p>
@@ -483,6 +550,7 @@ def build_mode_section(data: dict, story: dict, section_title: str, first_image:
           <div class="eyebrow">{escape(story['mode_short'])}</div>
           <h3>{escape(section_title)}</h3>
           <p>
+            当前下拉框选中的是 <span class="inline-code">{escape(story['role_label'])}</span>。
             2050 baseline 从 {fmt(story['baseline_2024'])} 下降到 {fmt(story['baseline_2050'])}，
             变化 {fmt_signed(story['baseline_change'])}。到 2050 年，情景最低是 {escape(scenario_label(data, story['low_row']['scenario_id']))}
             ({fmt(num(story['low_row']['scenario_pred_mean']))})，最高是 {escape(scenario_label(data, story['high_row']['scenario_id']))}
@@ -490,11 +558,11 @@ def build_mode_section(data: dict, story: dict, section_title: str, first_image:
           </p>
         </div>
         <div class="figure-grid figure-grid-large">
-          {figure_block(story['assets']['national'][0]['path'], f"{story['mode_short']} 全国总图", "主模型 Figure 5 风格总图。", True)}
+          {figure_block(story['assets']['national'][0]['path'], f"{story['mode_short']} 全国总图", "页面默认模型导出的 Figure 5 风格总图，供快速对照。", True)}
         </div>
         <div class="figure-grid figure-grid-two">
-          {figure_block(story['assets']['national'][1]['path'], f"{story['mode_short']} 全国轨迹", "全国年序列主模型轨迹图。")}
-          {figure_block(story['assets']['national'][2]['path'], f"{story['mode_short']} 2050 情景增量", "2050 年 SSP 相对 baseline 的增量。")}
+          {figure_block(story['assets']['national'][1]['path'], f"{story['mode_short']} 全国轨迹", "页面默认模型导出的全国轨迹参考图。")}
+          {figure_block(story['assets']['national'][2]['path'], f"{story['mode_short']} 2050 情景增量", "页面默认模型导出的 2050 情景增量参考图。")}
         </div>
         <div class="analysis-grid">
           <article class="analysis-card">
@@ -519,13 +587,13 @@ def build_mode_section(data: dict, story: dict, section_title: str, first_image:
           </article>
         </div>
         <div class="figure-grid figure-grid-two">
-          {figure_block(first_image, f"{story['mode_short']} 地区图", "七大区 Figure 5 小图矩阵。")}
-          {figure_block(second_image, f"{story['mode_short']} 地区热图", "七大区 2050 增量热图。")}
+          {figure_block(first_image, f"{story['mode_short']} 地区图", "页面默认模型导出的七大区轨迹参考图。")}
+          {figure_block(second_image, f"{story['mode_short']} 地区热图", "页面默认模型导出的七大区 2050 热图参考图。")}
         </div>
         {build_region_table(data, story['regional_119'], story['regional_585'])}
         <div class="figure-grid figure-grid-two">
-          {figure_block(story['assets']['provincial'][0]['path'], f"{story['mode_short']} 省级总图", "全国轨迹与省级热图放在同一张图里。")}
-          {figure_block(story['assets']['provincial'][1]['path'], f"{story['mode_short']} 双情景比较", "默认比较 SSP1-1.9 与 SSP5-8.5 的 ΔAMR 版图。")}
+          {figure_block(story['assets']['provincial'][0]['path'], f"{story['mode_short']} 省级总图", "页面默认模型导出的省级总图参考件。")}
+          {figure_block(story['assets']['provincial'][1]['path'], f"{story['mode_short']} 双情景比较", "页面默认模型导出的双情景对照参考图。")}
         </div>
         <div class="two-table-grid">
           <article>
@@ -541,40 +609,191 @@ def build_mode_section(data: dict, story: dict, section_title: str, first_image:
     """
 
 
-def build_html(data: dict) -> str:
+def build_role_payload(data: dict, role_id: str) -> dict[str, str]:
     stories = {
-        "lancet_ets": build_mode_story(data, "lancet_ets"),
-        "x_driven": build_mode_story(data, "x_driven"),
+        "lancet_ets": build_mode_story(data, "lancet_ets", role_id),
+        "x_driven": build_mode_story(data, "x_driven", role_id),
     }
     overall = build_overall_story(data, stories)
+    role_meta = next((role for role in data["roles"] if role["id"] == role_id), None)
+    role_name = role_meta["label"] if role_meta else role_id
+    legacy_count, strict_count = archive_mix_counts(data)
+
+    lancet_role_rows = stories["lancet_ets"]["role_rows"]
+    selected_lancet = next((row for row in lancet_role_rows if row["role_id"] == role_id), None)
+    selected_x = next((row for row in stories["x_driven"]["role_rows"] if row["role_id"] == role_id), None)
+    highest_r1 = max(lancet_role_rows, key=lambda row: row["r1_coef"]) if lancet_role_rows else None
+    lowest_r1 = min(lancet_role_rows, key=lambda row: row["r1_coef"]) if lancet_role_rows else None
 
     hero_points = [
         (
-            "Baseline gap widened",
-            f"{fmt(overall['baseline_gap_2024'], 3)} → {fmt(overall['baseline_gap_2050'], 3)}",
-            "X-driven 和 Lancet ETS 在 2024 的差距很小，但到 2050 已拉开到 2.21 个点，说明真正主导两版差异的是 baseline 生成方式。",
+            "Current Role",
+            role_name,
+            f"当前查看的是 {role_name}；下方全国、地区、省级解读和 2050 汇总表都会切到这一组模型结果。",
+        ),
+        (
+            "Baseline gap",
+            fmt(overall["baseline_gap_2050"], 3),
+            f"在 {role_name} 下，X-driven 比 Lancet ETS 到 2050 高出 {fmt(overall['baseline_gap_2050'], 3)} 个点，主差异仍来自 baseline 生成方式。",
         ),
         (
             "Scenario spread",
             fmt(overall["same_delta_spread"], 3),
-            "主模型下，SSP5-8.5 与 SSP1-1.9 的 2050 national delta spread 为 0.129，两种 baseline 完全一致。",
+            f"{role_name} 下，SSP5-8.5 与 SSP1-1.9 的 2050 national delta spread 为 {fmt(overall['same_delta_spread'], 3)}。",
         ),
         (
             "Regional split",
             f"{overall['regional_high']['region']} {fmt_signed(num(overall['regional_high']['delta_vs_baseline_mean']))}",
-            f"SSP5-8.5 下最高的是 {overall['regional_high']['region']}，最低的是 {overall['regional_low']['region']} {fmt_signed(num(overall['regional_low']['delta_vs_baseline_mean']))}。",
-        ),
-        (
-            "Provincial extremes",
-            f"{overall['province_high']['Province']} {fmt_signed(num(overall['province_high']['delta_vs_baseline']))}",
-            f"SSP5-8.5 下最高是 {overall['province_high']['Province']}，最低是 {overall['province_low']['Province']}，最大双情景 gap 在 {overall['province_gap']['Province']}。",
+            f"在 {role_name} 下，SSP5-8.5 最高的是 {overall['regional_high']['region']}，最低的是 {overall['regional_low']['region']}。",
         ),
     ]
 
-    role_note = (
-        "稳健性结果里，主模型和低 VIF 模型几乎重合；systematic 模型更敏感，strict FE 几乎被压平。"
-        "这和 R1xday 系数完全一致：主模型 0.869、低 VIF 0.873、systematic 1.064，而 strict FE 只有 0.042。"
+    if selected_lancet and selected_x and highest_r1 and lowest_r1:
+        role_intro = (
+            f"当前选中 <strong>{escape(role_name)}</strong>。"
+            f"Lancet ETS 下 2050 baseline 为 <strong>{fmt(selected_lancet['baseline_2050'])}</strong>，"
+            f"SSP5-8.5 相对 baseline 抬升 <strong>{fmt_signed(selected_lancet['ssp585_delta'])}</strong>；"
+            f"X-driven 下对应 baseline 为 <strong>{fmt(selected_x['baseline_2050'])}</strong>。"
+            f"当前稳健性表覆盖 {data['role_count']} 个归档模型角色，其中原始主线 {legacy_count} 个、严筛扩展 {strict_count} 个；"
+            f"R1xday 系数最高的是 {highest_r1['role_label']} ({fmt_signed(highest_r1['r1_coef'], 3)})，"
+            f"最低的是 {lowest_r1['role_label']} ({fmt_signed(lowest_r1['r1_coef'], 3)})。"
+        )
+    else:
+        role_intro = f"当前选中 <strong>{escape(role_name)}</strong>。下方整页内容会同步切换到这一组模型结果。"
+
+    judgements_html = f"""
+      <div class="summary-grid">
+        <article class="summary-card">
+          <div class="eyebrow">1. baseline drives level</div>
+          <strong>{fmt(overall['baseline_gap_2050'], 3)}</strong>
+          <p>{escape(role_name)} 下，X-driven 比 Lancet ETS 在 2050 高出 {fmt(overall['baseline_gap_2050'], 3)}。这一差距主要仍由 baseline 口径驱动，而不是情景增量本身。</p>
+        </article>
+        <article class="summary-card">
+          <div class="eyebrow">2. scenario spread is modest</div>
+          <strong>{fmt(overall['same_delta_spread'], 3)}</strong>
+          <p>{escape(role_name)} 下，SSP5-8.5 与 SSP1-1.9 的 national delta spread 仍然有限，说明当前由 R1xday 驱动的 SSP 分歧存在，但没有压过 baseline 趋势。</p>
+        </article>
+        <article class="summary-card">
+          <div class="eyebrow">3. spatial pattern is split</div>
+          <strong>{escape(overall['regional_high']['region'])}</strong>
+          <p>SSP5-8.5 下，地区层面最高是 {escape(overall['regional_high']['region'])} {fmt_signed(num(overall['regional_high']['delta_vs_baseline_mean']))}，最低是 {escape(overall['regional_low']['region'])} {fmt_signed(num(overall['regional_low']['delta_vs_baseline_mean']))}。</p>
+        </article>
+        <article class="summary-card">
+          <div class="eyebrow">4. province heterogeneity is large</div>
+          <strong>{escape(overall['province_gap']['Province'])}</strong>
+          <p>SSP5-8.5 下抬升最高是 {escape(overall['province_high']['Province'])}，最低是 {escape(overall['province_low']['Province'])}；而 SSP5-8.5 与 SSP1-1.9 的最大 gap 出现在 {escape(overall['province_gap']['Province'])}。</p>
+        </article>
+      </div>
+    """
+
+    baseline_html = f"""
+      <div class="mode-compare">
+        <article class="mode-card">
+          <div class="eyebrow">Lancet ETS</div>
+          <h3>先让 AMR 自身沿 ETS 延续</h3>
+          <p>当前读取的是 <span class="inline-code">{escape(role_name)}</span>。这版更贴近 Lancet 2023 的写法，更强调结果变量自身历史惯性。</p>
+          <div class="formula">Y_it = α_i + λ_t + Σ β_k Z_itk + ε_it
+Y^base_it = ETS(Y_i, historical series)
+Δ^scenario_it = Σ β_k × (Z^scenario_itk - Z^base_itk)
+Y^scenario_it = Y^base_it + Δ^scenario_it</div>
+          <ul>{bullet_items([
+              f"2024 到 2050 的 national baseline 从 {fmt(stories['lancet_ets']['baseline_2024'])} 下降到 {fmt(stories['lancet_ets']['baseline_2050'])}。",
+              f"在 {role_name} 下，SSP5-8.5 相对 baseline 的抬升为 {fmt_signed(selected_lancet['ssp585_delta']) if selected_lancet else '—'}。",
+              "适合作为主分析，因为它最容易和参考文献对齐。",
+          ])}</ul>
+        </article>
+        <article class="mode-card">
+          <div class="eyebrow">X-driven</div>
+          <h3>先用协变量路径重建 baseline</h3>
+          <p>当前读取的是 <span class="inline-code">{escape(role_name)}</span>。这版更强调未来协变量路径怎样推开 baseline 水平。</p>
+          <div class="formula">Y_it = α_i + λ_t + Σ β_k Z_itk + ε_it
+Y^base_it = α_i* + λ_t* + Σ β_k Z^base_itk
+Y^scenario_it = α_i* + λ_t* + Σ β_k Z^scenario_itk
+If only R1xday varies:
+Y^scenario_it = Y^base_it + β_R × (R1xday^scenario_it - R1xday^base_it)</div>
+          <ul>{bullet_items([
+              f"2024 到 2050 的 national baseline 从 {fmt(stories['x_driven']['baseline_2024'])} 下降到 {fmt(stories['x_driven']['baseline_2050'])}。",
+              f"在 {role_name} 下，SSP5-8.5 相对 baseline 的抬升为 {fmt_signed(selected_x['ssp585_delta']) if selected_x else '—'}。",
+              "更适合回答未来气候路径怎样拉开情景差距。",
+          ])}</ul>
+        </article>
+      </div>
+    """
+
+    national_html = f"""
+      {build_mode_section(data, stories['lancet_ets'], '全国结果：Lancet ETS', stories['lancet_ets']['assets']['regional'][0]['path'], stories['lancet_ets']['assets']['regional'][1]['path'])}
+      {build_mode_section(data, stories['x_driven'], '全国结果：X-driven', stories['x_driven']['assets']['regional'][0]['path'], stories['x_driven']['assets']['regional'][1]['path'])}
+      <article class="note-card">
+        <div class="eyebrow">2050 National Comparison</div>
+        <h3>把两版放在同一张表里看，差异更容易解释。</h3>
+        <p>当前表格已经切换到 <span class="inline-code">{escape(role_name)}</span>。这样可以直接看这个模型下两种 baseline 在同一情景上的水平、增量和不确定性。</p>
+        {build_summary_table(data, stories, role_id)}
+      </article>
+    """
+
+    spatial_html = f"""
+      <div class="analysis-grid">
+        <article class="analysis-card">
+          <h4>地区层面的统一结论</h4>
+          <ul>{bullet_items([
+              f"在 {role_name} 下，SSP1-1.9 时 7 大区中有 {sum(num(row['delta_vs_baseline_mean']) > 0 for row in stories['lancet_ets']['regional_119'])} 个正值、{sum(num(row['delta_vs_baseline_mean']) < 0 for row in stories['lancet_ets']['regional_119'])} 个负值；到 SSP5-8.5 变成 {sum(num(row['delta_vs_baseline_mean']) > 0 for row in stories['lancet_ets']['regional_585'])} 个正值、{sum(num(row['delta_vs_baseline_mean']) < 0 for row in stories['lancet_ets']['regional_585'])} 个负值。",
+              f"华南仍是最高增量区，到 SSP5-8.5 为 {fmt_signed(num(overall['regional_high']['delta_vs_baseline_mean']))}；华中仍最低，到 SSP5-8.5 为 {fmt_signed(num(overall['regional_low']['delta_vs_baseline_mean']))}。",
+              "这意味着全国均值上看似温和的变化，实际上是由一部分地区显著抬升、另一部分地区继续走低共同拼出来的。",
+          ])}</ul>
+        </article>
+        <article class="analysis-card">
+          <h4>省级层面的统一结论</h4>
+          <ul>{bullet_items([
+              f"在 {role_name} 下，SSP5-8.5 时 31 省里有 {sum(num(row['delta_vs_baseline']) > 0 for row in stories['lancet_ets']['provincial_585'])} 个省为正、{sum(num(row['delta_vs_baseline']) < 0 for row in stories['lancet_ets']['provincial_585'])} 个省为负。",
+              f"抬升最高的是 {escape(overall['province_high']['Province'])} {fmt_signed(num(overall['province_high']['delta_vs_baseline']))}，下降最低的是 {escape(overall['province_low']['Province'])} {fmt_signed(num(overall['province_low']['delta_vs_baseline']))}。",
+              f"双情景 gap 最大的省份是 {escape(overall['province_gap']['Province'])}，说明它对未来气候路径分化最敏感。",
+          ])}</ul>
+        </article>
+      </div>
+    """
+
+    robustness_intro = role_intro
+    robustness_tables_html = f"""
+      <div class="robust-grid">
+        <article class="note-card">
+          <div class="eyebrow">Lancet ETS Roles</div>
+          <h3>{data['role_count']} 个 role 的 2050 对照</h3>
+          {build_robustness_table(stories['lancet_ets']['role_rows'], role_id)}
+        </article>
+        <article class="note-card">
+          <div class="eyebrow">X-driven Roles</div>
+          <h3>{data['role_count']} 个 role 的 2050 对照</h3>
+          {build_robustness_table(stories['x_driven']['role_rows'], role_id)}
+        </article>
+      </div>
+    """
+
+    return {
+        "role_name": role_name,
+        "role_intro": role_intro,
+        "hero_points_html": "".join(
+            f'<article class="hero-card"><div class="eyebrow">{escape(title)}</div><strong>{escape(value)}</strong><p>{escape(note)}</p></article>'
+            for title, value, note in hero_points
+        ),
+        "judgements_html": judgements_html,
+        "baseline_html": baseline_html,
+        "national_html": national_html,
+        "spatial_html": spatial_html,
+        "robustness_intro": robustness_intro,
+        "robustness_tables_html": robustness_tables_html,
+        "model_cards_html": build_model_cards(data, role_id),
+    }
+
+
+def build_html(data: dict) -> str:
+    default_role = primary_role_id(data)
+    role_payloads = {role["id"]: build_role_payload(data, role["id"]) for role in data["roles"]}
+    role_options = "".join(
+        f'<option value="{escape(role["id"])}" {"selected" if role["id"] == default_role else ""}>{escape(role["label"])}</option>'
+        for role in data["roles"]
     )
+    role_payload_json = json.dumps(role_payloads, ensure_ascii=False).replace("</", "<\\/")
+    legacy_count, strict_count = archive_mix_counts(data)
 
     html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -706,6 +925,23 @@ def build_html(data: dict) -> str:
       border-radius: 18px;
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.12);
+    }}
+    .role-select {{
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(10, 18, 34, 0.34);
+      color: #f8fbff;
+      font: inherit;
+    }}
+    .role-select option {{
+      color: #141926;
+    }}
+    .role-summary {{
+      margin-top: 10px;
+      font-size: 14px;
     }}
     .nav {{
       display: grid;
@@ -885,6 +1121,9 @@ def build_html(data: dict) -> str:
     .muted {{
       color: var(--muted);
     }}
+    .active-row {{
+      background: rgba(17, 58, 143, 0.06);
+    }}
     .coef-list {{
       list-style: none;
       padding: 0;
@@ -917,6 +1156,11 @@ def build_html(data: dict) -> str:
       border: 1px solid rgba(17,58,143,0.10);
       font-size: 12px;
       color: #2f456f;
+    }}
+    .model-card.active {{
+      border-color: rgba(17, 58, 143, 0.26);
+      background: linear-gradient(180deg, rgba(232, 240, 255, 0.95), rgba(245,248,253,0.98));
+      box-shadow: 0 12px 30px rgba(17, 58, 143, 0.10);
     }}
     details {{
       border-radius: 16px;
@@ -985,32 +1229,32 @@ def build_html(data: dict) -> str:
           <div class="eyebrow">6 未来情景分析</div>
           <h1>把未来情景结果写成一页能读清的研究报告。</h1>
           <p>
-            这版不再把页面做成“先切选项再自己找结论”的仪表盘，而是按真正的阅读顺序重排：
-            先讲最关键的判断，再把两种 baseline 的全国结果摆在一起，然后往下看地区、再看省级，最后才回到稳健性和方法来源。
-            页面里所有已产出的主要图件都直接展开，不需要另外打开文件。
+            这页保留原来的完整报告式结构：先讲最关键的判断，再把两种 baseline 的全国结果摆在一起，然后往下看地区、再看省级，最后回到稳健性和方法来源。
+            页面默认还是正文入口模型，但现在可以在开头直接切换到其它模型角色，查看这一整页在对应模型下的结论和表格。
           </p>
         </div>
         <div class="hero-side">
           <div class="hero-note">
-            <strong>先看什么</strong>
-            <p>如果你只想抓结论，先看“Key Judgements”和“全国结果”。如果你在写结果部分，再继续往下看地区和省级空间格局。</p>
+            <strong>模型切换</strong>
+            <p>默认展示正文入口模型。切换后，下方“关键判断 / baseline 解释 / 全国 / 空间 / 稳健性”会整页同步替换成所选模型版本。</p>
+            <select id="roleSelect" class="role-select">{role_options}</select>
+            <p class="role-summary" id="roleSummary"></p>
           </div>
           <div class="hero-note">
             <strong>当前边界</strong>
-            <p>当前 SSP 情景真正进入未来路径的协变量只有 <span class="inline-code">R1xday</span>；因此两种 baseline 的情景增量几乎相同，主要差异来自 baseline 水平本身。</p>
+            <p>当前 SSP 情景真正进入未来路径的协变量只有 <span class="inline-code">R1xday</span>；因此两种 baseline 的情景增量通常非常接近，主要差异来自 baseline 水平本身。</p>
           </div>
           <div class="hero-note">
-            <strong>怎么理解稳健性</strong>
-            <p>主模型、低 VIF、systematic、strict FE 不是四个装饰性标签，而是四套不同历史系数。因为未来只让 R1xday 变动，所以 R1xday 系数大小直接决定了情景敏感度。</p>
+            <strong>怎么看静态图</strong>
+            <p>页面里的 PNG 仍保留原来的默认模型导出图，用来维持原报告页的完整阅读感；而文字解读、2050 汇总表、地区和省级排序会随下拉模型同步刷新。</p>
+          </div>
+          <div class="hero-note">
+            <strong>稳健性范围</strong>
+            <p>当前纳入 {data['role_count']} 个归档模型角色，其中原始主线 {legacy_count} 个、严筛扩展 {strict_count} 个。因为未来只让 R1xday 变动，所以不同模型的情景敏感度主要看历史 R1xday 系数大小。</p>
           </div>
         </div>
       </div>
-      <div class="hero-points">
-        {''.join(
-            f'<article class="hero-card"><div class="eyebrow">{escape(title)}</div><strong>{escape(value)}</strong><p>{escape(note)}</p></article>'
-            for title, value, note in hero_points
-        )}
-      </div>
+      <div class="hero-points" id="heroPoints"></div>
     </header>
 
     <nav class="nav">
@@ -1029,31 +1273,10 @@ def build_html(data: dict) -> str:
           <h2>这页最重要的判断，不需要先读表就能抓到。</h2>
         </div>
         <p>
-          这四条是当前这版结果里最值得先说清的事实。它们决定了后面怎么解释全国曲线、怎么解释空间差异，也决定了应该把哪一版 baseline 放主分析、哪一版放扩展分析。
+          这里会随着所选模型一起刷新。这样你不用离开原来的阅读顺序，就能直接比较“换一套模型角色之后，最值得先说清的事实有没有变”。
         </p>
       </div>
-      <div class="summary-grid">
-        <article class="summary-card">
-          <div class="eyebrow">1. baseline drives level</div>
-          <strong>{fmt(overall['baseline_gap_2050'], 3)}</strong>
-          <p>X-driven 比 Lancet ETS 在 2050 高出 2.211 个点，而两者在 2024 只差 0.128。这说明两版最大的差别不是情景增量，而是 baseline 怎么延伸到 2050。</p>
-        </article>
-        <article class="summary-card">
-          <div class="eyebrow">2. scenario spread is modest</div>
-          <strong>{fmt(overall['same_delta_spread'], 3)}</strong>
-          <p>主模型下，SSP5-8.5 与 SSP1-1.9 的 national delta spread 只有 0.129。这意味着当前由 R1xday 驱动的 SSP 分歧存在，但没有大到压过 baseline 趋势。</p>
-        </article>
-        <article class="summary-card">
-          <div class="eyebrow">3. spatial pattern is split</div>
-          <strong>{escape(overall['regional_high']['region'])}</strong>
-          <p>SSP5-8.5 下，地区层面最高是 {escape(overall['regional_high']['region'])} {fmt_signed(num(overall['regional_high']['delta_vs_baseline_mean']))}，最低是 {escape(overall['regional_low']['region'])} {fmt_signed(num(overall['regional_low']['delta_vs_baseline_mean']))}。全国平均掩盖了明显的区域分化。</p>
-        </article>
-        <article class="summary-card">
-          <div class="eyebrow">4. province heterogeneity is large</div>
-          <strong>{escape(overall['province_gap']['Province'])}</strong>
-          <p>SSP5-8.5 下省级抬升最高是 {escape(overall['province_high']['Province'])}，最低是 {escape(overall['province_low']['Province'])}；而 SSP5-8.5 与 SSP1-1.9 的最大 gap 出现在 {escape(overall['province_gap']['Province'])}。</p>
-        </article>
-      </div>
+      <div id="judgementsContent"></div>
     </section>
 
     <section class="section" id="baseline">
@@ -1063,40 +1286,10 @@ def build_html(data: dict) -> str:
           <h2>先把两种 baseline 分清，再去看结果，结论才不会串。</h2>
         </div>
         <p>
-          两种 baseline 共享同一套历史 FE 系数、同一套未来 R1xday 情景和同一套全国平均口径。它们唯一真正不同的地方，是“未来 baseline 到底由什么生成”。
+          两种 baseline 共享同一套历史 FE 系数、同一套未来 R1xday 情景和同一套全国平均口径。真正变的是“未来 baseline 到底由什么生成”，而模型切换会改变历史系数和固定效应配置。
         </p>
       </div>
-      <div class="mode-compare">
-        <article class="mode-card">
-          <div class="eyebrow">Lancet ETS</div>
-          <h3>先让 AMR 自身沿 ETS 延续</h3>
-          <p>这版最贴近 Lancet 2023 的表述：baseline scenario continued at current rates, as estimated by ETS models。它更强调结果变量自身历史惯性。</p>
-          <div class="formula">Y_it = α_i + λ_t + Σ β_k Z_itk + ε_it
-Y^base_it = ETS(Y_i, historical series)
-Δ^scenario_it = Σ β_k × (Z^scenario_itk - Z^base_itk)
-Y^scenario_it = Y^base_it + Δ^scenario_it</div>
-          <ul>{bullet_items([
-              f"2024 到 2050 的 national baseline 从 {fmt(stories['lancet_ets']['baseline_2024'])} 下降到 {fmt(stories['lancet_ets']['baseline_2050'])}。",
-              "适合作为主分析，因为它最容易和参考文献对齐。",
-              "缺点是 AMR 历史惯性更强，未来曲线更容易继续往历史方向延长。",
-          ])}</ul>
-        </article>
-        <article class="mode-card">
-          <div class="eyebrow">X-driven</div>
-          <h3>先用协变量路径重建 baseline</h3>
-          <p>这版更接近“由未来协变量路径驱动未来结果”的解释框架。它不是完整的 Nature Medicine 时空贝叶斯模型，但逻辑上更靠近 X-driven baseline。</p>
-          <div class="formula">Y_it = α_i + λ_t + Σ β_k Z_itk + ε_it
-Y^base_it = α_i* + λ_t* + Σ β_k Z^base_itk
-Y^scenario_it = α_i* + λ_t* + Σ β_k Z^scenario_itk
-If only R1xday varies:
-Y^scenario_it = Y^base_it + β_R × (R1xday^scenario_it - R1xday^base_it)</div>
-          <ul>{bullet_items([
-              f"2024 到 2050 的 national baseline 从 {fmt(stories['x_driven']['baseline_2024'])} 下降到 {fmt(stories['x_driven']['baseline_2050'])}，下降幅度小于 Lancet ETS。",
-              "更适合回答“如果未来气候路径真的分化，AMR 会被推开多少”这类机制问题。",
-              "当前和 Lancet ETS 的情景增量一致，说明两版差异主要来自 baseline 水平，而不是 scenario adjustment。",
-          ])}</ul>
-        </article>
-      </div>
+      <div id="baselineContent"></div>
     </section>
 
     <section class="section" id="national">
@@ -1106,20 +1299,10 @@ Y^scenario_it = Y^base_it + β_R × (R1xday^scenario_it - R1xday^base_it)</div>
           <h2>全国结果的核心不是“哪条线更高”，而是 baseline 与情景抬升分别贡献了多少。</h2>
         </div>
         <p>
-          下面先把两版的全国主图和全国补充图完整展开，再给出 2050 年双 baseline 的并列表。这样可以同时看水平、增量、排序和不确定性。
+          下拉切换后，这一整段的解释、2050 汇总表、地区与省级排序都会切到对应模型。原来的静态 PNG 继续保留在页内，方便和默认模型版本对照。
         </p>
       </div>
-      {build_mode_section(data, stories['lancet_ets'], '全国结果：Lancet ETS', stories['lancet_ets']['assets']['regional'][0]['path'], stories['lancet_ets']['assets']['regional'][1]['path'])}
-      {build_mode_section(data, stories['x_driven'], '全国结果：X-driven', stories['x_driven']['assets']['regional'][0]['path'], stories['x_driven']['assets']['regional'][1]['path'])}
-      <article class="note-card">
-        <div class="eyebrow">2050 National Comparison</div>
-        <h3>把两版放在同一张表里看，差异更容易解释。</h3>
-        <p>
-          这张表直接告诉你两件事：第一，两版的 delta 排序完全一致，说明 scenario ordering 主要由同一套 R1xday 路径决定；
-          第二，两版的 baseline 与 predicted level 系统性错开，说明主差异来自 baseline 生成口径。
-        </p>
-        {build_summary_table(data, stories)}
-      </article>
+      <div id="nationalContent"></div>
     </section>
 
     <section class="section" id="spatial">
@@ -1129,27 +1312,10 @@ Y^scenario_it = Y^base_it + β_R × (R1xday^scenario_it - R1xday^base_it)</div>
           <h2>真正决定“全国平均长什么样”的，是空间分异，而不是一条全国线本身。</h2>
         </div>
         <p>
-          七大区和省级结果都显示出非常明显的空间异质性。当前因为两种 baseline 的 scenario delta 相同，所以空间 pattern 基本一致，差异仍主要体现在 baseline level。
+          这部分会直接切换到所选模型的地区与省级结论，帮助你快速判断空间格局是不是只依赖某个模型设定。
         </p>
       </div>
-      <div class="analysis-grid">
-        <article class="analysis-card">
-          <h4>地区层面的统一结论</h4>
-          <ul>{bullet_items([
-              f"在主模型下，SSP1-1.9 时 7 大区中有 4 个正值、3 个负值；到 SSP5-8.5 变成 5 个正值、2 个负值。",
-              f"华南始终是最高增量区，到 SSP5-8.5 为 {fmt_signed(num(overall['regional_high']['delta_vs_baseline_mean']))}；华中始终最低，到 SSP5-8.5 为 {fmt_signed(num(overall['regional_low']['delta_vs_baseline_mean']))}。",
-              "这意味着全国均值上看似温和的变化，实际上是由一部分地区显著抬升、另一部分地区继续走低共同拼出来的。",
-          ])}</ul>
-        </article>
-        <article class="analysis-card">
-          <h4>省级层面的统一结论</h4>
-          <ul>{bullet_items([
-              f"在 SSP5-8.5 下，31 省里有 20 个省为正、11 个省为负，省际方向并不一致。",
-              f"抬升最高的是 {escape(overall['province_high']['Province'])} {fmt_signed(num(overall['province_high']['delta_vs_baseline']))}，下降最低的是 {escape(overall['province_low']['Province'])} {fmt_signed(num(overall['province_low']['delta_vs_baseline']))}。",
-              f"双情景 gap 最大的省份是 {escape(overall['province_gap']['Province'])}，说明它对未来气候路径分化最敏感。",
-          ])}</ul>
-        </article>
-      </div>
+      <div id="spatialContent"></div>
     </section>
 
     <section class="section" id="robustness">
@@ -1158,33 +1324,19 @@ Y^scenario_it = Y^base_it + β_R × (R1xday^scenario_it - R1xday^base_it)</div>
           <div class="eyebrow">Robustness</div>
           <h2>稳健性不是附录装饰，它直接告诉你情景敏感度到底是谁在驱动。</h2>
         </div>
-        <p>{escape(role_note)}</p>
+        <p id="robustnessIntro"></p>
       </div>
-      <div class="robust-grid">
-        <article class="note-card">
-          <div class="eyebrow">Lancet ETS Roles</div>
-          <h3>四个 role 的 2050 对照</h3>
-          {build_robustness_table(stories['lancet_ets']['role_rows'])}
-        </article>
-        <article class="note-card">
-          <div class="eyebrow">X-driven Roles</div>
-          <h3>四个 role 的 2050 对照</h3>
-          {build_robustness_table(stories['x_driven']['role_rows'])}
-        </article>
-      </div>
+      <div id="robustnessTables"></div>
       <div class="section-head">
         <div>
           <div class="eyebrow">Model Provenance</div>
           <h2>每个 role 用了什么变量、对应什么系数，这里都摆出来。</h2>
         </div>
         <p>
-          由于当前未来情景只更改 R1xday，所以下面这组模型卡片里最应该盯住的，其实就是各 role 的 R1xday 系数大小；
-          但其他协变量也一起列出来，方便你写方法时完整交代。
+          当前高亮的是你在顶部下拉框里选中的模型。由于未来情景现在只更改 R1xday，所以最值得盯住的仍然是各 role 的 R1xday 系数大小。
         </p>
       </div>
-      <div class="mode-grid">
-        {build_model_cards(data)}
-      </div>
+      <div class="mode-grid" id="modelCards"></div>
     </section>
 
     <section class="section" id="appendix">
@@ -1219,6 +1371,37 @@ python -X utf8 ".\\6 未来情景分析\\scripts\\run_dual_scenario_compare_figu
 
     <div class="footer">Generated at {escape(str(data['generated_at']))} · Source: 6 未来情景分析</div>
   </div>
+  <script>
+    const ROLE_CONTENT = {role_payload_json};
+    const DEFAULT_ROLE = {json.dumps(default_role, ensure_ascii=False)};
+
+    function renderRole(roleId) {{
+      const payload = ROLE_CONTENT[roleId] || ROLE_CONTENT[DEFAULT_ROLE];
+      if (!payload) return;
+      document.getElementById("roleSelect").value = roleId;
+      document.getElementById("roleSummary").innerHTML = payload.role_intro;
+      document.getElementById("heroPoints").innerHTML = payload.hero_points_html;
+      document.getElementById("judgementsContent").innerHTML = payload.judgements_html;
+      document.getElementById("baselineContent").innerHTML = payload.baseline_html;
+      document.getElementById("nationalContent").innerHTML = payload.national_html;
+      document.getElementById("spatialContent").innerHTML = payload.spatial_html;
+      document.getElementById("robustnessIntro").innerHTML = payload.robustness_intro;
+      document.getElementById("robustnessTables").innerHTML = payload.robustness_tables_html;
+      document.getElementById("modelCards").innerHTML = payload.model_cards_html;
+    }}
+
+    const roleSelect = document.getElementById("roleSelect");
+    roleSelect.addEventListener("change", (event) => {{
+      const nextRole = event.target.value || DEFAULT_ROLE;
+      renderRole(nextRole);
+      const url = new URL(window.location.href);
+      url.searchParams.set("role", nextRole);
+      window.history.replaceState(null, "", url.toString());
+    }});
+
+    const initialRole = new URL(window.location.href).searchParams.get("role");
+    renderRole(initialRole && ROLE_CONTENT[initialRole] ? initialRole : DEFAULT_ROLE);
+  </script>
 </body>
 </html>
 """

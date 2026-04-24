@@ -1,0 +1,940 @@
+{
+  "model_id": "SYS_10002 | Province: No / Year: Yes",
+  "scheme_id": "SYS_10002",
+  "scheme_source": "systematic",
+  "fe_label": "Province: No / Year: Yes",
+  "performance_rank": 34,
+  "performance_score": 0.9994968380956024,
+  "freq_coef_R1xday": 0.132563773299573,
+  "freq_p_R1xday": 0.0482524926133764,
+  "freq_coef_AMC": 0.110091588379202,
+  "freq_p_AMC": 0.0151929888340331,
+  "variant_id": "year_only_additive",
+  "variant_label": "Year-only additive",
+  "variant_rationale": "Mirror Year FE only without an explicit amplification term.",
+  "run_config": {
+    "draws": 1000,
+    "tune": 1000,
+    "chains": 4,
+    "cores": 2,
+    "target_accept": 0.9
+  },
+  "n_obs": 300,
+  "n_provinces": 30,
+  "n_years": 10,
+  "variables": [
+    "R1xday",
+    "抗菌药物使用强度",
+    "TA（°C）",
+    "PM2.5",
+    "医疗水平",
+    "饮用水\n供水综合生产能力(万立方米/日)",
+    "牲畜饲养\n-猪年底头数",
+    "文盲比例"
+  ],
+  "term_blocks": [
+    {
+      "name": "main",
+      "labels": [
+        "R1xday",
+        "抗菌药物使用强度",
+        "TA（°C）",
+        "PM2.5",
+        "医疗水平",
+        "饮用水\n供水综合生产能力(万立方米/日)",
+        "牲畜饲养\n-猪年底头数",
+        "文盲比例"
+      ],
+      "cols": [
+        "z__R1xday",
+        "z__抗菌药物使用强度",
+        "z__TA（°C）",
+        "z__PM2.5",
+        "z__医疗水平",
+        "z__饮用水供水综合生产能力(万立方米/日)",
+        "z__牲畜饲养-猪年底头数",
+        "z__文盲比例"
+      ],
+      "prior_sigma": 0.5
+    }
+  ],
+  "standardization": {
+    "R1xday": {
+      "mean": 43.05696014636,
+      "std": 28.994162198917437
+    },
+    "抗菌药物使用强度": {
+      "mean": 45.97858606833334,
+      "std": 7.462112607422849
+    },
+    "TA（°C）": {
+      "mean": 0.49531206837666664,
+      "std": 0.27734307345795706
+    },
+    "PM2.5": {
+      "mean": 34.978566666666666,
+      "std": 30.69633867872338
+    },
+    "医疗水平": {
+      "mean": 72.66333333333333,
+      "std": 15.580436094310356
+    },
+    "饮用水\n供水综合生产能力(万立方米/日)": {
+      "mean": 1031.8009333333334,
+      "std": 891.0388342572181
+    },
+    "牲畜饲养\n-猪年底头数": {
+      "mean": 1423.4396666666667,
+      "std": 1203.021465543829
+    },
+    "文盲比例": {
+      "mean": 4.305733333333333,
+      "std": 2.7372191111093436
+    }
+  },
+  "variant_flags": {
+    "include_year": true,
+    "include_province": false,
+    "use_mundlak": false,
+    "include_interaction": false
+  },
+  "term_definition": {
+    "main": "Z-standardized predictors pooled at the analysis-sample level."
+  },
+  "main_terms": {
+    "R1xday": "z__R1xday",
+    "抗菌药物使用强度": "z__抗菌药物使用强度",
+    "TA（°C）": "z__TA（°C）",
+    "PM2.5": "z__PM2.5",
+    "医疗水平": "z__医疗水平",
+    "饮用水\n供水综合生产能力(万立方米/日)": "z__饮用水供水综合生产能力(万立方米/日)",
+    "牲畜饲养\n-猪年底头数": "z__牲畜饲养-猪年底头数",
+    "文盲比例": "z__文盲比例"
+  },
+  "interaction_pairs": [],
+  "missing_value_strategy": {
+    "label": "province_year_time_imputation",
+    "steps": [
+      "convert selected X columns to numeric with coercion",
+      "if 2014 is missing, fill from 2015; if 2015 is also missing, use the first future non-missing year within the same province",
+      "for other missing years, use the mean of previous and next non-missing values within the same province",
+      "if only one side exists at the boundary, carry the nearest available value"
+    ],
+    "applied_columns": [
+      "R1xday",
+      "抗菌药物使用强度",
+      "TA（°C）",
+      "PM2.5",
+      "医疗水平",
+      "饮用水\n供水综合生产能力(万立方米/日)",
+      "牲畜饲养\n-猪年底头数",
+      "文盲比例"
+    ],
+    "column_report": [
+      {
+        "column": "R1xday",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "抗菌药物使用强度",
+        "missing_before": 71,
+        "missing_after": 10
+      },
+      {
+        "column": "TA（°C）",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "PM2.5",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "医疗水平",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "饮用水\n供水综合生产能力(万立方米/日)",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "牲畜饲养\n-猪年底头数",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "文盲比例",
+        "missing_before": 0,
+        "missing_after": 0
+      }
+    ],
+    "remaining_missing_after_imputation": {
+      "抗菌药物使用强度": 10
+    },
+    "rule_counts": {
+      "A1: 2014->2015": 30,
+      "B1: mean(prev,next)": 31
+    },
+    "imputation_log": [
+      {
+        "Province": "上海",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 52.84600967,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 52.84600967,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "上海",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 45.1,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 50.6,
+        "ref2_year": 2022,
+        "ref2_value": 39.6
+      },
+      {
+        "Province": "云南",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 43.52257573,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 43.52257573,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "云南",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 37.9,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 37.8,
+        "ref2_year": 2022,
+        "ref2_value": 38.0
+      },
+      {
+        "Province": "内蒙古",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 44.68125777,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 44.68125777,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "内蒙古",
+        "Year": 2018,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 33.575,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2017,
+        "ref1_value": 33.86,
+        "ref2_year": 2019,
+        "ref2_value": 33.29
+      },
+      {
+        "Province": "内蒙古",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 37.0,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 32.8,
+        "ref2_year": 2022,
+        "ref2_value": 41.2
+      },
+      {
+        "Province": "北京",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 55.24712255,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 55.24712255,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "北京",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 48.8,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 51.1,
+        "ref2_year": 2022,
+        "ref2_value": 46.5
+      },
+      {
+        "Province": "吉林",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 44.90924168,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 44.90924168,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "吉林",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 52.05,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 55.0,
+        "ref2_year": 2022,
+        "ref2_value": 49.1
+      },
+      {
+        "Province": "四川",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 45.90096569,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 45.90096569,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "四川",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 38.35,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 38.0,
+        "ref2_year": 2022,
+        "ref2_value": 38.7
+      },
+      {
+        "Province": "天津",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 42.23867596,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 42.23867596,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "天津",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 49.25,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 56.1,
+        "ref2_year": 2022,
+        "ref2_value": 42.4
+      },
+      {
+        "Province": "宁夏",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 38.60805861,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 38.60805861,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "宁夏",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 39.0,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 40.8,
+        "ref2_year": 2022,
+        "ref2_value": 37.2
+      },
+      {
+        "Province": "安徽",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 73.86817577,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 73.86817577,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "安徽",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 45.75,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 48.8,
+        "ref2_year": 2022,
+        "ref2_value": 42.7
+      },
+      {
+        "Province": "山东",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 55.11639185,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 55.11639185,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "山东",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 42.2,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 45.8,
+        "ref2_year": 2022,
+        "ref2_value": 38.6
+      },
+      {
+        "Province": "山西",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 46.65571462,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 46.65571462,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "山西",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 45.65,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 44.9,
+        "ref2_year": 2022,
+        "ref2_value": 46.4
+      },
+      {
+        "Province": "广东",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 54.3845288,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 54.3845288,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "广东",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 42.85,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 44.0,
+        "ref2_year": 2022,
+        "ref2_value": 41.7
+      },
+      {
+        "Province": "广西",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 52.46778989,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 52.46778989,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "广西",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 44.45,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 50.2,
+        "ref2_year": 2022,
+        "ref2_value": 38.7
+      },
+      {
+        "Province": "新疆",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 39.85955835,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 39.85955835,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "新疆",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 50.650000000000006,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 43.1,
+        "ref2_year": 2022,
+        "ref2_value": 58.2
+      },
+      {
+        "Province": "江苏",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 59.39159292,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 59.39159292,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "江苏",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 49.45,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 52.9,
+        "ref2_year": 2022,
+        "ref2_value": 46.0
+      },
+      {
+        "Province": "江西",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 43.98408001,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 43.98408001,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "江西",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 45.85,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 45.2,
+        "ref2_year": 2022,
+        "ref2_value": 46.5
+      },
+      {
+        "Province": "河北",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 40.59230194,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 40.59230194,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "河北",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 42.7,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 45.8,
+        "ref2_year": 2022,
+        "ref2_value": 39.6
+      },
+      {
+        "Province": "河南",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 47.50307969,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 47.50307969,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "河南",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 45.35,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 48.6,
+        "ref2_year": 2022,
+        "ref2_value": 42.1
+      },
+      {
+        "Province": "浙江",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 47.0972278,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 47.0972278,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "浙江",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 40.849999999999994,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 42.4,
+        "ref2_year": 2022,
+        "ref2_value": 39.3
+      },
+      {
+        "Province": "海南",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 50.17779132,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 50.17779132,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "海南",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 41.95,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 48.3,
+        "ref2_year": 2022,
+        "ref2_value": 35.6
+      },
+      {
+        "Province": "湖北",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 55.87495161,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 55.87495161,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "湖北",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 47.25,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 49.9,
+        "ref2_year": 2022,
+        "ref2_value": 44.6
+      },
+      {
+        "Province": "湖南",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 45.57310996,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 45.57310996,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "湖南",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 40.650000000000006,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 41.7,
+        "ref2_year": 2022,
+        "ref2_value": 39.6
+      },
+      {
+        "Province": "甘肃",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 50.29072538,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 50.29072538,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "甘肃",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 40.6,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 42.2,
+        "ref2_year": 2022,
+        "ref2_value": 39.0
+      },
+      {
+        "Province": "福建",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 37.44257992,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 37.44257992,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "福建",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 37.95,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 37.6,
+        "ref2_year": 2022,
+        "ref2_value": 38.3
+      },
+      {
+        "Province": "贵州",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 45.04848663,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 45.04848663,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "贵州",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 49.5,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 50.2,
+        "ref2_year": 2022,
+        "ref2_value": 48.8
+      },
+      {
+        "Province": "辽宁",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 53.5717738,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 53.5717738,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "辽宁",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 41.0,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 43.0,
+        "ref2_year": 2022,
+        "ref2_value": 39.0
+      },
+      {
+        "Province": "重庆",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 59.27959942,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 59.27959942,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "重庆",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 39.05,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 37.1,
+        "ref2_year": 2022,
+        "ref2_value": 41.0
+      },
+      {
+        "Province": "陕西",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 48.10034274,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 48.10034274,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "陕西",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 45.599999999999994,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 50.9,
+        "ref2_year": 2022,
+        "ref2_value": 40.3
+      },
+      {
+        "Province": "青海",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 24.26659576,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 24.26659576,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "青海",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 36.099999999999994,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 36.4,
+        "ref2_year": 2022,
+        "ref2_value": 35.8
+      },
+      {
+        "Province": "黑龙江",
+        "Year": 2014,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 46.54010441,
+        "rule": "A1: 2014->2015",
+        "ref1_year": 2015,
+        "ref1_value": 46.54010441,
+        "ref2_year": null,
+        "ref2_value": null
+      },
+      {
+        "Province": "黑龙江",
+        "Year": 2021,
+        "column": "抗菌药物使用强度",
+        "before": null,
+        "after": 46.15,
+        "rule": "B1: mean(prev,next)",
+        "ref1_year": 2020,
+        "ref1_value": 52.9,
+        "ref2_year": 2022,
+        "ref2_value": 39.4
+      }
+    ]
+  },
+  "outcome_handling": {
+    "column": "AMR_AGG_z",
+    "strategy": "do_not_impute_drop_missing_after_x_completion",
+    "missing_before_drop": 3,
+    "missing_after_drop": 0,
+    "n_obs_after_drop": 300
+  },
+  "post_imputation_filtering": {
+    "dropna_subset": [
+      "AMR_AGG_z",
+      "R1xday",
+      "抗菌药物使用强度",
+      "TA（°C）",
+      "PM2.5",
+      "医疗水平",
+      "饮用水\n供水综合生产能力(万立方米/日)",
+      "牲畜饲养\n-猪年底头数",
+      "文盲比例"
+    ],
+    "remaining_x_missing_before_drop": {
+      "抗菌药物使用强度": 10
+    }
+  }
+}

@@ -1,0 +1,42 @@
+2026-04-23 00:59:27,666 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\run_future_scenario_projection_20260423_005927.log
+2026-04-23 00:59:27,682 | INFO | Selected model roles: ['main_model', 'strict_top_02', 'strict_top_03', 'strict_top_04', 'strict_top_05', 'strict_top_06', 'strict_top_07', 'strict_top_08']
+2026-04-23 00:59:27,682 | INFO | Union variables: ['PA（%）', 'PM2.5', 'R1xday', 'TA（°C）', '医疗水平', '卫生程度\n（日污水处理能力）', '城市用水普及率', '抗菌药物使用强度', '文盲比例', '牲畜饲养\n-猪年底头数', '生活垃圾无害化处理率', '食品消费量', '饮用水\n供水综合生产能力(万立方米/日)']
+2026-04-23 00:59:27,684 | INFO | Baseline modes: ['lancet_ets', 'x_driven']
+2026-04-23 00:59:27,909 | INFO | Forecasted PA（%） for 31 provinces
+2026-04-23 00:59:28,101 | INFO | Forecasted PM2.5 for 31 provinces
+2026-04-23 00:59:28,277 | INFO | Forecasted R1xday for 31 provinces
+2026-04-23 00:59:28,496 | INFO | Forecasted TA（°C） for 31 provinces
+2026-04-23 00:59:28,769 | INFO | Forecasted 医疗水平 for 31 provinces
+2026-04-23 00:59:29,171 | INFO | Forecasted 卫生程度
+（日污水处理能力） for 31 provinces
+2026-04-23 00:59:29,424 | INFO | Forecasted 城市用水普及率 for 31 provinces
+2026-04-23 00:59:29,622 | INFO | Forecasted 抗菌药物使用强度 for 31 provinces
+2026-04-23 00:59:29,856 | INFO | Forecasted 文盲比例 for 31 provinces
+2026-04-23 00:59:30,082 | INFO | Forecasted 牲畜饲养
+-猪年底头数 for 31 provinces
+2026-04-23 00:59:30,303 | INFO | Forecasted 生活垃圾无害化处理率 for 31 provinces
+2026-04-23 00:59:30,549 | INFO | Forecasted 食品消费量 for 31 provinces
+2026-04-23 00:59:30,772 | INFO | Forecasted 饮用水
+供水综合生产能力(万立方米/日) for 31 provinces
+2026-04-23 00:59:30,866 | INFO | Aligned external rx1day by province/scenario/statistic with mean-bias correction; overlap groups=465
+2026-04-23 00:59:31,452 | INFO | Running baseline mode: lancet_ets
+2026-04-23 00:59:31,690 | INFO | Forecasted value for 31 provinces
+2026-04-23 00:59:32,060 | INFO | Forecasted value for 31 provinces
+2026-04-23 00:59:32,408 | INFO | Forecasted value for 31 provinces
+2026-04-23 00:59:32,765 | INFO | Forecasted value for 31 provinces
+2026-04-23 00:59:33,168 | INFO | Forecasted value for 31 provinces
+2026-04-23 00:59:33,545 | INFO | Forecasted value for 31 provinces
+2026-04-23 00:59:33,889 | INFO | Forecasted value for 31 provinces
+2026-04-23 00:59:34,248 | INFO | Forecasted value for 31 provinces
+2026-04-23 00:59:37,417 | INFO | Completed baseline mode lancet_ets with 107136 rows
+2026-04-23 00:59:37,417 | INFO | Running baseline mode: x_driven
+2026-04-23 00:59:37,438 | INFO | Built x-driven baseline for main_model using 8 variables; time-effect method=ets_add_damped
+2026-04-23 00:59:37,585 | INFO | Built x-driven baseline for strict_top_02 using 8 variables; time-effect method=ets_add_damped
+2026-04-23 00:59:37,738 | INFO | Built x-driven baseline for strict_top_03 using 8 variables; time-effect method=ets_add_damped
+2026-04-23 00:59:37,941 | INFO | Built x-driven baseline for strict_top_04 using 9 variables; time-effect method=ets_add_damped
+2026-04-23 00:59:38,106 | INFO | Built x-driven baseline for strict_top_05 using 8 variables; time-effect method=ets_add_damped
+2026-04-23 00:59:38,264 | INFO | Built x-driven baseline for strict_top_06 using 8 variables; time-effect method=ets_add_damped
+2026-04-23 00:59:38,424 | INFO | Built x-driven baseline for strict_top_07 using 9 variables; time-effect method=ets_add_damped
+2026-04-23 00:59:38,630 | INFO | Built x-driven baseline for strict_top_08 using 8 variables; time-effect method=ets_add_damped
+2026-04-23 00:59:41,779 | INFO | Completed baseline mode x_driven with 107136 rows
+2026-04-23 00:59:41,849 | INFO | Top-level metadata: E:\MALA\Code_health\6 未来情景分析\results\run_metadata.json

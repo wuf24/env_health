@@ -76,6 +76,17 @@ def parse_args() -> argparse.Namespace:
         default="delta",
         help="Metric shown in the dual-scenario figure. `delta` emphasizes SSP contrast by plotting values relative to baseline.",
     )
+    parser.add_argument(
+        "--metric-family",
+        choices=["amr", "temperature"],
+        default="amr",
+        help="Target metric family. `amr` reproduces the existing AMR comparison figures; `temperature` renders the SSP comparison on the temperature channel itself.",
+    )
+    parser.add_argument(
+        "--role-id",
+        default="main_model",
+        help="Model role used to render the dual-scenario figure. For TA-based temperature figures, `strict_main_model` is the usual choice.",
+    )
     parser.add_argument("--start-year", type=int, default=FUTURE_START_YEAR, help="First future year to include.")
     parser.add_argument("--end-year", type=int, default=FUTURE_END_YEAR, help="Last future year to include.")
     return parser.parse_args()
@@ -102,16 +113,73 @@ def load_projection_panel(outcome_dir: Path, baseline_mode: str) -> pd.DataFrame
     return pd.read_csv(projection_path, encoding="utf-8-sig")
 
 
-def get_value_meta(value_mode: str) -> dict[str, str]:
+def format_temperature_proxy_label(proxy_variable: str | None) -> str:
+    if not proxy_variable:
+        return "Temperature"
+    proxy_variable = str(proxy_variable).strip()
+    if "TA" in proxy_variable:
+        return "Temperature anomaly (TA)"
+    if "省平均气温" in proxy_variable:
+        return "Province mean temperature"
+    return proxy_variable
+
+
+def build_metric_tag(metric_family: str, proxy_variable: str | None, role_id: str) -> str:
+    if metric_family == "amr":
+        return f"amr_{role_id}" if role_id != "main_model" else ""
+    if proxy_variable and "TA" in proxy_variable:
+        return f"temperature_ta_{role_id}"
+    if proxy_variable and "省平均气温" in proxy_variable:
+        return f"temperature_province_tas_{role_id}"
+    return f"temperature_{role_id}"
+
+
+def build_output_stub(
+    metric_family: str,
+    scenario_pair: list[str],
+    value_mode: str,
+    role_id: str,
+    proxy_variable: str | None,
+) -> str:
+    pair_tag = f"{scenario_pair[0]}_vs_{scenario_pair[1]}"
+    delta_suffix = "_delta" if value_mode == "delta" else ""
+    metric_tag = build_metric_tag(metric_family=metric_family, proxy_variable=proxy_variable, role_id=role_id)
+
+    if not metric_tag:
+        return f"dual_scenario_compare_{pair_tag}{delta_suffix}"
+    return f"dual_scenario_compare_{metric_tag}_{pair_tag}{delta_suffix}"
+
+
+def get_value_meta(metric_family: str, value_mode: str, proxy_variable: str | None = None) -> dict[str, str]:
+    if metric_family == "temperature":
+        proxy_label = format_temperature_proxy_label(proxy_variable)
+        if value_mode == "predicted":
+            return {
+                "column": "temperature_scenario",
+                "baseline_column": "temperature_baseline",
+                "label": f"{proxy_label} (°C)",
+                "title": proxy_label,
+                "unit_suffix": "°C",
+            }
+        return {
+            "column": "temperature_delta",
+            "baseline_column": "temperature_delta",
+            "label": f"\u0394{proxy_label} vs baseline (°C)",
+            "title": f"\u0394{proxy_label}",
+            "unit_suffix": "°C",
+        }
+
     if value_mode == "predicted":
         return {
             "column": "scenario_pred",
+            "baseline_column": "scenario_pred",
             "label": "Predicted AMR (%)",
             "title": "Predicted AMR",
             "unit_suffix": "%",
         }
     return {
         "column": "delta_vs_baseline",
+        "baseline_column": "delta_vs_baseline",
         "label": "\u0394AMR vs baseline (percentage points)",
         "title": "\u0394AMR vs baseline",
         "unit_suffix": "pp",
@@ -122,11 +190,12 @@ def prepare_dual_scenario_frame(
     projection_panel: pd.DataFrame,
     region_mapping: pd.DataFrame,
     scenario_pair: list[str],
+    role_id: str,
     start_year: int,
     end_year: int,
 ) -> pd.DataFrame:
     plot_df = projection_panel[
-        projection_panel["role_id"].eq("main_model")
+        projection_panel["role_id"].eq(role_id)
         & projection_panel["scenario_id"].isin(["baseline_ets", *scenario_pair])
         & projection_panel["Year"].between(start_year, end_year)
     ].copy()
@@ -143,16 +212,17 @@ def prepare_dual_scenario_frame(
 def build_national_trajectory(
     plot_df: pd.DataFrame,
     scenario_pair: list[str],
+    meta: dict[str, str],
     value_mode: str,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    meta = get_value_meta(value_mode)
     value_col = meta["column"]
+    baseline_col = meta["baseline_column"]
 
     if value_mode == "predicted":
         baseline = (
             plot_df[plot_df["scenario_id"].eq("baseline_ets")]
             .groupby("Year", as_index=False)
-            .agg(reference_mean=(value_col, "mean"))
+            .agg(reference_mean=(baseline_col, "mean"))
             .sort_values("Year")
         )
     else:
@@ -172,9 +242,8 @@ def build_pair_table(
     plot_df: pd.DataFrame,
     scenario_pair: list[str],
     end_year: int,
-    value_mode: str,
+    meta: dict[str, str],
 ) -> pd.DataFrame:
-    meta = get_value_meta(value_mode)
     value_col = meta["column"]
 
     end_df = plot_df[
@@ -203,13 +272,13 @@ def build_rose_order(
     plot_df: pd.DataFrame,
     scenario_pair: list[str],
     end_year: int,
-    value_mode: str,
+    meta: dict[str, str],
 ) -> pd.DataFrame:
     pivot = build_pair_table(
         plot_df=plot_df,
         scenario_pair=scenario_pair,
         end_year=end_year,
-        value_mode=value_mode,
+        meta=meta,
     )
     pivot = pivot.sort_values(
         ["scenario_gap_abs", "scenario_gap", "scenario_midpoint", "region_order", "Province"],
@@ -223,13 +292,13 @@ def build_dumbbell_order(
     plot_df: pd.DataFrame,
     scenario_pair: list[str],
     end_year: int,
-    value_mode: str,
+    meta: dict[str, str],
 ) -> pd.DataFrame:
     pivot = build_pair_table(
         plot_df=plot_df,
         scenario_pair=scenario_pair,
         end_year=end_year,
-        value_mode=value_mode,
+        meta=meta,
     )
     return pivot.sort_values(
         ["scenario_gap_abs", "scenario_gap", "scenario_midpoint", "region_order", "Province"],
@@ -259,10 +328,9 @@ def plot_national_trajectory(
     baseline: pd.DataFrame,
     national: pd.DataFrame,
     scenario_pair: list[str],
+    meta: dict[str, str],
     value_mode: str,
 ) -> None:
-    meta = get_value_meta(value_mode)
-
     if value_mode == "delta":
         ax.axhline(0, color="#475569", linewidth=2.0, linestyle="--", label="Baseline", zorder=1)
     else:
@@ -389,9 +457,9 @@ def plot_rose_chart(
     rose_df: pd.DataFrame,
     scenario_pair: list[str],
     end_year: int,
+    meta: dict[str, str],
     value_mode: str,
 ) -> None:
-    meta = get_value_meta(value_mode)
     n = len(rose_df)
     theta = np.linspace(0, 2 * np.pi, n, endpoint=False)
     width = (2 * np.pi / n) * 0.88
@@ -565,9 +633,9 @@ def plot_dumbbell(
     dumbbell_df: pd.DataFrame,
     scenario_pair: list[str],
     end_year: int,
+    meta: dict[str, str],
     value_mode: str,
 ) -> None:
-    meta = get_value_meta(value_mode)
     y = np.arange(len(dumbbell_df))
     a_values = dumbbell_df[scenario_pair[0]].to_numpy()
     b_values = dumbbell_df[scenario_pair[1]].to_numpy()
@@ -672,27 +740,30 @@ def render_dual_scenario_figure(
     output_path: Path,
     baseline_label: str,
     scenario_pair: list[str],
+    meta: dict[str, str],
+    metric_family: str,
+    role_label: str,
     value_mode: str,
     start_year: int,
     end_year: int,
 ) -> Path:
-    meta = get_value_meta(value_mode)
     baseline, national = build_national_trajectory(
         plot_df=plot_df,
         scenario_pair=scenario_pair,
+        meta=meta,
         value_mode=value_mode,
     )
     rose_df = build_rose_order(
         plot_df=plot_df,
         scenario_pair=scenario_pair,
         end_year=end_year,
-        value_mode=value_mode,
+        meta=meta,
     )
     dumbbell_df = build_dumbbell_order(
         plot_df=plot_df,
         scenario_pair=scenario_pair,
         end_year=end_year,
-        value_mode=value_mode,
+        meta=meta,
     )
 
     fig = plt.figure(figsize=(18.8, 13.6), facecolor="white")
@@ -707,6 +778,7 @@ def render_dual_scenario_figure(
         baseline=baseline,
         national=national,
         scenario_pair=scenario_pair,
+        meta=meta,
         value_mode=value_mode,
     )
     plot_rose_chart(
@@ -714,6 +786,7 @@ def render_dual_scenario_figure(
         rose_df=rose_df,
         scenario_pair=scenario_pair,
         end_year=end_year,
+        meta=meta,
         value_mode=value_mode,
     )
     plot_dumbbell(
@@ -721,6 +794,7 @@ def render_dual_scenario_figure(
         dumbbell_df=dumbbell_df,
         scenario_pair=scenario_pair,
         end_year=end_year,
+        meta=meta,
         value_mode=value_mode,
     )
 
@@ -733,14 +807,22 @@ def render_dual_scenario_figure(
 
     pair_title = f"{SCENARIO_LABELS[scenario_pair[0]]} vs {SCENARIO_LABELS[scenario_pair[1]]}"
     if value_mode == "delta":
-        mode_note = (
-            f"Top and rose panels show \u0394AMR relative to baseline. The dumbbell panel is re-centered to "
-            f"{SCENARIO_LABELS[scenario_pair[0]]} = 0 so line length equals the provincial SSP gap."
-        )
+        if metric_family == "temperature":
+            mode_note = (
+                f"Top and rose panels show {meta['title']} relative to the baseline path. "
+                f"The dumbbell panel is re-centered to {SCENARIO_LABELS[scenario_pair[0]]} = 0 so line length equals the provincial SSP gap."
+            )
+        else:
+            mode_note = (
+                f"Top and rose panels show \u0394AMR relative to baseline. The dumbbell panel is re-centered to "
+                f"{SCENARIO_LABELS[scenario_pair[0]]} = 0 so line length equals the provincial SSP gap."
+            )
     else:
-        mode_note = "All panels show predicted AMR."
+        mode_note = f"All panels show projected {meta['title']}." if metric_family == "temperature" else "All panels show predicted AMR."
+
+    role_note = f" | {role_label}" if role_label and role_label != "main_model" else ""
     fig.suptitle(
-        f"Dual-scenario comparison | {baseline_label}",
+        f"Dual-scenario comparison | {baseline_label}{role_note}",
         x=0.06,
         y=0.985,
         ha="left",
@@ -750,7 +832,7 @@ def render_dual_scenario_figure(
     fig.text(
         0.06,
         0.95,
-        f"Top: national trajectories. Bottom-left: provincial rose chart. Bottom-right: {end_year} provincial dumbbell ranking. Pair: {pair_title}. {mode_note}",
+        f"Top: national trajectories from {start_year} to {end_year}. Bottom-left: provincial rose chart. Bottom-right: {end_year} provincial dumbbell ranking. Pair: {pair_title}. {mode_note}",
         ha="left",
         va="center",
         fontsize=11,
@@ -775,20 +857,51 @@ def main() -> int:
     outcome_dir = resolve_results_output_dir(args.outcome)
     compare_dir = outcome_dir / "baseline_mode_compare"
     compare_dir.mkdir(parents=True, exist_ok=True)
+    region_mapping = load_region_mapping()
 
     mode_outputs: dict[str, dict[str, str]] = {}
-    scenario_tag = f"{scenario_pair[0]}_vs_{scenario_pair[1]}_{args.value_mode}"
+    metadata_stub: str | None = None
 
     for baseline_mode in args.baseline_modes:
         baseline_label = BASELINE_MODE_LABELS[baseline_mode]
         projection_panel = load_projection_panel(outcome_dir=outcome_dir, baseline_mode=baseline_mode)
         plot_df = prepare_dual_scenario_frame(
             projection_panel=projection_panel,
-            region_mapping=load_region_mapping(),
+            region_mapping=region_mapping,
             scenario_pair=scenario_pair,
+            role_id=args.role_id,
             start_year=args.start_year,
             end_year=args.end_year,
         )
+        if plot_df.empty:
+            raise ValueError(
+                f"No rows available for baseline_mode={baseline_mode}, role_id={args.role_id}, scenario_pair={scenario_pair}."
+            )
+
+        proxy_candidates = (
+            plot_df.get("temperature_proxy_variable", pd.Series(dtype="object"))
+            .dropna()
+            .astype(str)
+            .str.strip()
+        )
+        proxy_variable = proxy_candidates.iloc[0] if not proxy_candidates.empty else None
+        role_candidates = (
+            plot_df.get("role_label", pd.Series(dtype="object")).dropna().astype(str).str.strip()
+        )
+        role_label = role_candidates.iloc[0] if not role_candidates.empty else args.role_id
+        meta = get_value_meta(
+            metric_family=args.metric_family,
+            value_mode=args.value_mode,
+            proxy_variable=proxy_variable,
+        )
+        output_stub = build_output_stub(
+            metric_family=args.metric_family,
+            scenario_pair=scenario_pair,
+            value_mode=args.value_mode,
+            role_id=args.role_id,
+            proxy_variable=proxy_variable,
+        )
+        metadata_stub = output_stub.removeprefix("dual_scenario_compare_")
 
         figure_dir = outcome_dir / baseline_mode / "dual_scenario_figures"
         output_dir = outcome_dir / baseline_mode / "dual_scenario_outputs"
@@ -799,16 +912,19 @@ def main() -> int:
             plot_df=plot_df,
             scenario_pair=scenario_pair,
             end_year=args.end_year,
-            value_mode=args.value_mode,
+            meta=meta,
         )
-        table_path = output_dir / f"dual_scenario_compare_{scenario_tag}_{args.end_year}.csv"
+        table_path = output_dir / f"{output_stub}_{args.end_year}.csv"
         comparison_table.to_csv(table_path, index=False, encoding="utf-8-sig")
 
         figure_path = render_dual_scenario_figure(
             plot_df=plot_df,
-            output_path=figure_dir / f"dual_scenario_compare_{scenario_tag}.png",
+            output_path=figure_dir / f"{output_stub}.png",
             baseline_label=baseline_label,
             scenario_pair=scenario_pair,
+            meta=meta,
+            metric_family=args.metric_family,
+            role_label=role_label,
             value_mode=args.value_mode,
             start_year=args.start_year,
             end_year=args.end_year,
@@ -817,6 +933,10 @@ def main() -> int:
         mode_outputs[baseline_mode] = {
             "comparison_table": str(table_path),
             "dual_scenario_figure": str(figure_path),
+            "metric_family": args.metric_family,
+            "role_id": args.role_id,
+            "role_label": role_label,
+            "temperature_proxy_variable": proxy_variable,
         }
         logger.info("Dual-scenario figure completed for %s", baseline_mode)
 
@@ -825,13 +945,17 @@ def main() -> int:
         "baseline_modes": args.baseline_modes,
         "scenario_pair": scenario_pair,
         "value_mode": args.value_mode,
+        "metric_family": args.metric_family,
+        "role_id": args.role_id,
         "start_year": args.start_year,
         "end_year": args.end_year,
         "mapping_path": str(REGION_MAPPING_PATH),
         "mode_outputs": mode_outputs,
         "log_path": str(log_path),
     }
-    metadata_path = compare_dir / f"dual_scenario_run_metadata_{scenario_tag}.json"
+    if metadata_stub is None:
+        raise RuntimeError("No dual-scenario outputs were generated.")
+    metadata_path = compare_dir / f"dual_scenario_run_metadata_{metadata_stub}.json"
     metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
 
     logger.info("Dual-scenario metadata: %s", metadata_path)

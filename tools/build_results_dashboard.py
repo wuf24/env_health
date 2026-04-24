@@ -45,6 +45,18 @@ FAMILY_ORDER = [
     "social_env_proxy",
     "hydro_proxy",
 ]
+HYDRO_CHOICES = ["主要城市降水量", "省平均降水", "PA（%）", "R5xday"]
+TA_PROXY_LABEL = "TA（°C）"
+META_PREDICTORS = {
+    "Province",
+    "Year",
+    "R-squared",
+    "R-squared (Overall)",
+    "R² (within)",
+    "Total number of observations",
+}
+STRICT_PRESET_EXCLUDED_PREDICTORS = {"R1xday", "抗菌药物使用强度", TA_PROXY_LABEL}
+CORE_SIGNAL_PREDICTORS = {"R1xday", "抗菌药物使用强度"}
 
 
 def clean_value(value: Any) -> Any:
@@ -64,8 +76,36 @@ def split_items(value: Any, sep: str) -> list[str]:
     return [item.strip() for item in str(text).split(sep) if item and item.strip()]
 
 
+def pick_proxy_choice(value: Any, choices: list[str], sep: str = " | ") -> str | None:
+    for item in split_items(value, sep):
+        if item in choices:
+            return item
+    return None
+
+
 def load_csv(name: str) -> pd.DataFrame:
     return pd.read_csv(RESULT_DIR / name, encoding="utf-8-sig")
+
+
+def parse_numeric(value: Any) -> float | None:
+    value = clean_value(value)
+    if value is None:
+        return None
+    if isinstance(value, str):
+        text = value.strip()
+        if not text:
+            return None
+        if text.startswith("<"):
+            text = text[1:]
+        text = text.replace("*", "")
+        try:
+            return float(text)
+        except ValueError:
+            return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def dedupe_preserve_order(items: list[str]) -> list[str]:
@@ -122,6 +162,47 @@ def build_signal_summary(df: pd.DataFrame, label: str) -> dict[str, Any]:
         "amc_sig_count": int((df["p_AMC"] < 0.05).sum()) if count else 0,
         "both_positive_count": int(((df["coef_R1xday"] > 0) & (df["coef_AMC"] > 0)).sum()) if count else 0,
     }
+
+
+def build_significant_negative_other_details(
+    ranking: pd.DataFrame, coefficients: pd.DataFrame
+) -> tuple[list[str], dict[str, list[dict[str, Any]]]]:
+    core_sig_ids = set(
+        ranking.loc[
+            (ranking["p_R1xday"] < 0.05) & (ranking["p_AMC"] < 0.05),
+            "model_id",
+        ].astype(str)
+    )
+    work = coefficients.copy()
+    for col in ["coef", "p_value", "ci_low", "ci_high"]:
+        work[col] = pd.to_numeric(work[col], errors="coerce")
+    work["model_id"] = work["model_id"].astype(str)
+    work = work[
+        work["model_id"].isin(core_sig_ids)
+        & ~work["predictor"].isin(CORE_SIGNAL_PREDICTORS)
+        & (work["coef"] < 0)
+        & (work["p_value"] < 0.05)
+    ]
+
+    details: dict[str, list[dict[str, Any]]] = {}
+    for model_id, group in work.sort_values(["model_id", "p_value", "predictor"]).groupby("model_id"):
+        details[model_id] = [
+            {
+                "predictor": clean_value(row.get("predictor")),
+                "coef": clean_value(row.get("coef")),
+                "p_value": clean_value(row.get("p_value")),
+                "ci_low": clean_value(row.get("ci_low")),
+                "ci_high": clean_value(row.get("ci_high")),
+            }
+            for row in group.to_dict(orient="records")
+        ]
+
+    ordered_ids = [
+        str(model_id)
+        for model_id in ranking.sort_values("performance_rank")["model_id"].tolist()
+        if str(model_id) in details
+    ]
+    return ordered_ids, details
 
 
 def load_counterfactual_selection() -> pd.DataFrame:
@@ -198,6 +279,19 @@ def parse_lancet_tables(df: pd.DataFrame, model_ids: set[str]) -> dict[str, list
     return tables
 
 
+def build_predictor_lookup(rows: list[dict[str, Any]]) -> dict[str, dict[str, float | None]]:
+    lookup: dict[str, dict[str, float | None]] = {}
+    for row in rows:
+        predictor = clean_value(row.get("Predictor"))
+        if not predictor or predictor in META_PREDICTORS:
+            continue
+        lookup[str(predictor)] = {
+            "coef": parse_numeric(row.get("Coefficient")),
+            "p": parse_numeric(row.get("p value")),
+        }
+    return lookup
+
+
 def build_matrix_rows(
     horizontal: pd.DataFrame,
     matrix_model_ids: list[str],
@@ -228,18 +322,24 @@ def build_payload() -> dict[str, Any]:
     vif = load_csv("exhaustive_model_vif.csv")
     horizontal = load_csv("exhaustive_model_horizontal_compare_top200.csv")
     lancet = load_csv("exhaustive_model_lancet_tables.csv")
+    coefficients = load_csv("exhaustive_model_coefficients.csv")
     scheme_catalog = load_csv("exhaustive_scheme_catalog.csv")
     counterfactual_selected = load_counterfactual_selection()
     counterfactual_force = build_counterfactual_force_include(ranking, counterfactual_selected)
+    significant_negative_model_ids, significant_negative_details = build_significant_negative_other_details(
+        ranking, coefficients
+    )
 
     display_ids = list(
         dict.fromkeys(
             ranking.head(DISPLAY_RANK_LIMIT)["model_id"].tolist()
             + counterfactual_force["forced_model_ids"]
+            + significant_negative_model_ids
             + ranking.loc[ranking["scheme_source"] == "curated", "model_id"].tolist()
         )
     )
     display_id_set = set(display_ids)
+    lancet_tables = parse_lancet_tables(lancet, display_id_set)
 
     ranking_map = {
         clean_value(row["model_id"]): {k: clean_value(v) for k, v in row.items()}
@@ -270,9 +370,49 @@ def build_payload() -> dict[str, Any]:
             or family_map.get("pollution_proxy")
             or ("人工方案" if source_group == "curated" else "未标注")
         )
+        hydro_proxy = (
+            full.get("hydro_proxy")
+            or rec.get("hydro_proxy")
+            or family_map.get("hydro_proxy")
+            or pick_proxy_choice(full.get("variables"), HYDRO_CHOICES)
+        )
+        if isinstance(hydro_proxy, str) and hydro_proxy.strip() in {"skip", "未纳入"}:
+            hydro_proxy = None
+        resolved_family_map = dict(family_map)
+        if temperature_proxy:
+            resolved_family_map.setdefault("temperature_proxy", temperature_proxy)
+        if pollution_proxy:
+            resolved_family_map.setdefault("pollution_proxy", pollution_proxy)
+        if hydro_proxy:
+            resolved_family_map.setdefault("hydro_proxy", hydro_proxy)
+        predictor_lookup = build_predictor_lookup(lancet_tables.get(rec["model_id"], []))
+        ta_stats = predictor_lookup.get(TA_PROXY_LABEL, {})
+        negative_other_predictors = sorted(
+            predictor
+            for predictor, stats in predictor_lookup.items()
+            if predictor not in STRICT_PRESET_EXCLUDED_PREDICTORS
+            and (stats.get("coef") is None or stats.get("coef") < 0)
+        )
+        ta_in_model = TA_PROXY_LABEL in predictor_lookup
+        ta_sig_pass = ta_in_model and ta_stats.get("p") is not None and ta_stats["p"] < 0.05
+        core_sig_pass = (
+            rec.get("p_R1xday") is not None
+            and rec["p_R1xday"] < 0.05
+            and rec.get("p_AMC") is not None
+            and rec["p_AMC"] < 0.05
+        )
+        strict_preset_pass = (
+            core_sig_pass
+            and temperature_proxy == TA_PROXY_LABEL
+            and pollution_proxy == "PM2.5"
+            and ta_sig_pass
+            and not negative_other_predictors
+        )
         family_pairs = [
             {"label": FAMILY_LABELS.get(key, key), "value": value}
-            for key, value in family_map.items()
+            for key in FAMILY_ORDER
+            for value in [resolved_family_map.get(key)]
+            if value
         ]
         search_parts = [
             rec.get("model_id"),
@@ -282,7 +422,8 @@ def build_payload() -> dict[str, Any]:
             rec.get("sig_predictors_p_lt_0_05"),
             temperature_proxy,
             pollution_proxy,
-            " ".join(value for value in family_map.values() if value),
+            hydro_proxy,
+            " ".join(value for value in resolved_family_map.values() if value),
         ]
 
         rec.update(
@@ -303,6 +444,19 @@ def build_payload() -> dict[str, Any]:
                 "family_pairs": family_pairs,
                 "temperature_proxy": temperature_proxy,
                 "pollution_proxy": pollution_proxy,
+                "hydro_proxy": hydro_proxy,
+                "hydro_proxy_label": hydro_proxy or "无水文代理",
+                "has_hydro_proxy": bool(hydro_proxy),
+                "coef_TA": ta_stats.get("coef"),
+                "p_TA": ta_stats.get("p"),
+                "ta_in_model": ta_in_model,
+                "ta_sig_pass": ta_sig_pass,
+                "core_sig_pass": core_sig_pass,
+                "other_coefficients_nonnegative": not negative_other_predictors,
+                "negative_other_predictors": negative_other_predictors,
+                "strict_preset_pass": strict_preset_pass,
+                "significant_negative_other_pass": rec["model_id"] in significant_negative_model_ids,
+                "significant_negative_other_predictors": significant_negative_details.get(rec["model_id"], []),
                 "counterfactual_anchor": rec["model_id"] in counterfactual_forced_set,
                 "search_text": " ".join(str(item) for item in search_parts if item).lower(),
             }
@@ -329,8 +483,11 @@ def build_payload() -> dict[str, Any]:
 
     dashboard_summary = summary[summary["model_id"].isin(display_id_set)].sort_values("performance_rank")
     family_counters: dict[str, Counter[str]] = defaultdict(Counter)
-    for item in dashboard_summary["family_selection"]:
-        mapping = parse_family_selection(item)
+    for item in dashboard_summary.to_dict(orient="records"):
+        mapping = parse_family_selection(item.get("family_selection"))
+        hydro_choice = pick_proxy_choice(item.get("variables"), HYDRO_CHOICES)
+        if hydro_choice:
+            mapping.setdefault("hydro_proxy", hydro_choice)
         for family in FAMILY_ORDER:
             family_counters[family][mapping.get(family, "skip")] += 1
     family_summary = []
@@ -406,17 +563,20 @@ def build_payload() -> dict[str, Any]:
         "scope_note": (
             f"全量统计来自 {len(ranking):,} 个 exhaustive 模型；"
             f"页面展示集以 Top {DISPLAY_RANK_LIMIT} 为基础，额外强制纳入反事实入选方案展开后的 "
-            f"{len(counterfactual_force['forced_model_ids']):,} 个 FE 模型，并保留全部 curated，共 {len(ranking_records):,} 个模型。"
+            f"{len(counterfactual_force['forced_model_ids']):,} 个 FE 模型、"
+            f"{len(significant_negative_model_ids):,} 个核心显著且其他变量显著负向组合，并保留全部 curated，共 {len(ranking_records):,} 个模型。"
         ),
         "total_models_all": int(len(ranking)),
         "total_schemes_all": int(scheme_catalog["scheme_id"].nunique()),
         "dashboard_models": int(len(ranking_records)),
         "dashboard_rank_limit": DISPLAY_RANK_LIMIT,
-        "dashboard_scope_label": "Top 200 基础窗口 + 反事实入选方案三类 FE + 全部 curated",
+        "dashboard_scope_label": "Top 200 基础窗口 + 反事实入选方案三类 FE + 显著负向组合 + 全部 curated",
         "dashboard_required_models": int(len(counterfactual_force["forced_model_ids"])),
         "dashboard_required_roles": int(len(counterfactual_force["selected_roles"])),
         "dashboard_required_schemes": int(len(counterfactual_force["selected_scheme_ids"])),
         "dashboard_required_model_ids": counterfactual_force["forced_model_ids"],
+        "significant_negative_model_count": int(len(significant_negative_model_ids)),
+        "significant_negative_model_ids": significant_negative_model_ids,
         "total_curated_models": int((ranking["scheme_source"] == "curated").sum()),
         "total_systematic_models": int((ranking["scheme_source"] == "systematic").sum()),
         "source_breakdown_all": build_breakdown(ranking["scheme_source"]),
@@ -439,7 +599,7 @@ def build_payload() -> dict[str, Any]:
         "ranking": ranking_records,
         "matrix_model_ids": matrix_model_ids,
         "matrix_rows": matrix_rows,
-        "lancet_tables": parse_lancet_tables(lancet, display_id_set),
+        "lancet_tables": lancet_tables,
         "vif_tables": vif_map,
         "source_labels": [label for label in ["systematic", "curated"] if label in {rec["source_group"] for rec in ranking_records}],
         "fe_labels": [label for label in FE_ORDER if label in {rec["fe_label"] for rec in ranking_records}],
@@ -585,6 +745,14 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
           <select class="control-select" id="pollutionSelect"></select>
           <div class="sub" style="color:var(--muted);font-size:12px;margin:16px 0 8px">PM2.5 快筛</div>
           <div class="filters" id="pm25OnlyFilters"></div>
+          <div class="sub" style="color:var(--muted);font-size:12px;margin:16px 0 8px">一键严筛</div>
+          <div class="filters" id="strictPresetFilters"></div>
+          <div class="sub" style="color:var(--muted);font-size:11px;margin:8px 0 0">R1xday / AMC / TA 显著，污染为 PM2.5，且其他系数不为负</div>
+          <div class="sub" style="color:var(--muted);font-size:12px;margin:16px 0 8px">显著负向组合</div>
+          <div class="filters" id="significantNegativeFilters"></div>
+          <div class="sub" style="color:var(--muted);font-size:11px;margin:8px 0 0">R1xday 与 AMC 均显著，且至少一个其他变量显著为负</div>
+          <div class="sub" style="color:var(--muted);font-size:12px;margin:16px 0 8px">水文代理</div>
+          <div class="filters" id="hydrologyFilters"></div>
           <div class="sub" style="color:var(--muted);font-size:12px;margin:16px 0 8px">变量数</div>
           <select class="control-select" id="nVarSelect"></select>
           <div class="sub" style="color:var(--muted);font-size:12px;margin:16px 0 8px">搜索</div>
@@ -638,6 +806,9 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       temperature: '全部',
       pollution: '全部',
       pm25Only: '全部',
+      strictPreset: '全部',
+      significantNegative: '全部',
+      hydrology: '全部',
       nvars: '全部',
       search: '',
       selected: data.ranking[0] ? data.ranking[0].model_id : null,
@@ -661,7 +832,6 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       coef_AMC: 'desc',
       r2_model: 'desc',
       n_vars: 'asc',
-      max_vif_z: 'asc',
     };
 
     const metaRows = new Set(['Province','Year','R-squared','R-squared (Overall)','R² (within)','Total number of observations']);
@@ -713,6 +883,11 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
         (state.temperature === '全部' || row.temperature_proxy === state.temperature) &&
         (state.pollution === '全部' || row.pollution_proxy === state.pollution) &&
         (state.pm25Only === '全部' || row.pollution_proxy === 'PM2.5') &&
+        (state.strictPreset === '全部' || row.strict_preset_pass) &&
+        (state.significantNegative === '全部' || row.significant_negative_other_pass) &&
+        (state.hydrology === '全部' ||
+          (state.hydrology === '只看有水文代理' && row.has_hydro_proxy) ||
+          (state.hydrology === '只看无水文代理' && !row.has_hydro_proxy)) &&
         (state.nvars === '全部' || row.n_vars_label === state.nvars) &&
         (!state.search || String(row.search_text || '').includes(state.search.toLowerCase()))
       );
@@ -776,6 +951,9 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       mk(['全部', ...data.source_labels], state.source, 'source', document.getElementById('schemeFilters'));
       mk(['全部', ...data.fe_labels], state.fe, 'fe', document.getElementById('feFilters'));
       mk(['全部', '只看 PM2.5'], state.pm25Only, 'pm25Only', document.getElementById('pm25OnlyFilters'));
+      mk(['全部', '一键严筛'], state.strictPreset, 'strictPreset', document.getElementById('strictPresetFilters'));
+      mk(['全部', `核心显著+显著负向 (${data.significant_negative_model_count || 0})`], state.significantNegative, 'significantNegative', document.getElementById('significantNegativeFilters'));
+      mk(['全部', '只看有水文代理', '只看无水文代理'], state.hydrology, 'hydrology', document.getElementById('hydrologyFilters'));
       const fillSelect = (id, values, current) => {
         const target = document.getElementById(id);
         target.innerHTML = ['全部', ...values].map(v => `<option value="${html(v)}" ${v === current ? 'selected' : ''}>${html(v)}</option>`).join('');
@@ -839,7 +1017,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
     function renderTop(list) {
       const target = document.getElementById('topPicks');
       if (!list.length) { target.innerHTML = '<div class="empty">当前筛选条件下没有模型。</div>'; return; }
-      target.innerHTML = performanceOrdered(list).slice(0,3).map(row => `<div class="pick"><span class="badge${badge(row.performance_rank)}">Rank ${row.performance_rank}</span><div style="font-weight:700;line-height:1.5">${label(row.scheme_id || row.model_id)}</div><div class="chips"><span class="chip ${sourceCls(row.source_group)}">${html(row.source_group)}</span><span class="chip">${html(row.fe_label)}</span></div><div style="font-size:12px;color:var(--muted)">${label(row.temperature_proxy)} · ${label(row.pollution_proxy)} · Score ${num(row.performance_score)}</div></div>`).join('');
+        target.innerHTML = performanceOrdered(list).slice(0,3).map(row => `<div class="pick"><span class="badge${badge(row.performance_rank)}">Rank ${row.performance_rank}</span><div style="font-weight:700;line-height:1.5">${label(row.scheme_id || row.model_id)}</div><div class="chips"><span class="chip ${sourceCls(row.source_group)}">${html(row.source_group)}</span><span class="chip">${html(row.fe_label)}</span></div><div style="font-size:12px;color:var(--muted)">${label(row.temperature_proxy)} · ${label(row.pollution_proxy)} · ${label(row.hydro_proxy_label)} · Score ${num(row.performance_score)}</div></div>`).join('');
     }
 
     function renderBest() {
@@ -869,7 +1047,10 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
       const table = document.getElementById('rankingTable');
       if (!list.length) { table.innerHTML = '<tbody><tr><td class="empty">当前筛选条件下没有模型。</td></tr></tbody>'; return; }
       const sortHead = (key, labelText) => `<button class="sort-btn ${state.sortKey === key ? `active ${state.sortDir}` : ''}" data-sort="${key}" title="点击按 ${labelText} 排序"><span>${labelText}</span><span class="arrows"><span class="up">▲</span><span class="down">▼</span></span></button>`;
-      table.innerHTML = `<thead><tr><th>${sortHead('performance_rank','Rank')}</th><th>${sortHead('scheme_id','Scheme')}</th><th>Proxy Mix</th><th>${sortHead('performance_score','Score')}</th><th>${sortHead('coef_R1xday','R1xday')}</th><th>${sortHead('coef_AMC','AMC')}</th><th>${sortHead('r2_model','R²')}</th><th>${sortHead('max_vif_z','VIF(z)')}</th></tr></thead><tbody>${list.map(row => `<tr data-model="${html(row.model_id)}" class="${row.model_id === state.selected ? 'on' : ''}"><td><span class="badge${badge(row.performance_rank)}">#${row.performance_rank}</span></td><td><div style="font-weight:700;line-height:1.5">${label(row.scheme_id || row.model_id)}</div><div class="chips" style="margin-top:6px"><span class="chip ${sourceCls(row.source_group)}">${html(row.source_group)}</span><span class="chip soft">${html(row.fe_label)}</span>${row.counterfactual_anchor ? '<span class="chip scheme">反事实锚点</span>' : ''}</div></td><td><div>${label(row.temperature_proxy)}</div><div style="font-size:12px;color:var(--muted)">${label(row.pollution_proxy)} · ${html(row.n_vars_label)}</div></td><td class="score">${num(row.performance_score)}</td><td><div class="${ccls(row.coef_R1xday)}">${num(row.coef_R1xday,4)}${stars(row.p_R1xday)}</div><div class="${pcls(row.p_R1xday)}" style="font-size:12px">p=${num(row.p_R1xday,4)}</div></td><td><div class="${ccls(row.coef_AMC)}">${num(row.coef_AMC,4)}${stars(row.p_AMC)}</div><div class="${pcls(row.p_AMC)}" style="font-size:12px">p=${num(row.p_AMC,4)}</div></td><td>${num(row.r2_model)}</td><td>${num(row.max_vif_z)}</td></tr>`).join('')}</tbody>`;
+      const taCell = (row) => row.ta_in_model
+        ? `<div class="${ccls(row.coef_TA)}">${num(row.coef_TA,4)}${stars(row.p_TA)}</div><div class="${pcls(row.p_TA)}" style="font-size:12px">p=${num(row.p_TA,4)}</div>`
+        : `<div style="font-size:12px;color:var(--muted)">非 TA</div><div style="font-size:12px;color:var(--muted)">${label(row.temperature_proxy || '—')}</div>`;
+      table.innerHTML = `<thead><tr><th>${sortHead('performance_rank','Rank')}</th><th>${sortHead('scheme_id','Scheme')}</th><th>Proxy Mix</th><th>${sortHead('performance_score','Score')}</th><th>${sortHead('coef_R1xday','R1xday')}</th><th>${sortHead('coef_AMC','AMC')}</th><th>TA 情况</th><th>${sortHead('r2_model','R²')}</th></tr></thead><tbody>${list.map(row => `<tr data-model="${html(row.model_id)}" class="${row.model_id === state.selected ? 'on' : ''}"><td><span class="badge${badge(row.performance_rank)}">#${row.performance_rank}</span></td><td><div style="font-weight:700;line-height:1.5">${label(row.scheme_id || row.model_id)}</div><div class="chips" style="margin-top:6px"><span class="chip ${sourceCls(row.source_group)}">${html(row.source_group)}</span><span class="chip soft">${html(row.fe_label)}</span>${row.significant_negative_other_pass ? '<span class="chip scheme">显著负向</span>' : ''}${row.counterfactual_anchor ? '<span class="chip scheme">反事实锚点</span>' : ''}</div></td><td><div>${label(row.temperature_proxy)}</div><div style="font-size:12px;color:var(--muted)">${label(row.pollution_proxy)} · ${label(row.hydro_proxy_label)} · ${html(row.n_vars_label)}</div></td><td class="score">${num(row.performance_score)}</td><td><div class="${ccls(row.coef_R1xday)}">${num(row.coef_R1xday,4)}${stars(row.p_R1xday)}</div><div class="${pcls(row.p_R1xday)}" style="font-size:12px">p=${num(row.p_R1xday,4)}</div></td><td><div class="${ccls(row.coef_AMC)}">${num(row.coef_AMC,4)}${stars(row.p_AMC)}</div><div class="${pcls(row.p_AMC)}" style="font-size:12px">p=${num(row.p_AMC,4)}</div></td><td>${taCell(row)}</td><td>${num(row.r2_model)}</td></tr>`).join('')}</tbody>`;
       table.querySelectorAll('[data-sort]').forEach(btn => btn.onclick = (event) => { event.stopPropagation(); setSort(btn.dataset.sort); renderAll(false); });
       table.querySelectorAll('tbody tr[data-model]').forEach(tr => tr.onclick = () => { state.selected = tr.dataset.model; renderAll(false); });
     }
@@ -980,6 +1161,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
         ? model.family_pairs.map(item => `<span class="pill">${html(item.label)}: ${label(item.value)}</span>`).join('')
         : '<span class="pill">人工方案暂无 family_selection 标签</span>';
       const vars = (model.variables_list || []).map(item => `<span class="pill">${label(item)}</span>`).join('');
+      const sigNeg = (model.significant_negative_other_predictors || []).map(item => `<span class="pill good">${label(item.predictor)} = ${num(item.coef,4)}, p=${num(item.p_value,4)}</span>`).join('');
       const pct = Math.max(0, Math.min(100, Number(model.performance_score || 0) * 100));
       const lancetLink = `results_dashboard_lancet.html#${encodeURIComponent(model.model_id)}`;
       target.innerHTML = `
@@ -993,6 +1175,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
               <span class="chip">${html(model.fe_label)}</span>
               <span class="chip soft">Rank ${model.performance_rank}</span>
               <span class="chip soft">${html(model.n_vars_label)}</span>
+              ${model.significant_negative_other_pass ? '<span class="chip scheme">显著负向</span>' : ''}
             </div>
             <div class="bar"><span style="width:${pct}%"></span></div>
           </div>
@@ -1021,6 +1204,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
                 <div class="pills compact">
                   <span class="pill">${label(model.temperature_proxy || '—')}</span>
                   <span class="pill">${label(model.pollution_proxy || '—')}</span>
+                  <span class="pill">${label(model.hydro_proxy_label || '—')}</span>
                   <span class="pill">${html(model.n_vars_label || '')}</span>
                 </div>
               </div>
@@ -1032,6 +1216,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
                 <div class="eyebrow" style="color:var(--muted)">变量组成</div>
                 <div class="pills compact">${vars}</div>
               </div>
+              ${sigNeg ? `<div><div class="eyebrow" style="color:var(--muted)">显著负向其他变量</div><div class="pills compact">${sigNeg}</div></div>` : ''}
             </div>
           </div>
           <div class="panel">
@@ -1059,6 +1244,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
         ? model.family_pairs.map(item => `<span class="pill">${html(item.label)}: ${label(item.value)}</span>`).join('')
         : '<span class="pill">人工方案暂无 family_selection 标签</span>';
       const vars = (model.variables_list || []).map(item => `<span class="pill">${label(item)}</span>`).join('');
+      const sigNeg = (model.significant_negative_other_predictors || []).map(item => `<span class="pill good">${label(item.predictor)} = ${num(item.coef,4)}, p=${num(item.p_value,4)}</span>`).join('');
       const pct = Math.max(0, Math.min(100, Number(model.performance_score || 0) * 100));
       const lancetLink = `results_dashboard_lancet.html#${encodeURIComponent(model.model_id)}`;
       target.innerHTML = `
@@ -1072,6 +1258,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
               <span class="chip">${html(model.fe_label)}</span>
               <span class="chip soft">Rank ${model.performance_rank}</span>
               <span class="chip soft">${html(model.n_vars_label)}</span>
+              ${model.significant_negative_other_pass ? '<span class="chip scheme">显著负向</span>' : ''}
             </div>
             <div class="bar"><span style="width:${pct}%"></span></div>
           </div>
@@ -1100,6 +1287,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
                 <div class="pills compact">
                   <span class="pill">${label(model.temperature_proxy || '—')}</span>
                   <span class="pill">${label(model.pollution_proxy || '—')}</span>
+                  <span class="pill">${label(model.hydro_proxy_label || '—')}</span>
                   <span class="pill">${html(model.n_vars_label || '')}</span>
                 </div>
               </div>
@@ -1111,6 +1299,7 @@ def build_html(payload: dict[str, Any], page_kind: str) -> str:
                 <div class="eyebrow" style="color:var(--muted)">变量组成</div>
                 <div class="pills compact">${vars}</div>
               </div>
+              ${sigNeg ? `<div><div class="eyebrow" style="color:var(--muted)">显著负向其他变量</div><div class="pills compact">${sigNeg}</div></div>` : ''}
             </div>
           </div>
           <div class="panel">

@@ -18,6 +18,8 @@ COUNTERFACTUAL_RESULT_ROOT = ROOT / "5 反事实推演" / "results"
 SELECTED_MODELS_DIR = COUNTERFACTUAL_RESULT_ROOT
 
 RX1DAY_TIMESERIES_PATH = DATA_PROCESSED_DIR / "cckp_rx1day_timeseries_panel.csv"
+TA_FUTURE_PATH = DATA_PROCESSED_DIR / "TA_future_panel.csv"
+PROVINCE_TAS_SSP_PATH = DATA_PROCESSED_DIR / "ssp_province_mean_tas_panel.csv"
 
 HISTORICAL_START_YEAR = 2014
 HISTORICAL_END_YEAR = 2023
@@ -28,7 +30,7 @@ FUTURE_END_YEAR = 2050
 DEFAULT_OUTCOME = "AMR_AGG_RAW"
 DEFAULT_MODEL_SOURCE_OUTCOME = "AMR_AGG"
 DEFAULT_SINGLE_OUTCOME_SCALE = "zscore"
-DEFAULT_MODEL_ROLES = ["main_model", "robust_low_vif", "robust_systematic", "robust_strict_fe"]
+DEFAULT_MODEL_ROLES: list[str] = []
 DEFAULT_BASELINE_MODES = ["lancet_ets", "x_driven"]
 
 BASELINE_MODE_LABELS = {
@@ -37,8 +39,8 @@ BASELINE_MODE_LABELS = {
 }
 
 BASELINE_MODE_DESCRIPTIONS = {
-    "lancet_ets": "Use ETS on the outcome itself as the future baseline, then add scenario deltas from future R1xday paths.",
-    "x_driven": "Use future covariate paths as the baseline driver; baseline R1xday and other covariates follow ETS extensions, then future AMR is reconstructed from the historical association model.",
+    "lancet_ets": "Use ETS on the outcome itself as the future baseline, then add scenario deltas from future climate paths such as R1xday and supported temperature proxies.",
+    "x_driven": "Use future covariate paths as the baseline driver; baseline covariates follow ETS extensions, then future AMR is reconstructed from the historical association model and perturbed by supported climate scenario inputs.",
 }
 
 BASELINE_OUTCOME_METHOD = "ets"
@@ -51,7 +53,13 @@ EXTERNAL_ALIGNMENT_METHOD = "mean_bias"
 EXTERNAL_ALIGNMENT_MIN_OVERLAP = 3
 
 RX1DAY_VARIABLE_NAME = "R1xday"
-CONTROLLED_FUTURE_VARIABLES = [RX1DAY_VARIABLE_NAME]
+TA_VARIABLE_NAME = "TA（°C）"
+PROVINCE_TAS_VARIABLE_NAME = "省平均气温"
+CONTROLLED_FUTURE_VARIABLES = [
+    RX1DAY_VARIABLE_NAME,
+    TA_VARIABLE_NAME,
+    PROVINCE_TAS_VARIABLE_NAME,
+]
 RX1DAY_SCENARIOS = ["ssp119", "ssp126", "ssp245", "ssp370", "ssp585"]
 RX1DAY_STATISTICS = ["median", "p10", "p90"]
 RX1DAY_MAIN_STATISTIC = "median"
@@ -70,16 +78,18 @@ BASELINE_SCENARIO = {
     "scenario_family": "baseline",
     "description": "不额外施加未来情景调整，仅按历史 AMR 趋势的 ETS 基线外推。",
     "rx1day_source_scenario": None,
+    "tas_source_scenario": None,
     "adjustments": {},
 }
 
 CLIMATE_SCENARIOS = [
     {
         "scenario_id": scenario_id,
-        "scenario_label": f"{SCENARIO_LABELS[scenario_id]}（rx1day）",
-        "scenario_family": "rx1day_ssp",
-        "description": f"将未来 R1xday 路径替换为 CCKP {SCENARIO_LABELS[scenario_id]} 的省级年度序列，其余协变量保留基线延续路径。",
+        "scenario_label": f"{SCENARIO_LABELS[scenario_id]}（climate）",
+        "scenario_family": "climate_ssp",
+        "description": f"将未来 R1xday 与已支持的温度路径替换为 CCKP {SCENARIO_LABELS[scenario_id]} 的省级年度序列，其余协变量保留基线延续路径。",
         "rx1day_source_scenario": scenario_id,
+        "tas_source_scenario": scenario_id,
         "adjustments": {},
     }
     for scenario_id in RX1DAY_SCENARIOS

@@ -1,24 +1,16 @@
 {
-  "generated_at": "2026-04-22 23:28:45",
+  "generated_at": "2026-04-23 15:49:47",
+  "model_count": 12,
+  "variant_count": 6,
+  "bridge_rows": 72,
+  "primary_rows": 180,
+  "diagnostic_rows": 828,
   "source_dir": "4 贝叶斯分析/results/model_summaries",
-  "inputs": [
-    "4 贝叶斯分析/results/model_summaries/focus_primary_summary.csv",
-    "4 贝叶斯分析/results/model_summaries/focus_variant_bridge_summary.csv",
-    "4 贝叶斯分析/results/model_summaries/combined_diagnostics.csv"
-  ],
-  "n_models": 18,
-  "n_obs": 300,
-  "n_provinces": 30,
-  "n_years": 10,
-  "run_config": {
-    "draws": 1000,
-    "tune": 1000,
-    "chains": 4,
-    "cores": 2,
-    "target_accept": 0.9
-  },
-  "max_r_hat": 1.01,
-  "min_ess_bulk": 621,
-  "min_ess_tail": 968,
-  "strongest_interaction_line": "仅控制省份 · 放大效应模型 · 方案A 平衡主线组"
+  "archive_path": "2 固定效应模型/results/model_archive_12/selected_models.csv",
+  "downloads": [
+    "focus_primary_summary.csv",
+    "focus_variant_bridge_summary.csv",
+    "combined_diagnostics.csv",
+    "selected_models.csv"
+  ]
 }

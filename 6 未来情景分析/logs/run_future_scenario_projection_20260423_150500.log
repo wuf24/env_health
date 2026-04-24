@@ -1,0 +1,39 @@
+2026-04-23 15:05:00,470 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\run_future_scenario_projection_20260423_150500.log
+2026-04-23 15:05:00,483 | INFO | Selected model roles: ['strict_main_model', 'strict_top_02', 'strict_top_03', 'strict_top_04', 'strict_top_05', 'strict_top_06', 'strict_top_07', 'strict_top_08', 'robust_systematic', 'robust_systematic_2', 'robust_low_vif', 'main_model']
+2026-04-23 15:05:00,483 | INFO | Union variables: ['GDP', 'PA（%）', 'PM2.5', 'R1xday', 'TA（°C）', '主要城市日照时数', '主要城市降水量', '人均日生活用水量(升)', '医疗水平', '卫生程度\n（日污水处理能力）', '城市用水普及率', '抗菌药物使用强度', '文盲比例', '牲畜饲养\n-猪年底头数', '生活垃圾无害化处理率', '省平均气温', '食品消费量', '饮用水\n供水综合生产能力(万立方米/日)']
+2026-04-23 15:05:00,486 | INFO | Baseline modes: ['lancet_ets', 'x_driven']
+2026-04-23 15:05:00,631 | INFO | Forecasted GDP for 31 provinces
+2026-04-23 15:05:00,809 | INFO | Forecasted PA（%） for 31 provinces
+2026-04-23 15:05:00,973 | INFO | Forecasted PM2.5 for 31 provinces
+2026-04-23 15:05:01,141 | INFO | Forecasted R1xday for 31 provinces
+2026-04-23 15:05:01,307 | INFO | Forecasted TA（°C） for 31 provinces
+2026-04-23 15:05:01,525 | INFO | Forecasted 主要城市日照时数 for 31 provinces
+2026-04-23 15:05:01,666 | INFO | Forecasted 主要城市降水量 for 31 provinces
+2026-04-23 15:05:01,831 | INFO | Forecasted 人均日生活用水量(升) for 31 provinces
+2026-04-23 15:05:01,982 | INFO | Forecasted 医疗水平 for 31 provinces
+2026-04-23 15:05:02,158 | INFO | Forecasted 卫生程度
+（日污水处理能力） for 31 provinces
+2026-04-23 15:05:02,325 | INFO | Forecasted 城市用水普及率 for 31 provinces
+2026-04-23 15:05:02,480 | INFO | Forecasted 抗菌药物使用强度 for 31 provinces
+2026-04-23 15:05:02,657 | INFO | Forecasted 文盲比例 for 31 provinces
+2026-04-23 15:05:02,792 | INFO | Forecasted 牲畜饲养
+-猪年底头数 for 31 provinces
+2026-04-23 15:05:02,953 | INFO | Forecasted 生活垃圾无害化处理率 for 31 provinces
+2026-04-23 15:05:03,128 | INFO | Forecasted 省平均气温 for 31 provinces
+2026-04-23 15:05:03,298 | INFO | Forecasted 食品消费量 for 31 provinces
+2026-04-23 15:05:03,457 | INFO | Forecasted 饮用水
+供水综合生产能力(万立方米/日) for 31 provinces
+2026-04-23 15:05:03,534 | INFO | Aligned external rx1day by province/scenario/statistic with mean-bias correction; overlap groups=465
+2026-04-23 15:05:04,202 | INFO | Running baseline mode: lancet_ets
+2026-04-23 15:05:04,362 | INFO | Forecasted value for 31 provinces
+2026-04-23 15:05:04,653 | INFO | Forecasted value for 31 provinces
+2026-04-23 15:05:04,942 | INFO | Forecasted value for 31 provinces
+2026-04-23 15:05:05,225 | INFO | Forecasted value for 31 provinces
+2026-04-23 15:05:05,495 | INFO | Forecasted value for 31 provinces
+2026-04-23 15:05:05,741 | INFO | Forecasted value for 31 provinces
+2026-04-23 15:05:05,984 | INFO | Forecasted value for 31 provinces
+2026-04-23 15:05:06,229 | INFO | Forecasted value for 31 provinces
+2026-04-23 15:05:06,469 | INFO | Forecasted value for 31 provinces
+2026-04-23 15:05:06,709 | INFO | Forecasted value for 31 provinces
+2026-04-23 15:05:06,947 | INFO | Forecasted value for 31 provinces
+2026-04-23 15:05:07,195 | INFO | Forecasted value for 31 provinces

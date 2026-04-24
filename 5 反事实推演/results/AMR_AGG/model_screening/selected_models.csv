@@ -1,9 +1,28 @@
 ﻿role_id,role_label,selection_rule,reason,model_id,scheme_id,scheme_source,fe_label,variables,performance_rank,performance_score,coef_R1xday,p_R1xday,coef_AMC,p_AMC,r2_model,max_vif_z
-main_model,主模型,curated + Year FE + R1xday 与 AMC 同时正向且 p<0.05,理论上最容易承接正文主线，且双核心变量在频率学和 year-only 贝叶斯结果中都最稳定。,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes,"省平均气温 | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
--猪年底头数",972,0.7218422485555385,0.1508246294759486,0.042609775295463,0.1310341033515701,0.0033854032562117,0.3338148826961948,3.0544803429981107
-robust_low_vif,稳健性模型 1,curated + Year FE + 低 VIF + 双核心方向稳定,用于检验主结果是否依赖于较高共线性的变量组织方式。,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes,"TA（°C） | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
--猪年底头数 | 主要城市日照时数",156,0.754215661360927,0.1343718513136075,0.0511176547836138,0.1282545796871254,0.0033740699130591,0.3450624353022486,1.8204312093552328
-robust_systematic,稳健性模型 2,systematic + Year FE + 已有贝叶斯桥接 + 双核心显著,用于证明结论不完全依赖人工选模，并与已完成的贝叶斯扩展自然衔接。,SYS_09556 | Province: No / Year: Yes,SYS_09556,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | GDP | 城市用水普及率 | 牲畜饲养
+strict_main_model,严筛主模型,R1xday / AMC / TA 显著 + PM2.5 + 其他系数不为负,作为严筛主模型进入后续分析。,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | 医疗水平 | 卫生程度
+（日污水处理能力） | 牲畜饲养
+-猪年底头数 | 食品消费量",27,0.9995617944598866,0.1285306286023753,0.0344698096446054,0.1057129811562968,0.0193063779592099,0.4276299979124666,1.7211445207083764
+strict_top_02,严筛模型 2,R1xday / AMC / TA 显著 + PM2.5 + 其他系数不为负,作为严筛并列候选 #2，用于稳健性与异质性比较。,SYS_10001 | Province: No / Year: Yes,SYS_10001,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | 医疗水平 | 饮用水
+供水综合生产能力(万立方米/日) | 牲畜饲养
+-猪年底头数 | 食品消费量",30,0.9995309524351194,0.1352099504705239,0.0316157984616889,0.1057412228683963,0.0184126351563778,0.425447482788186,1.7285688726687878
+strict_top_03,严筛模型 3,R1xday / AMC / TA 显著 + PM2.5 + 其他系数不为负,作为严筛并列候选 #3，用于稳健性与异质性比较。,SYS_10002 | Province: No / Year: Yes,SYS_10002,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | 医疗水平 | 饮用水
+供水综合生产能力(万立方米/日) | 牲畜饲养
+-猪年底头数 | 文盲比例",34,0.9994968380956024,0.132563773299573,0.0482524926133764,0.110091588379202,0.0151929888340331,0.4230334045458238,1.822409026507411
+strict_top_04,严筛模型 4,R1xday / AMC / TA 显著 + PM2.5 + 其他系数不为负,作为严筛并列候选 #4，用于稳健性与异质性比较。,SYS_09941 | Province: No / Year: Yes,SYS_09941,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | 医疗水平 | 城市用水普及率 | 牲畜饲养
+-猪年底头数 | PA（%） | 食品消费量",49,0.9992962275731204,0.143485217770118,0.0486297390672487,0.1222713898553088,0.0074355577127309,0.4088373371756515,1.789640299554322
+strict_top_05,严筛模型 5,R1xday / AMC / TA 显著 + PM2.5 + 其他系数不为负,作为严筛并列候选 #5，用于稳健性与异质性比较。,SYS_09926 | Province: No / Year: Yes,SYS_09926,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | 医疗水平 | 城市用水普及率 | 牲畜饲养
+-猪年底头数 | 食品消费量",50,0.9992962234990448,0.1435952493025688,0.0274535534649327,0.1222751677920434,0.0074079905584321,0.4088370488758063,1.7490463540320311
+strict_top_06,严筛模型 6,R1xday / AMC / TA 显著 + PM2.5 + 其他系数不为负,作为严筛并列候选 #6，用于稳健性与异质性比较。,SYS_09927 | Province: No / Year: Yes,SYS_09927,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | 医疗水平 | 城市用水普及率 | 牲畜饲养
+-猪年底头数 | 文盲比例",51,0.9992910109673137,0.1432111958897139,0.0403418107859661,0.1245634961317869,0.0070854614913498,0.4084681874472157,1.861589862732211
+strict_top_07,严筛模型 7,R1xday / AMC / TA 显著 + PM2.5 + 其他系数不为负,作为严筛并列候选 #7，用于稳健性与异质性比较。,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | 医疗水平 | 生活垃圾无害化处理率 | 牲畜饲养
+-猪年底头数 | PA（%） | 食品消费量",68,0.9992426855541868,0.1469036662003963,0.0446199051976146,0.120697077592715,0.0088289410403672,0.405048472432325,1.8432958857286188
+strict_top_08,严筛模型 8,R1xday / AMC / TA 显著 + PM2.5 + 其他系数不为负,作为严筛并列候选 #8，用于稳健性与异质性比较。,SYS_09776 | Province: No / Year: Yes,SYS_09776,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | 医疗水平 | 生活垃圾无害化处理率 | 牲畜饲养
+-猪年底头数 | 食品消费量",69,0.9992425986785324,0.1474014425536451,0.0241275210618998,0.1207117585081428,0.0088053710271067,0.4050423247347506,1.801001555430177
+robust_systematic,稳健性模型 2,hand-picked + Year FE + systematic bridge candidate,Used to show the result does not rely only on manually curated bundles.,SYS_09556 | Province: No / Year: Yes,SYS_09556,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | GDP | 城市用水普及率 | 牲畜饲养
 -猪年底头数 | 主要城市降水量 | 食品消费量",49,0.7665352008628431,0.1812432996167564,0.0218372297507352,0.1164206832956922,0.0054403730794863,0.361691613754023,1.8630223924966105
-robust_strict_fe,稳健性模型 3,主模型同变量集 + 双向 FE,用于给出更严格 FE 控制下的保守下界，识别结果对 FE 设定的敏感性。,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes,"省平均气温 | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
--猪年底头数",23331,0.4501476749911623,-0.0033076735002741,0.8506875682706379,0.0092846932124281,0.5169604958523597,0.0212117047615382,3.0544803429981107
+robust_systematic_2,稳健性模型 3,hand-picked + Year FE + adjacent systematic candidate,Used as a neighboring high-performing Year FE specification for final comparison.,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | GDP | 城市用水普及率 | 牲畜饲养
+-猪年底头数 | 主要城市降水量 | 文盲比例",65,0.7642202278382038,0.1784084705607142,0.0277135674869211,0.1166271193804089,0.0048884233852937,0.3614007612845442,1.80401653941866
+robust_low_vif,稳健性模型 1,hand-picked + Year FE + lower-collinearity reference,Used to test whether the core story depends on a more collinear variable bundle.,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes,"TA（°C） | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
+-猪年底头数 | 主要城市日照时数",156,0.754215661360927,0.1343718513136075,0.0511176547836138,0.1282545796871254,0.0033740699130591,0.3450624353022486,1.8204312093552328
+main_model,主模型,hand-picked + Year FE + story-first candidate,Most directly aligned with the paper's main narrative and intended interpretation.,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes,"省平均气温 | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
+-猪年底头数",972,0.7218422485555385,0.1508246294759486,0.042609775295463,0.1310341033515701,0.0033854032562117,0.3338148826961948,3.0544803429981107

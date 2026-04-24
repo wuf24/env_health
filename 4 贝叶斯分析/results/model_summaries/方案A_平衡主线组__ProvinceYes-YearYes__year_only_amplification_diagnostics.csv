@@ -1,0 +1,14 @@
+﻿parameter,mean,sd,hdi_2.5%,hdi_97.5%,mcse_mean,mcse_sd,ess_bulk,ess_tail,r_hat,effect_scope,variable,variant_id,variant_label,model_id,scheme_id,scheme_source,fe_label
+alpha,0.009,0.025,-0.036,0.061,0.0,0.0,4731.0,2917.0,1.0,global,,year_only_amplification,Year-only amplification,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes
+beta_main[省平均气温],0.018,0.045,-0.072,0.106,0.001,0.001,2735.0,2687.0,1.0,main,省平均气温,year_only_amplification,Year-only amplification,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes
+beta_main[R1xday],0.106,0.039,0.026,0.18,0.001,0.001,3161.0,2986.0,1.0,main,R1xday,year_only_amplification,Year-only amplification,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes
+beta_main[PM2.5],0.001,0.034,-0.065,0.067,0.001,0.001,3569.0,3048.0,1.0,main,PM2.5,year_only_amplification,Year-only amplification,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes
+beta_main[抗菌药物使用强度],0.112,0.029,0.054,0.167,0.0,0.0,3760.0,3090.0,1.0,main,抗菌药物使用强度,year_only_amplification,Year-only amplification,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes
+beta_main[GDP],0.175,0.033,0.113,0.243,0.001,0.001,3901.0,2536.0,1.0,main,GDP,year_only_amplification,Year-only amplification,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes
+beta_main[文盲比例],-0.101,0.032,-0.162,-0.037,0.0,0.0,4192.0,3138.0,1.0,main,文盲比例,year_only_amplification,Year-only amplification,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes
+beta_main[人均日生活用水量(升)],-0.132,0.036,-0.198,-0.057,0.001,0.001,2881.0,3010.0,1.0,main,人均日生活用水量(升),year_only_amplification,Year-only amplification,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes
+"beta_main[牲畜饲养
+-猪年底头数]",0.066,0.03,0.009,0.128,0.0,0.0,3729.0,2717.0,1.0,main,"牲畜饲养
+-猪年底头数",year_only_amplification,Year-only amplification,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes
+beta_interaction[R1xday × 抗菌药物使用强度],0.03,0.029,-0.024,0.088,0.0,0.0,3921.0,2924.0,1.0,interaction,R1xday × 抗菌药物使用强度,year_only_amplification,Year-only amplification,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes
+sigma_residual,0.438,0.019,0.403,0.474,0.0,0.0,4686.0,3174.0,1.0,global,,year_only_amplification,Year-only amplification,方案A_平衡主线组 | Province: Yes / Year: Yes,方案A_平衡主线组,curated,Province: Yes / Year: Yes

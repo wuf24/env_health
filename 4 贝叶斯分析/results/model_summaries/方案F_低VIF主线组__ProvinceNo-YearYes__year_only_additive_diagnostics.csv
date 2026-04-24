@@ -1,0 +1,14 @@
+﻿parameter,mean,sd,hdi_2.5%,hdi_97.5%,mcse_mean,mcse_sd,ess_bulk,ess_tail,r_hat,effect_scope,variable,variant_id,variant_label,model_id,scheme_id,scheme_source,fe_label
+alpha,0.009,0.025,-0.039,0.058,0.0,0.0,5182.0,2692.0,1.0,global,,year_only_additive,Year-only additive,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[TA（°C）],0.061,0.04,-0.018,0.136,0.001,0.001,3892.0,2804.0,1.0,main,TA（°C）,year_only_additive,Year-only additive,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[R1xday],0.115,0.033,0.052,0.18,0.001,0.001,3592.0,3098.0,1.0,main,R1xday,year_only_additive,Year-only additive,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[PM2.5],0.008,0.034,-0.062,0.073,0.001,0.0,3641.0,3148.0,1.0,main,PM2.5,year_only_additive,Year-only additive,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[抗菌药物使用强度],0.103,0.029,0.049,0.161,0.0,0.0,4321.0,3079.0,1.0,main,抗菌药物使用强度,year_only_additive,Year-only additive,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[GDP],0.166,0.033,0.099,0.228,0.001,0.001,3729.0,2923.0,1.0,main,GDP,year_only_additive,Year-only additive,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[文盲比例],-0.087,0.033,-0.153,-0.026,0.001,0.0,3652.0,2944.0,1.0,main,文盲比例,year_only_additive,Year-only additive,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[人均日生活用水量(升)],-0.142,0.033,-0.206,-0.076,0.001,0.001,4033.0,2766.0,1.0,main,人均日生活用水量(升),year_only_additive,Year-only additive,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+"beta_main[牲畜饲养
+-猪年底头数]",0.048,0.031,-0.014,0.108,0.001,0.0,3800.0,3114.0,1.0,main,"牲畜饲养
+-猪年底头数",year_only_additive,Year-only additive,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[主要城市日照时数],-0.049,0.035,-0.114,0.02,0.001,0.001,3599.0,3001.0,1.0,main,主要城市日照时数,year_only_additive,Year-only additive,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+sigma_residual,0.435,0.019,0.401,0.473,0.0,0.0,4206.0,2684.0,1.0,global,,year_only_additive,Year-only additive,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes

@@ -36,6 +36,7 @@ FE_RANKING_PATH = ROOT / "2 固定效应模型" / "results" / "exhaustive_model_
 FE_COEF_PATH = ROOT / "2 固定效应模型" / "results" / "exhaustive_model_coefficients.csv"
 BAYES_CANDIDATE_PATH = ROOT / "4 贝叶斯分析" / "results" / "bayes_candidate_models.csv"
 BAYES_BRIDGE_PATH = ROOT / "4 贝叶斯分析" / "results" / "model_summaries" / "focus_variant_bridge_summary.csv"
+MODEL_ARCHIVE_PATH = ROOT / "2 固定效应模型" / "results" / "model_archive_12" / "selected_models.csv"
 
 AMR_COLS = [
     "MRCNS",
@@ -388,6 +389,61 @@ def build_selected_models(summary_df: pd.DataFrame, bayes_candidates_df: pd.Data
     ]
 
 
+def build_selected_models_from_file(selected_models_path: Path) -> list[SelectedModel]:
+    if not selected_models_path.exists():
+        raise FileNotFoundError(f"找不到 selected models 文件: {selected_models_path}")
+
+    df = pd.read_csv(selected_models_path)
+    required_columns = {
+        "role_id",
+        "role_label",
+        "model_id",
+        "scheme_id",
+        "scheme_source",
+        "fe_label",
+        "variables",
+        "selection_rule",
+        "reason",
+        "performance_rank",
+        "performance_score",
+        "coef_R1xday",
+        "p_R1xday",
+        "coef_AMC",
+        "p_AMC",
+        "r2_model",
+        "max_vif_z",
+    }
+    missing = sorted(required_columns - set(df.columns))
+    if missing:
+        raise ValueError(f"selected models 文件缺少必要字段: {missing}")
+
+    selected_models: list[SelectedModel] = []
+    for _, row in df.iterrows():
+        variables = [item.strip() for item in str(row["variables"]).split(" | ") if item.strip()]
+        selected_models.append(
+            SelectedModel(
+                role_id=str(row["role_id"]),
+                role_label=str(row["role_label"]),
+                selection_rule=str(row.get("selection_rule", "external archive")),
+                reason=str(row.get("reason", "从外部模型归档直接读取。")),
+                model_id=str(row["model_id"]),
+                scheme_id=str(row["scheme_id"]),
+                scheme_source=str(row["scheme_source"]),
+                fe_label=str(row["fe_label"]),
+                variables=variables,
+                performance_rank=int(pd.to_numeric(row["performance_rank"], errors="coerce")),
+                performance_score=float(pd.to_numeric(row["performance_score"], errors="coerce")),
+                coef_R1xday=float(pd.to_numeric(row["coef_R1xday"], errors="coerce")),
+                p_R1xday=float(pd.to_numeric(row["p_R1xday"], errors="coerce")),
+                coef_AMC=float(pd.to_numeric(row["coef_AMC"], errors="coerce")),
+                p_AMC=float(pd.to_numeric(row["p_AMC"], errors="coerce")),
+                r2_model=float(pd.to_numeric(row["r2_model"], errors="coerce")),
+                max_vif_z=float(pd.to_numeric(row["max_vif_z"], errors="coerce")),
+            )
+        )
+    return selected_models
+
+
 def selected_models_to_frame(selected_models: list[SelectedModel]) -> pd.DataFrame:
     return pd.DataFrame(
         [
@@ -413,6 +469,192 @@ def selected_models_to_frame(selected_models: list[SelectedModel]) -> pd.DataFra
             for model in selected_models
         ]
     )
+
+
+def format_signed(value: object, digits: int = 3) -> str:
+    if value is None or pd.isna(value):
+        return "NA"
+    return f"{float(value):+.{digits}f}"
+
+
+def format_plain(value: object, digits: int = 3) -> str:
+    if value is None or pd.isna(value):
+        return "NA"
+    return f"{float(value):.{digits}f}"
+
+
+def clean_display_label(value: object) -> str:
+    return str(value).replace("\n", "").strip()
+
+
+def join_top_items(values: pd.Series, n: int = 3) -> str:
+    items = [clean_display_label(item) for item in values.tolist() if clean_display_label(item)]
+    return "、".join(items[:n]) if items else "NA"
+
+
+def get_scenario_value(model_rows: pd.DataFrame, scenario_id: str, column: str) -> float | None:
+    match = model_rows[model_rows["scenario_id"].eq(scenario_id)]
+    if match.empty:
+        return None
+    return float(match.iloc[0][column])
+
+
+def build_counterfactual_model_detail_df(
+    selected_models_df: pd.DataFrame,
+    national_overall_df: pd.DataFrame,
+    province_average_df: pd.DataFrame,
+    latest_year_df: pd.DataFrame,
+) -> pd.DataFrame:
+    detail_rows: list[dict[str, object]] = []
+
+    for _, row in selected_models_df.iterrows():
+        role_id = str(row["role_id"])
+        variables = [
+            clean_display_label(item)
+            for item in str(row["variables"]).split(" | ")
+            if clean_display_label(item)
+        ]
+        climate_vars = [item for item in variables if item in CLIMATE_VARS]
+        hydro_vars = [item for item in variables if item in HYDRO_VARS]
+        temp_vars = [item for item in variables if item in TEMPERATURE_VARS]
+
+        scenario_rows = national_overall_df[national_overall_df["role_id"].eq(role_id)].copy()
+        if scenario_rows.empty:
+            continue
+
+        strongest = scenario_rows.sort_values("actual_minus_counterfactual_mean", ascending=False).iloc[0]
+        weakest = scenario_rows.sort_values("actual_minus_counterfactual_mean", ascending=True).iloc[0]
+
+        province_avg_rows = province_average_df[
+            province_average_df["role_id"].eq(role_id) & province_average_df["scenario_id"].eq("all_climate_to_baseline")
+        ].copy()
+        latest_rows = latest_year_df[
+            latest_year_df["role_id"].eq(role_id) & latest_year_df["scenario_id"].eq("all_climate_to_baseline")
+        ].copy()
+
+        detail_rows.append(
+            {
+                "role_id": role_id,
+                "role_label": clean_display_label(row["role_label"]),
+                "model_id": row["model_id"],
+                "scheme_id": row["scheme_id"],
+                "scheme_source": row["scheme_source"],
+                "fe_label": row["fe_label"],
+                "variables": " | ".join(variables),
+                "variable_count": len(variables),
+                "climate_variable_count": len(climate_vars),
+                "temperature_proxy": temp_vars[0] if temp_vars else pd.NA,
+                "hydro_variables": " | ".join(hydro_vars) if hydro_vars else pd.NA,
+                "selection_rule": row["selection_rule"],
+                "reason": row["reason"],
+                "coef_R1xday": row["coef_R1xday"],
+                "p_R1xday": row["p_R1xday"],
+                "coef_AMC": row["coef_AMC"],
+                "p_AMC": row["p_AMC"],
+                "r2_model": row["r2_model"],
+                "max_vif_z": row["max_vif_z"],
+                "scenario_count": int(scenario_rows.shape[0]),
+                "positive_scenario_count": int((scenario_rows["actual_minus_counterfactual_mean"] > 0).sum()),
+                "all_climate_delta": get_scenario_value(
+                    scenario_rows,
+                    "all_climate_to_baseline",
+                    "actual_minus_counterfactual_mean",
+                ),
+                "r1xday_delta": get_scenario_value(
+                    scenario_rows,
+                    "r1xday_to_baseline",
+                    "actual_minus_counterfactual_mean",
+                ),
+                "temperature_delta": get_scenario_value(
+                    scenario_rows,
+                    "temperature_to_baseline",
+                    "actual_minus_counterfactual_mean",
+                ),
+                "joint_delta": get_scenario_value(
+                    scenario_rows,
+                    "r1xday_plus_temperature_to_baseline",
+                    "actual_minus_counterfactual_mean",
+                ),
+                "strongest_scenario": strongest["scenario_label"],
+                "strongest_scenario_delta": strongest["actual_minus_counterfactual_mean"],
+                "weakest_scenario": weakest["scenario_label"],
+                "weakest_scenario_delta": weakest["actual_minus_counterfactual_mean"],
+                "all_climate_avg_top_provinces": join_top_items(
+                    province_avg_rows.sort_values("actual_minus_counterfactual_mean", ascending=False)["Province"]
+                ),
+                "all_climate_avg_bottom_provinces": join_top_items(
+                    province_avg_rows.sort_values("actual_minus_counterfactual_mean", ascending=True)["Province"]
+                ),
+                "all_climate_latest_top_provinces": join_top_items(
+                    latest_rows.sort_values("actual_minus_counterfactual_mean", ascending=False)["Province"]
+                ),
+                "all_climate_latest_bottom_provinces": join_top_items(
+                    latest_rows.sort_values("actual_minus_counterfactual_mean", ascending=True)["Province"]
+                ),
+            }
+        )
+
+    return pd.DataFrame(detail_rows)
+
+
+def write_model_detail_notes(
+    output_dir: Path,
+    outcome_label: str,
+    baseline_years: Iterable[int],
+    model_detail_df: pd.DataFrame,
+) -> Path:
+    baseline_text = "、".join(str(year) for year in baseline_years)
+    lines = [
+        f"# {outcome_label} 12 模型逐一详细分析",
+        "",
+        f"当前说明基于基准期 {baseline_text} 的反事实推演结果生成。",
+        "这里不再只围绕 `main_model` 展开，而是对当前归档中的 12 个模型角色逐一说明变量结构、系数稳定性、情景响应和空间异质性。",
+        "",
+    ]
+
+    for _, row in model_detail_df.iterrows():
+        lines.extend(
+            [
+                f"## {row['role_label']}：{row['scheme_id']}",
+                "",
+                f"- 识别口径：`{row['fe_label']}`，来源为 `{row['scheme_source']}`。",
+                f"- 变量结构：`{row['variables']}`。温度代理为 `{row['temperature_proxy']}`；水文/降水变量为 `{row['hydro_variables']}`。",
+                (
+                    f"- 核心系数：`R1xday` = {format_plain(row['coef_R1xday'])} "
+                    f"(p={float(row['p_R1xday']):.4f})，`AMC` = {format_plain(row['coef_AMC'])} "
+                    f"(p={float(row['p_AMC']):.4f})；R² = {format_plain(row['r2_model'])}，"
+                    f"Max VIF(z) = {format_plain(row['max_vif_z'])}。"
+                ),
+                (
+                    f"- 情景响应：{int(row['positive_scenario_count'])}/{int(row['scenario_count'])} 个已生成情景为正差值。"
+                    f"最强的是“{row['strongest_scenario']}”({format_signed(row['strongest_scenario_delta'])})，"
+                    f"最弱的是“{row['weakest_scenario']}”({format_signed(row['weakest_scenario_delta'])})。"
+                ),
+                (
+                    f"- 三条主通道：所有气候变量恢复基准 {format_signed(row['all_climate_delta'])}；"
+                    f"仅 R1xday 恢复基准 {format_signed(row['r1xday_delta'])}；"
+                    f"仅温度变量恢复基准 {format_signed(row['temperature_delta'])}；"
+                    f"R1xday+温度联合情景 {format_signed(row['joint_delta'])}。"
+                ),
+                (
+                    f"- 省级格局：在“所有气候变量恢复基准”情景下，长期平均正差值较高的省份主要是 "
+                    f"{row['all_climate_avg_top_provinces']}，长期平均负差值较高的省份主要是 "
+                    f"{row['all_climate_avg_bottom_provinces']}；最新年份正差值较高的省份主要是 "
+                    f"{row['all_climate_latest_top_provinces']}，最新年份负差值较高的省份主要是 "
+                    f"{row['all_climate_latest_bottom_provinces']}。"
+                ),
+                (
+                    "- 写作提示：如果该模型的“所有气候变量恢复基准”和“仅 R1xday 恢复基准”同向为正，"
+                    "可将其表述为 climate-related burden 与极端降雨通道共同得到支持；"
+                    "如果温度单独情景方向偏弱或为负，则应明确说明其对温度代理更敏感。"
+                ),
+                "",
+            ]
+        )
+
+    output_path = output_dir / "model_role_detailed_analysis.md"
+    output_path.write_text("\n".join(lines), encoding="utf-8")
+    return output_path
 
 
 def ensure_geojson() -> Path:
@@ -665,36 +907,63 @@ def summarize_counterfactual(panel_results: pd.DataFrame, target_year: int) -> d
     }
 
 
+def plot_national_yearly_by_model(
+    national_yearly_df: pd.DataFrame,
+    target_dir: Path,
+    selected_models_df: pd.DataFrame | None = None,
+) -> dict[str, Path]:
+    role_order = (
+        selected_models_df["role_id"].dropna().astype(str).tolist()
+        if selected_models_df is not None
+        else national_yearly_df["role_id"].dropna().astype(str).drop_duplicates().tolist()
+    )
+    output_paths: dict[str, Path] = {}
+
+    for role_id in role_order:
+        plot_df = national_yearly_df[national_yearly_df["role_id"].eq(role_id)].copy()
+        if plot_df.empty:
+            continue
+
+        scenario_order = plot_df["scenario_label"].drop_duplicates().tolist()
+        role_label = str(plot_df["role_label"].iloc[0])
+        scheme_id = str(plot_df["scheme_id"].iloc[0])
+
+        fig, axes = plt.subplots(len(scenario_order), 1, figsize=(11, 3.5 * len(scenario_order)), sharex=True)
+        if len(scenario_order) == 1:
+            axes = [axes]
+
+        for ax, scenario_label in zip(axes, scenario_order):
+            sub = plot_df[plot_df["scenario_label"].eq(scenario_label)].sort_values("Year")
+            ax.plot(sub["Year"], sub["actual_pred_mean"], marker="o", linewidth=2.2, label="实际情景预测值")
+            ax.plot(sub["Year"], sub["counterfactual_pred_mean"], marker="s", linewidth=2.2, label="反事实情景预测值")
+            ax.fill_between(
+                sub["Year"],
+                sub["counterfactual_pred_mean"],
+                sub["actual_pred_mean"],
+                color="#D1495B",
+                alpha=0.18,
+            )
+            ax.set_title(scenario_label)
+            ax.set_ylabel("Predicted AMR")
+            ax.legend(loc="best")
+
+        axes[-1].set_xlabel("Year")
+        fig.suptitle(f"{role_label}（{scheme_id}）全国年度实际情景与反事实情景对比", fontsize=14, y=1.02)
+        fig.tight_layout()
+        output_path = target_dir / f"national_yearly_{role_id}.png"
+        fig.savefig(output_path, dpi=240, bbox_inches="tight")
+        plt.close(fig)
+        output_paths[role_id] = output_path
+
+    return output_paths
+
+
 def plot_national_yearly_main_model(national_yearly_df: pd.DataFrame, target_dir: Path) -> Path:
-    plot_df = national_yearly_df[national_yearly_df["role_id"].eq("main_model")].copy()
-    scenario_order = plot_df["scenario_label"].drop_duplicates().tolist()
-
-    fig, axes = plt.subplots(len(scenario_order), 1, figsize=(11, 3.5 * len(scenario_order)), sharex=True)
-    if len(scenario_order) == 1:
-        axes = [axes]
-
-    for ax, scenario_label in zip(axes, scenario_order):
-        sub = plot_df[plot_df["scenario_label"].eq(scenario_label)].sort_values("Year")
-        ax.plot(sub["Year"], sub["actual_pred_mean"], marker="o", linewidth=2.2, label="实际情景预测值")
-        ax.plot(sub["Year"], sub["counterfactual_pred_mean"], marker="s", linewidth=2.2, label="反事实情景预测值")
-        ax.fill_between(
-            sub["Year"],
-            sub["counterfactual_pred_mean"],
-            sub["actual_pred_mean"],
-            color="#D1495B",
-            alpha=0.18,
-        )
-        ax.set_title(scenario_label)
-        ax.set_ylabel("Predicted AMR")
-        ax.legend(loc="best")
-
-    axes[-1].set_xlabel("Year")
-    fig.suptitle("主模型下全国年度实际情景与反事实情景对比", fontsize=14, y=1.02)
-    fig.tight_layout()
-    output_path = target_dir / "national_yearly_main_model.png"
-    fig.savefig(output_path, dpi=240, bbox_inches="tight")
-    plt.close(fig)
-    return output_path
+    paths = plot_national_yearly_by_model(national_yearly_df, target_dir)
+    main_path = paths.get("main_model")
+    if main_path is None:
+        raise RuntimeError("未找到 main_model 的全国年度图。")
+    return main_path
 
 
 def plot_model_comparison_heatmap(national_yearly_df: pd.DataFrame, target_year: int, target_dir: Path) -> Path:
@@ -748,59 +1017,83 @@ def iter_feature_patches(geometry: dict) -> list[Polygon]:
     return patches
 
 
-def plot_province_map(latest_year_df: pd.DataFrame, target_year: int, target_dir: Path) -> Path:
+def plot_province_maps_by_model(
+    latest_year_df: pd.DataFrame,
+    target_year: int,
+    target_dir: Path,
+    selected_models_df: pd.DataFrame | None = None,
+) -> dict[str, Path]:
     geojson_path = ensure_geojson()
     geo = json.loads(geojson_path.read_text(encoding="utf-8"))
-
-    plot_df = latest_year_df[
-        latest_year_df["role_id"].eq("main_model") & latest_year_df["scenario_id"].eq("all_climate_to_baseline")
-    ].copy()
-    if plot_df.empty:
-        raise RuntimeError("主模型缺少“所有气候变量恢复基准”情景，无法生成省级地图。")
-
-    plot_df["geo_name"] = plot_df["Province"].map(normalize_geo_name)
-    value_map = plot_df.set_index("geo_name")["actual_minus_counterfactual_mean"].to_dict()
-
-    patches: list[Polygon] = []
-    values: list[float] = []
-    for feature in geo["features"]:
-        geo_name = normalize_geo_name(feature.get("properties", {}).get("name", ""))
-        if geo_name == "南海诸岛":
-            continue
-        feature_patches = iter_feature_patches(feature["geometry"])
-        if not feature_patches:
-            continue
-        value = value_map.get(geo_name, np.nan)
-        patches.extend(feature_patches)
-        values.extend([value] * len(feature_patches))
-
-    values_arr = np.asarray(values, dtype=float)
-    finite = values_arr[np.isfinite(values_arr)]
-    vmax = float(np.nanmax(np.abs(finite))) if len(finite) else 1.0
-    vmax = max(vmax, 1e-6)
-    norm = TwoSlopeNorm(vmin=-vmax, vcenter=0.0, vmax=vmax)
-
-    fig, ax = plt.subplots(figsize=(11, 8))
-    collection = PatchCollection(
-        patches,
-        array=np.ma.masked_invalid(values_arr),
-        cmap="RdBu_r",
-        edgecolor="white",
-        linewidth=0.45,
-        norm=norm,
+    role_order = (
+        selected_models_df["role_id"].dropna().astype(str).tolist()
+        if selected_models_df is not None
+        else latest_year_df["role_id"].dropna().astype(str).drop_duplicates().tolist()
     )
-    ax.add_collection(collection)
-    ax.autoscale_view()
-    ax.set_aspect("equal")
-    ax.axis("off")
-    ax.set_title(f"{target_year} 年主模型下“所有气候变量恢复基准”情景的分省差值地图")
-    cbar = fig.colorbar(collection, ax=ax, shrink=0.75, pad=0.02)
-    cbar.set_label("Actual - Counterfactual")
-    fig.tight_layout()
-    output_path = target_dir / "province_map_main_model_latest_year.png"
-    fig.savefig(output_path, dpi=240, bbox_inches="tight")
-    plt.close(fig)
-    return output_path
+    output_paths: dict[str, Path] = {}
+
+    for role_id in role_order:
+        plot_df = latest_year_df[
+            latest_year_df["role_id"].eq(role_id) & latest_year_df["scenario_id"].eq("all_climate_to_baseline")
+        ].copy()
+        if plot_df.empty:
+            continue
+
+        role_label = str(plot_df["role_label"].iloc[0])
+        scheme_id = str(plot_df["scheme_id"].iloc[0])
+        plot_df["geo_name"] = plot_df["Province"].map(normalize_geo_name)
+        value_map = plot_df.set_index("geo_name")["actual_minus_counterfactual_mean"].to_dict()
+
+        patches: list[Polygon] = []
+        values: list[float] = []
+        for feature in geo["features"]:
+            geo_name = normalize_geo_name(feature.get("properties", {}).get("name", ""))
+            if geo_name == "南海诸岛":
+                continue
+            feature_patches = iter_feature_patches(feature["geometry"])
+            if not feature_patches:
+                continue
+            value = value_map.get(geo_name, np.nan)
+            patches.extend(feature_patches)
+            values.extend([value] * len(feature_patches))
+
+        values_arr = np.asarray(values, dtype=float)
+        finite = values_arr[np.isfinite(values_arr)]
+        vmax = float(np.nanmax(np.abs(finite))) if len(finite) else 1.0
+        vmax = max(vmax, 1e-6)
+        norm = TwoSlopeNorm(vmin=-vmax, vcenter=0.0, vmax=vmax)
+
+        fig, ax = plt.subplots(figsize=(11, 8))
+        collection = PatchCollection(
+            patches,
+            array=np.ma.masked_invalid(values_arr),
+            cmap="RdBu_r",
+            edgecolor="white",
+            linewidth=0.45,
+            norm=norm,
+        )
+        ax.add_collection(collection)
+        ax.autoscale_view()
+        ax.set_aspect("equal")
+        ax.axis("off")
+        ax.set_title(f"{target_year} 年{role_label}（{scheme_id}）在“所有气候变量恢复基准”情景下的分省差值地图")
+        cbar = fig.colorbar(collection, ax=ax, shrink=0.75, pad=0.02)
+        cbar.set_label("Actual - Counterfactual")
+        fig.tight_layout()
+        output_path = target_dir / f"province_map_{role_id}_latest_year.png"
+        fig.savefig(output_path, dpi=240, bbox_inches="tight")
+        plt.close(fig)
+        output_paths[role_id] = output_path
+
+    return output_paths
+
+
+def plot_province_map(latest_year_df: pd.DataFrame, target_year: int, target_dir: Path) -> Path:
+    paths = plot_province_maps_by_model(latest_year_df, target_year, target_dir)
+    main_path = paths.get("main_model")
+    if main_path is None:
+        raise RuntimeError("未找到 main_model 的省级地图。")
+    return main_path
 
 
 def write_notes(
@@ -814,11 +1107,39 @@ def write_notes(
 ) -> Path:
     baseline_text = "、".join(str(year) for year in baseline_years)
     fe_main = fe_compare_df.iloc[0]
-    main_model = selected_models_df[selected_models_df["role_id"].eq("main_model")].iloc[0]
-    strict_model = selected_models_df[selected_models_df["role_id"].eq("robust_strict_fe")].iloc[0]
+    main_pool = selected_models_df[selected_models_df["role_id"].eq("main_model")]
+    main_model = main_pool.iloc[0] if not main_pool.empty else selected_models_df.iloc[0]
+    strict_pool = selected_models_df[selected_models_df["fe_label"].eq("Province: Yes / Year: Yes")]
     top_rows = national_overall_df[
         ["role_label", "scheme_id", "scenario_label", "actual_minus_counterfactual_mean", "relative_change_pct_mean"]
     ].sort_values(["scenario_label", "role_label"])
+    selected_count = int(selected_models_df.shape[0])
+    year_fe_count = int(selected_models_df["fe_label"].eq(fe_main["fe_label"]).sum())
+    legacy_role_ids = {"main_model", "robust_low_vif", "robust_systematic", "robust_systematic_2"}
+    legacy_count = int(selected_models_df["role_id"].isin(legacy_role_ids).sum())
+    strict_count = int(selected_count - legacy_count)
+    scenario_positive = (
+        national_overall_df.groupby("scenario_label")["actual_minus_counterfactual_mean"]
+        .apply(lambda s: int((s > 0).sum()))
+        .to_dict()
+    )
+
+    archived_model_lines = []
+    for _, row in selected_models_df.iterrows():
+        archived_model_lines.append(
+            (
+                f"- {row['role_label']}：`{row['scheme_id']}` + `{row['fe_label']}`；"
+                f" R1xday={row['coef_R1xday']:.3f} (p={row['p_R1xday']:.4f})，"
+                f" AMC={row['coef_AMC']:.3f} (p={row['p_AMC']:.4f})，"
+                f" R²={row['r2_model']:.3f}。"
+            )
+        )
+
+    strict_text = (
+        f"- 更严格 FE 的保守口径仍保留在归档中，共 {strict_pool.shape[0]} 个双向 FE 模型。"
+        if not strict_pool.empty
+        else "- 当前归档全部来自 Year FE，因此结果更适合比较同一识别口径下的变量组合差异。"
+    )
 
     lines = [
         f"# {outcome_label} 反事实推演说明",
@@ -840,19 +1161,131 @@ def write_notes(
         f"- `R1xday` 在该 FE 设定下为正的模型占比 {fe_main['share_r1xday_positive']:.1%}，显著比例为 {fe_main['share_r1xday_sig_005']:.1%}；`AMC` 为正的模型占比 {fe_main['share_amc_positive']:.1%}。",
         "- 与之相对，双向 FE 更适合作为保守下界检验，因为它显著压缩了气候主效应。",
         "",
-        "## 入选模型",
+        "## 入选模型归档",
         "",
-        f"- 主模型：`{main_model['scheme_id']}` + `{main_model['fe_label']}`。原因是理论叙事最完整，且 `R1xday` 与 `AMC` 同时为正且达到 0.05 显著。",
-        f"- 稳健性模型 1：`{selected_models_df.loc[selected_models_df['role_id'].eq('robust_low_vif'), 'scheme_id'].iloc[0]}` + Year FE，用于检验低共线性口径。",
-        f"- 稳健性模型 2：`{selected_models_df.loc[selected_models_df['role_id'].eq('robust_systematic'), 'scheme_id'].iloc[0]}` + Year FE，用于检验结论能否在系统穷举高分模型中复现。",
-        f"- 稳健性模型 3：`{strict_model['scheme_id']}` + `{strict_model['fe_label']}`，用于给出严格 FE 下的保守下界。",
+        f"- 当前反事实页直接承接 12 模型归档：手选 Year FE 4 模型 + 严筛扩展 8 模型；其中主模型是 `{main_model['scheme_id']}` + `{main_model['fe_label']}`。",
+        f"- 当前归档里原始主线角色有 {legacy_count} 个，严筛扩展角色有 {strict_count} 个；其中 {year_fe_count}/{selected_count} 个与主推 FE 口径一致，可直接比较同一 FE 下变量组合的稳健性。",
+        strict_text,
+        *archived_model_lines,
         "",
         "## 当前结果解释时建议强调",
         "",
         f"- 基准期默认设为 {baseline_text}；脚本会把每个省的气候变量恢复到该基准期的省内水平。",
         "- `actual_minus_counterfactual > 0` 表示：相对于“气候恢复基准”的世界，实际气候轨迹对应更高的预测 AMR。",
         "- 由于 `AMR_AGG_z` 是标准化综合指标，百分比变化仅作辅助展示；正文请优先解释绝对差值与方向一致性。",
-        "- 如果 Year FE 下多数情景都给出正的 national average difference，而双向 FE 明显收缩，则可写成“反事实量化支持 climate-related burden 的存在，但其幅度对 FE 设定敏感”。",
+        f"- “所有气候变量恢复基准”情景下有 {scenario_positive.get('所有气候变量恢复基准', 0)}/{selected_count} 个模型给出正差值；“仅 R1xday 恢复基准”情景下对应为 {scenario_positive.get('仅 R1xday 恢复基准', 0)}/{selected_count}。",
+        "- 如果多数归档模型都给出正的 national average difference，则可写成“反事实量化支持 climate-related burden 的存在”；若温度单独情景波动更大，则应强调其对代理变量更敏感。",
+        "",
+        "## 全国平均结果快照",
+        "",
+        top_rows.to_markdown(index=False),
+        "",
+    ]
+
+    output_path = output_dir / "selection_and_writeup_notes.md"
+    output_path.write_text("\n".join(lines), encoding="utf-8")
+    return output_path
+
+
+def write_notes_current(
+    output_dir: Path,
+    outcome_label: str,
+    baseline_years: Iterable[int],
+    fe_compare_df: pd.DataFrame,
+    selected_models_df: pd.DataFrame,
+    national_overall_df: pd.DataFrame,
+    model_detail_df: pd.DataFrame,
+) -> Path:
+    baseline_text = "、".join(str(year) for year in baseline_years)
+    fe_main = fe_compare_df.iloc[0]
+    main_pool = selected_models_df[selected_models_df["role_id"].eq("main_model")]
+    main_model = main_pool.iloc[0] if not main_pool.empty else selected_models_df.iloc[0]
+    strict_pool = selected_models_df[selected_models_df["fe_label"].eq("Province: Yes / Year: Yes")]
+    selected_count = int(selected_models_df.shape[0])
+    year_fe_count = int(selected_models_df["fe_label"].eq(fe_main["fe_label"]).sum())
+    legacy_role_ids = {"main_model", "robust_low_vif", "robust_systematic", "robust_systematic_2"}
+    legacy_count = int(selected_models_df["role_id"].isin(legacy_role_ids).sum())
+    strict_count = int(selected_count - legacy_count)
+    scenario_positive = (
+        national_overall_df.groupby("scenario_label")["actual_minus_counterfactual_mean"]
+        .apply(lambda s: int((s > 0).sum()))
+        .to_dict()
+    )
+    archived_model_lines = [
+        (
+            f"- {row['role_label']}：`{row['scheme_id']}` + `{row['fe_label']}`；"
+            f" R1xday={row['coef_R1xday']:.3f} (p={row['p_R1xday']:.4f})；"
+            f" AMC={row['coef_AMC']:.3f} (p={row['p_AMC']:.4f})；"
+            f" R²={row['r2_model']:.3f}。"
+        )
+        for _, row in selected_models_df.iterrows()
+    ]
+    strict_text = (
+        f"- 更严格 FE 的保守口径仍保留在归档中，共 {strict_pool.shape[0]} 个双向 FE 模型。"
+        if not strict_pool.empty
+        else "- 当前归档全部来自 Year FE，因此结果更适合比较同一识别口径下的变量组合差异。"
+    )
+    key_summary = (
+        model_detail_df[
+            [
+                "role_label",
+                "scheme_id",
+                "all_climate_delta",
+                "r1xday_delta",
+                "temperature_delta",
+                "strongest_scenario",
+                "strongest_scenario_delta",
+            ]
+        ]
+        .rename(
+            columns={
+                "role_label": "模型",
+                "scheme_id": "方案",
+                "all_climate_delta": "所有气候变量恢复基准",
+                "r1xday_delta": "仅R1xday恢复基准",
+                "temperature_delta": "仅温度恢复基准",
+                "strongest_scenario": "模型内最强情景",
+                "strongest_scenario_delta": "最强情景差值",
+            }
+        )
+        .to_markdown(index=False)
+    )
+    top_rows = national_overall_df[
+        ["role_label", "scheme_id", "scenario_label", "actual_minus_counterfactual_mean", "relative_change_pct_mean"]
+    ].sort_values(["scenario_label", "role_label"])
+
+    lines = [
+        f"# {outcome_label} 反事实推演说明",
+        "",
+        "## 与前文的衔接",
+        "",
+        "本节不是重新建立新的普通多元线性回归，而是在既有固定效应候选模型库上先做筛选，再对入选 FE 模型开展 counterfactual simulation。",
+        "写作上可自然承接前文“单因素筛选 -> 固定效应主分析 -> 贝叶斯桥接验证”的主线。",
+        "",
+        "## 为什么当前采用 12 模型口径",
+        "",
+        f"- 当前反事实页直接承接 12 模型归档：原始主线 4 模型 + 严筛扩展 8 模型；其中正文主模型是 `{main_model['scheme_id']}` + `{main_model['fe_label']}`。",
+        f"- 当前归档里原始主线角色有 {legacy_count} 个，严筛扩展角色有 {strict_count} 个；其中 {year_fe_count}/{selected_count} 个与主推 FE 口径一致，可直接比较同一 FE 下变量组合的稳健性。",
+        f"- 当前全库结果里，`{fe_main['fe_label']}` 的 top-10 平均综合分最高（{fe_main['top10_mean_score']:.3f}），因此 `Year FE only` 仍是主推入口。",
+        strict_text,
+        *archived_model_lines,
+        "",
+        "## 结果解释时建议强调",
+        "",
+        f"- 基准期默认设为 {baseline_text}；脚本会把每个省的气候变量恢复到该基准期的省内均值。",
+        "- `actual_minus_counterfactual > 0` 表示：相对于“气候恢复基准”的世界，实际气候轨迹对应更高的预测 AMR。",
+        "- 由于 `AMR_AGG_z` 是标准化综合指标，百分比变化仅作辅助展示；正文应优先解释绝对差值与方向一致性。",
+        f"- “所有气候变量恢复基准”情景下有 {scenario_positive.get('所有气候变量恢复基准', 0)}/{selected_count} 个模型给出正差值；“仅 R1xday 恢复基准”情景下对应有 {scenario_positive.get('仅 R1xday 恢复基准', 0)}/{selected_count}。",
+        "- 如果大多数归档模型都给出正的 national average difference，可写成“反事实量化支持 climate-related burden 的存在”；若温度单独情景波动更大，则应强调其对温度代理更敏感。",
+        "",
+        "## 逐模型详细分析怎么读",
+        "",
+        "- 当前 12 个模型的逐一详细分析已写入 `model_role_detailed_analysis.md`，每个模型都单独说明变量结构、核心系数、最强/最弱情景以及长期与最新年份的省级格局。",
+        "- 反事实网页 `counterfactual_results_dashboard.html` 的“单模型聚焦分析”部分也支持逐个角色切换，不再只局限于 `main_model`。",
+        "",
+        "## 12 模型关键摘要表",
+        "",
+        key_summary,
         "",
         "## 全国平均结果快照",
         "",
@@ -870,6 +1303,7 @@ def save_outputs(
     fe_compare_df: pd.DataFrame,
     bayes_variant_summary_df: pd.DataFrame,
     selected_models_df: pd.DataFrame,
+    selected_models_source_path: Path | None,
     ranking_df: pd.DataFrame,
     panel_results_df: pd.DataFrame,
     summary_tables: dict[str, pd.DataFrame],
@@ -882,6 +1316,12 @@ def save_outputs(
     fe_compare_df.to_csv(screening_dir / "fe_spec_comparison.csv", index=False, encoding="utf-8-sig")
     bayes_variant_summary_df.to_csv(screening_dir / "bayes_variant_summary.csv", index=False, encoding="utf-8-sig")
     selected_models_df.to_csv(screening_dir / "selected_models.csv", index=False, encoding="utf-8-sig")
+    if selected_models_source_path and selected_models_source_path.exists():
+        pd.read_csv(selected_models_source_path).to_csv(
+            screening_dir / "selected_models_source_snapshot.csv",
+            index=False,
+            encoding="utf-8-sig",
+        )
     ranking_df.head(20).to_csv(screening_dir / "top20_ranking_snapshot.csv", index=False, encoding="utf-8-sig")
     panel_results_df.to_csv(counterfactual_dir / "counterfactual_panel_predictions.csv", index=False, encoding="utf-8-sig")
 
@@ -889,11 +1329,36 @@ def save_outputs(
         table.to_csv(counterfactual_dir / f"{name}.csv", index=False, encoding="utf-8-sig")
 
 
+def save_outputs_current(
+    output_dir: Path,
+    fe_compare_df: pd.DataFrame,
+    bayes_variant_summary_df: pd.DataFrame,
+    selected_models_df: pd.DataFrame,
+    model_detail_df: pd.DataFrame,
+    selected_models_source_path: Path | None,
+    ranking_df: pd.DataFrame,
+    panel_results_df: pd.DataFrame,
+    summary_tables: dict[str, pd.DataFrame],
+) -> None:
+    save_outputs(
+        output_dir=output_dir,
+        fe_compare_df=fe_compare_df,
+        bayes_variant_summary_df=bayes_variant_summary_df,
+        selected_models_df=selected_models_df,
+        selected_models_source_path=selected_models_source_path,
+        ranking_df=ranking_df,
+        panel_results_df=panel_results_df,
+        summary_tables=summary_tables,
+    )
+    model_detail_df.to_csv(output_dir / "model_role_detail_summary.csv", index=False, encoding="utf-8-sig")
+
+
 def run_analysis(
     outcome: str,
     single_outcome_scale: str,
     baseline_years: list[int],
     target_year: int,
+    selected_models_file: Path | None,
 ) -> dict[str, Path]:
     base_df = load_base_frame()
     outcome_series, outcome_meta = build_outcome_series(base_df, outcome, single_outcome_scale)
@@ -902,7 +1367,11 @@ def run_analysis(
     fe_compare_df = compare_fe_specs(results["summary"])
     bayes_variant_summary_df = summarize_bayes_bridge(results["bayes_bridge"])
     primary_fe_label = pick_primary_fe(fe_compare_df)
-    selected_models = build_selected_models(results["summary"], results["bayes_candidates"], primary_fe_label)
+    selected_models = (
+        build_selected_models_from_file(selected_models_file)
+        if selected_models_file
+        else build_selected_models(results["summary"], results["bayes_candidates"], primary_fe_label)
+    )
     selected_models_df = selected_models_to_frame(selected_models)
 
     outcome_dir = RESULT_ROOT / outcome
@@ -917,29 +1386,54 @@ def run_analysis(
 
     panel_results_df = pd.concat(panel_results, axis=0, ignore_index=True)
     summary_tables = summarize_counterfactual(panel_results_df, target_year=target_year)
+    model_detail_df = build_counterfactual_model_detail_df(
+        selected_models_df=selected_models_df,
+        national_overall_df=summary_tables["national_overall"],
+        province_average_df=summary_tables["province_average"],
+        latest_year_df=summary_tables["latest_year_province"],
+    )
 
-    save_outputs(
+    save_outputs_current(
         output_dir=outcome_dir,
         fe_compare_df=fe_compare_df,
         bayes_variant_summary_df=bayes_variant_summary_df,
         selected_models_df=selected_models_df,
+        model_detail_df=model_detail_df,
+        selected_models_source_path=selected_models_file,
         ranking_df=results["ranking"],
         panel_results_df=panel_results_df,
         summary_tables=summary_tables,
     )
 
-    national_plot = plot_national_yearly_main_model(summary_tables["national_yearly"], figure_dir)
+    national_plot_paths = plot_national_yearly_by_model(
+        summary_tables["national_yearly"],
+        figure_dir,
+        selected_models_df=selected_models_df,
+    )
+    national_plot = national_plot_paths.get("main_model")
     model_heatmap = plot_model_comparison_heatmap(summary_tables["national_yearly"], target_year, figure_dir)
     scenario_plot = plot_scenario_comparison_bar(summary_tables["national_overall"], figure_dir)
-    province_map = plot_province_map(summary_tables["latest_year_province"], target_year, figure_dir)
-    notes_path = write_notes(
+    province_map_paths = plot_province_maps_by_model(
+        summary_tables["latest_year_province"],
+        target_year,
+        figure_dir,
+        selected_models_df=selected_models_df,
+    )
+    province_map = province_map_paths.get("main_model")
+    notes_path = write_notes_current(
         output_dir=outcome_dir,
         outcome_label=outcome_meta["outcome_label"],
         baseline_years=baseline_years,
         fe_compare_df=fe_compare_df,
-        bayes_variant_summary_df=bayes_variant_summary_df,
         selected_models_df=selected_models_df,
         national_overall_df=summary_tables["national_overall"],
+        model_detail_df=model_detail_df,
+    )
+    detail_notes_path = write_model_detail_notes(
+        output_dir=outcome_dir,
+        outcome_label=outcome_meta["outcome_label"],
+        baseline_years=baseline_years,
+        model_detail_df=model_detail_df,
     )
 
     metadata = {
@@ -949,14 +1443,43 @@ def run_analysis(
         "baseline_years": baseline_years,
         "target_year": target_year,
         "primary_fe_label": primary_fe_label,
+        "selected_models_source": str(selected_models_file) if selected_models_file else "built_in_selection",
         "selected_models": selected_models_df.to_dict(orient="records"),
         "figures": {
-            "national_yearly_main_model": str(national_plot),
+            "national_yearly_main_model": str(national_plot) if national_plot else None,
             "model_comparison_heatmap_latest_year": str(model_heatmap),
             "scenario_comparison_bar": str(scenario_plot),
-            "province_map_main_model_latest_year": str(province_map),
+            "province_map_main_model_latest_year": str(province_map) if province_map else None,
+            "national_yearly_by_role": {
+                role_id: str(path) for role_id, path in national_plot_paths.items()
+            },
+            "province_map_latest_year_by_role": {
+                role_id: str(path) for role_id, path in province_map_paths.items()
+            },
         },
+        "model_figure_catalog": [
+            {
+                "role_id": str(row["role_id"]),
+                "model_id": str(row["model_id"]),
+                "role_label": str(row["role_label"]),
+                "national_yearly": (
+                    str(national_plot_paths[str(row["role_id"])])
+                    if str(row["role_id"]) in national_plot_paths
+                    else None
+                ),
+                "province_map_latest_year": (
+                    str(province_map_paths[str(row["role_id"])])
+                    if str(row["role_id"]) in province_map_paths
+                    else None
+                ),
+                "province_map_scenario_id": "all_climate_to_baseline",
+                "province_map_scenario_label": "所有气候变量恢复基准",
+            }
+            for _, row in selected_models_df.iterrows()
+        ],
         "notes": str(notes_path),
+        "model_role_detail_notes": str(detail_notes_path),
+        "model_role_detail_summary": str(outcome_dir / "model_role_detail_summary.csv"),
     }
     metadata_path = outcome_dir / "run_metadata.json"
     metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -966,10 +1489,13 @@ def run_analysis(
         "figure_dir": figure_dir,
         "metadata_path": metadata_path,
         "notes_path": notes_path,
+        "detail_notes_path": detail_notes_path,
         "national_plot": national_plot,
+        "national_plot_paths": national_plot_paths,
         "model_heatmap": model_heatmap,
         "scenario_plot": scenario_plot,
         "province_map": province_map,
+        "province_map_paths": province_map_paths,
     }
 
 
@@ -989,6 +1515,12 @@ def parse_args() -> argparse.Namespace:
         default=2023,
         help="分省地图与模型比较图默认展示的目标年份。",
     )
+    parser.add_argument(
+        "--selected-models-file",
+        type=Path,
+        default=MODEL_ARCHIVE_PATH,
+        help="可选：直接读取已归档的 selected models CSV；默认使用 12 模型归档。",
+    )
     return parser.parse_args()
 
 
@@ -999,6 +1531,7 @@ def main() -> None:
         single_outcome_scale=args.single_outcome_scale,
         baseline_years=args.baseline_years,
         target_year=args.target_year,
+        selected_models_file=args.selected_models_file,
     )
     print(f"[done] outcome_dir={outputs['outcome_dir']}")
     print(f"[done] metadata={outputs['metadata_path']}")

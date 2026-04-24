@@ -7,10 +7,18 @@
   "start_year": 2024,
   "end_year": 2050,
   "selected_roles": [
-    "main_model",
-    "robust_low_vif",
+    "strict_main_model",
+    "strict_top_02",
+    "strict_top_03",
+    "strict_top_04",
+    "strict_top_05",
+    "strict_top_06",
+    "strict_top_07",
+    "strict_top_08",
     "robust_systematic",
-    "robust_strict_fe"
+    "robust_systematic_2",
+    "robust_low_vif",
+    "main_model"
   ],
   "model_source_outcome": "AMR_AGG",
   "scenario_ids": [
@@ -41,6 +49,8 @@
     "projection_panel": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\projection_outputs\\future_scenario_projection_panel.csv",
     "baseline_method_snapshot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\model_screening\\baseline_method_snapshot.csv",
     "notes": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\projection_notes.md",
+    "model_role_detail_summary": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\model_role_detail_summary.csv",
+    "model_role_detail_notes": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\model_role_detailed_analysis.md",
     "national_plot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\figures\\national_yearly_main_model.png",
     "delta_plot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\figures\\scenario_delta_2050_main_model.png",
     "figure5_style_main": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\figures\\figure5_style_main.png",

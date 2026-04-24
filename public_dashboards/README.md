@@ -19,7 +19,8 @@ public_dashboards/
   future-scenario-analysis/
   bayes-analysis/
   counterfactual-amr-agg/
-  releases/20260422-232841/
+  variable-group-deep-dive/
+  releases/20260423-145837/
 ```
 
 ## 维护命令
@@ -48,8 +49,9 @@ python -X utf8 tools/deploy_public_dashboards.py --retain-releases 12
 - legacy-exhaustive-20260419 builder：`tools/build_results_dashboard.py`
 - legacy-12models builder：`2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py`
 - future-scenario-analysis builder：`tools/build_future_scenario_dashboard_report.py`
-- bayes-analysis builder：`tools/build_bayes_analysis_dashboard.py`
+- bayes-analysis builder：`tools/build_bayes_analysis_dashboard_v2.py`
 - counterfactual-amr-agg builder：`5 反事实推演/build_counterfactual_dashboard.py`
+- variable-group-deep-dive builder：`tools/build_variable_group_deep_dive_dashboard.py`
 
 ## GitHub Pages
 

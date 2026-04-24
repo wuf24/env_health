@@ -1,122 +1,198 @@
 # 5 反事实推演
 
-新增论文格式方法小结：
+新增方法说明见：
+
 - [论文格式方法小结.md](</e:/MALA/Code_health/5 反事实推演/论文格式方法小结.md>)
 
-这一部分不是重新从头建立一个普通多元线性回归，而是站在你已经完成的三条主线上继续往前走：
+这个目录不是重新从头拟合一个普通多元回归，而是在固定效应主筛选已经完成后，继续回答：
 
-1. `1 单因素分析/` 已经完成变量筛选与关系摸底。
-2. `2 固定效应模型/` 已经完成多组候选模型、三类 FE 设定和系统穷举。
-3. `4 贝叶斯分析/` 已经对重点候选模型做了 year-only / province-only / province+year 的桥接验证。
+- 如果把气候变量恢复到基准状态，预测的 AMR 会怎样变化？
+- 这种变化在不同模型角色之间是否一致？
+- 哪些结果是“方向稳定”的，哪些对模型设定更敏感？
 
-因此这里的正确入口是：
+## 这个目录在整条链里的位置
 
-- 先比较既有 FE 候选模型，而不是重建普通回归。
-- 再从中筛出主模型和稳健性模型。
-- 最后基于这些已筛出的 FE 模型做 counterfactual simulation。
+它承接的是前三层工作：
 
-## 文献借鉴的分工
+1. `1 单因素分析/`
+   - 已完成变量摸底和展示。
+2. `2 固定效应模型/`
+   - 已完成 FE 比较、系统穷举、strict top-8 和统一 `12` 模型归档。
+3. `4 贝叶斯分析/`
+   - 已对重点候选模型做 Year-only / Province-only / Province+year 的桥接检验。
 
-- Lancet Planetary Health 2023
-  你给的 Lancet 链接对应的是 2023 年发表的全球 PM2.5 与临床耐药分析。我这里只借它的环境-AMR 主分析框架、控制变量组织方式和结果表风格，不照搬全球模型。
-- Nature Medicine 2025
-  借它“单因素筛选 → 多因素整合 → 扩展分析/情景预测”的衔接逻辑，并用现有贝叶斯结果作为 FE 选模后的桥接证据。
-- Nature 2023
-  借它“先确定主模型，再拿 benchmark 状态与 observed state 做 counterfactual comparison”的思路；这里的 benchmark 改写为省级气候变量在基准年份或基准期的水平。
+因此，这里正确的工作方式是：
 
-## 当前脚本做了什么
+- 先读取已有 FE 模型归档；
+- 再在同一套模型之上做 observed vs counterfactual 对照；
+- 而不是重新回到“从头选变量”的阶段。
 
-脚本入口：
+## 当前默认口径
+
+### 脚本入口
 
 ```bash
 python -X utf8 "5 反事实推演/run_counterfactual_analysis.py"
 ```
 
-网页入口：
+### 页面入口
 
 ```bash
 python -X utf8 "5 反事实推演/build_counterfactual_dashboard.py"
 ```
 
-生成后的网页文件：
+### 当前生成页面
 
-- [results/AMR_AGG/counterfactual_results_dashboard.html](</e:/MALA/Code_health/5 反事实推演/results/AMR_AGG/counterfactual_results_dashboard.html>)
+- `results/AMR_AGG/counterfactual_results_dashboard.html`
 
-默认行为：
+### 默认行为
 
-- 先跑 `AMR_AGG`
+- outcome 先跑 `AMR_AGG`
 - 默认基准年为 `2014`
-- 默认地图和模型对比图展示 `2023`
+- 默认地图与模型比较图展示 `2023`
+- 默认读取 `2 固定效应模型/results/model_archive_12/selected_models.csv`
 
-默认筛选逻辑：
+## 当前 12 模型归档怎么接入这里
 
-1. 先汇总 `2 固定效应模型/results/exhaustive_model_summary.csv`
-2. 比较三类 FE 设定的综合分、核心变量方向稳定性和显著性占比
-3. 将 `Year FE only` 作为正文反事实推演的主入口
-4. 选出 4 个模型：
-   - 主模型：理论最完整且 `R1xday` 与 `AMC` 同时显著的 curated Year FE
-   - 稳健性模型 1：低 VIF 的 curated Year FE
-   - 稳健性模型 2：已有贝叶斯桥接的 systematic Year FE
-   - 稳健性模型 3：主模型同变量集下的双向 FE
+反事实部分现在承接的是统一的 `12` 模型归档，而不是旧版“只围绕主模型 + 少量稳健性模型”的口径。
 
-## 反事实情景
+这 `12` 个角色包括：
 
-脚本会按模型变量构成自动生成以下情景，并对重复情景自动去重：
+- 手选 Year FE `4` 模型：
+  - `main_model`
+  - `robust_low_vif`
+  - `robust_systematic`
+  - `robust_systematic_2`
+- 严筛 `8` 模型：
+  - `strict_main_model`
+  - `strict_top_02` 到 `strict_top_08`
+
+这意味着当前反事实推演的口径已经变成：
+
+- `main_model` 仍然是正文主叙事入口；
+- 但其余 `11` 个模型也一起参与反事实量化；
+- 输出中会显式区分“方向稳定的结论”和“对设定敏感的结论”。
+
+## 反事实情景设计
+
+脚本会按模型变量构成自动生成情景，并对重复情景自动去重。  
+当前常见情景包括：
 
 1. 所有气候变量恢复基准
 2. 仅 `R1xday` 恢复基准
 3. 仅温度变量恢复基准
 4. `R1xday + 温度变量` 共同恢复基准
 
-这里的“恢复基准”是指：
+这里“恢复基准”的含义是：
 
-- 按省份取基准年份或基准期的省内水平
-- 其他协变量保持实际值
-- 用原 FE 模型同一套系数和固定效应做 observed / counterfactual 对照
+- 按省份取基准年份或基准期的省内均值；
+- 其他协变量保持实际值；
+- 使用原 FE 模型同一套系数和固定效应做 observed / counterfactual 对照。
 
-## 输出目录
+## 当前输出结构
 
-以 `AMR_AGG` 为例，结果会写到：
+以 `AMR_AGG` 为例，结果会写到三个层次：
 
-- [results/AMR_AGG/model_screening](</e:/MALA/Code_health/5 反事实推演/results/AMR_AGG/model_screening>)
-- [results/AMR_AGG/counterfactual_outputs](</e:/MALA/Code_health/5 反事实推演/results/AMR_AGG/counterfactual_outputs>)
-- [results/AMR_AGG/figures](</e:/MALA/Code_health/5 反事实推演/results/AMR_AGG/figures>)
+- `results/AMR_AGG/model_screening/`
+- `results/AMR_AGG/counterfactual_outputs/`
+- `results/AMR_AGG/figures/`
 
-主要文件包括：
+同时还会生成：
 
-- `fe_spec_comparison.csv`
-  三类 FE 设定的汇总比较
+- `results/AMR_AGG/run_metadata.json`
+- `results/AMR_AGG/counterfactual_results_dashboard.html`
+- `results/AMR_AGG/model_role_detail_summary.csv`
+- `results/AMR_AGG/model_role_detailed_analysis.md`
+
+## 结果文件分别做什么
+
+### `model_screening/`
+
+这里主要保存“本次推演到底读取了哪些模型”的说明文件：
+
 - `selected_models.csv`
-  主模型与稳健性模型清单
+  - 当前进入反事实推演的模型清单
+- `selected_models_source_snapshot.csv`
+  - 统一 `12` 模型归档的快照副本
+- `fe_spec_comparison.csv`
+  - FE 设定层面的汇总比较
+- `bayes_variant_summary.csv`
+  - 来自贝叶斯桥接的补充摘要
+- `top20_ranking_snapshot.csv`
+  - 当时引用的高分模型快照
+
+### `counterfactual_outputs/`
+
+这里是定量结果主区：
+
 - `counterfactual_panel_predictions.csv`
-  每个“模型 × 情景 × 省份 × 年份”的实际预测值、反事实预测值、差值和相对变化
+  - 每个“模型 × 情景 × 省份 × 年份”的实际预测值、反事实预测值、差值和相对变化
 - `national_yearly.csv`
-  全国年度平均结果
+  - 全国年度平均结果
+- `national_overall.csv`
+  - 全国层面的总体汇总
 - `province_average.csv`
-  分省平均结果
+  - 分省长期平均结果
 - `latest_year_province.csv`
-  目标年份的分省结果，适合做地图
-- `selection_and_writeup_notes.md`
-  面向正文写作的解释说明
+  - 目标年份的分省结果，适合地图
 
-## 图形输出
+### `figures/`
 
-脚本至少会生成：
+当前图形已经不只围绕 `main_model`，而是覆盖全部 `12` 个模型角色。  
+例如：
 
 - `national_yearly_main_model.png`
-  主模型下全国年度实际情景与反事实情景时间序列图
-- `province_map_main_model_latest_year.png`
-  主模型主情景在目标年份的分省地图
+- `national_yearly_robust_low_vif.png`
+- `national_yearly_robust_systematic.png`
+- `national_yearly_robust_systematic_2.png`
+- `national_yearly_strict_main_model.png`
+- `national_yearly_strict_top_02.png` 到 `strict_top_08.png`
+- 各模型对应的 `province_map_*_latest_year.png`
 - `model_comparison_heatmap_latest_year.png`
-  不同模型下反事实结果对比图
 - `scenario_comparison_bar.png`
-  不同情景下反事实结果对比图
 
-此外还会生成一个静态网页，把模型筛选、结果解释、图形和结果表整合到同一页里，适合直接查看和汇报展示。
+## 页面入口怎么用
 
-## 如何扩展到 13 个单独 AMR 指标
+`counterfactual_results_dashboard.html` 现在不只是一个“主模型单页”。
 
-这套脚本已经把流程拆成了：
+它至少包含三层用途：
+
+1. 看 `12` 模型整体比较；
+2. 在“单模型聚焦分析”中切换不同模型角色；
+3. 查看某个模型在不同情景下的全国趋势、省级异质性和比较矩阵。
+
+也就是说，这个页面已经从“展示一个主模型”升级成“展示统一模型归档的反事实层”。
+
+## 当前最值得直接看的文件
+
+如果只想快速把握当前结果，优先看：
+
+- `results/AMR_AGG/run_metadata.json`
+- `results/AMR_AGG/model_screening/selected_models.csv`
+- `results/AMR_AGG/counterfactual_outputs/national_overall.csv`
+- `results/AMR_AGG/counterfactual_outputs/national_yearly.csv`
+- `results/AMR_AGG/model_role_detail_summary.csv`
+- `results/AMR_AGG/model_role_detailed_analysis.md`
+- `results/AMR_AGG/selection_and_writeup_notes.md`
+
+## 当前写作上怎么使用这层
+
+这层最适合支撑：
+
+- “如果气候变量恢复到基准状态，AMR 风险将怎样变化”的量化表达；
+- 主模型与稳健性模型之间结果方向是否一致的比较；
+- 全国平均、分省和目标年份地图的叙事；
+- 对“当前主结论是否高度依赖某一个模型”的回答。
+
+它不适合替代的内容包括：
+
+- 前面 FE 的变量筛选逻辑；
+- 贝叶斯交互项对 `amplifies` 的检验；
+- 单菌种异质性的细粒度讨论。
+
+## 如何扩展到单独 AMR 指标
+
+当前脚本流程已经拆成：
 
 1. outcome 构造
 2. FE 结果筛选
@@ -124,14 +200,33 @@ python -X utf8 "5 反事实推演/build_counterfactual_dashboard.py"
 4. counterfactual simulation
 5. 汇总与出图
 
-扩展时建议这样做：
+扩展到单独指标时，建议直接指定 outcome：
 
 ```bash
 python -X utf8 "5 反事实推演/run_counterfactual_analysis.py" --outcome CRKP --single-outcome-scale raw
 python -X utf8 "5 反事实推演/run_counterfactual_analysis.py" --outcome CRAB --single-outcome-scale raw
 ```
 
-注意两点：
+需要特别注意两点：
 
-- 如果要与 `3 单固定效应模型/` 严格保持一致，请先确认单指标主分析使用的是原始率还是标准化率，再决定 `--single-outcome-scale`。
-- 如果后续希望每个单指标也先做“候选模型筛选”，可以把当前的 `build_selected_models()` 扩展为按 outcome 单独读取对应的 FE 长表或结果汇总，再重复同样的筛选逻辑。
+- 如果要与 `3 单固定效应模型/` 严格对齐，先确认单指标主分析使用的是原始率还是标准化率，再决定 `--single-outcome-scale`；
+- 如果后续希望每个单指标也先做候选模型筛选，建议先按 outcome 生成对应模型归档，再重复同样的反事实流程。
+
+## 与 public dashboard 的关系
+
+当前 public 发布副本位于：
+
+- `public_dashboards/counterfactual-amr-agg/`
+
+public bundle 会同步：
+
+- dashboard 页面
+- 关键 CSV
+- 主要 figures
+- `selection_and_writeup_notes.md`
+
+因此写 README 或结果说明时，默认应以 `results/AMR_AGG/` 里的源文件为准，再由 public 层做发布复制。
+
+## 一句话记住这个目录
+
+这里负责把“当前最值得保留的 FE 模型”推进成可量化、可比较、可出图的反事实结果层，而且已经从单主模型扩展成统一 `12` 模型归档框架。

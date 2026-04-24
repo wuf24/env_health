@@ -1,0 +1,4 @@
+2026-04-24 03:30:21,574 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\run_provincial_future_figure_20260424_033021.log
+2026-04-24 03:30:24,745 | INFO | Provincial figure completed for lancet_ets
+2026-04-24 03:30:27,767 | INFO | Provincial figure completed for x_driven
+2026-04-24 03:30:27,768 | INFO | Provincial metadata: E:\MALA\Code_health\6 未来情景分析\results\baseline_mode_compare\provincial_run_metadata_temperature_ta_strict_main_model.json

@@ -147,19 +147,19 @@ def build_assets() -> dict[str, object]:
         "lancet_ets": {
             "national": [
                 {
-                    "label": "Figure 5 style main",
+                    "label": "Figure 5 entry role",
                     "path": "results/lancet_ets/figures/figure5_style_main.png",
-                    "note": "主模型的全国 Figure 5 风格总图。",
+                    "note": "以正文入口模型呈现的全国 Figure 5 风格总图；逐模型请结合 role 详解文件。",
                 },
                 {
-                    "label": "National yearly main model",
+                    "label": "National yearly entry role",
                     "path": "results/lancet_ets/figures/national_yearly_main_model.png",
-                    "note": "全国年序列轨迹图。",
+                    "note": "正文入口模型的全国年序列轨迹图。",
                 },
                 {
                     "label": "Scenario delta 2050",
                     "path": "results/lancet_ets/figures/scenario_delta_2050_main_model.png",
-                    "note": "2050 年各情景相对 baseline 的增量。",
+                    "note": "正文入口模型在 2050 年各情景相对 baseline 的增量。",
                 },
             ],
             "regional": [
@@ -195,19 +195,19 @@ def build_assets() -> dict[str, object]:
         "x_driven": {
             "national": [
                 {
-                    "label": "Figure 5 style main",
+                    "label": "Figure 5 entry role",
                     "path": "results/x_driven/figures/figure5_style_main.png",
-                    "note": "X-driven 版本的全国总图。",
+                    "note": "X-driven 版本中以正文入口模型呈现的全国总图。",
                 },
                 {
-                    "label": "National yearly main model",
+                    "label": "National yearly entry role",
                     "path": "results/x_driven/figures/national_yearly_main_model.png",
-                    "note": "全国年序列轨迹图。",
+                    "note": "正文入口模型的全国年序列轨迹图。",
                 },
                 {
                     "label": "Scenario delta 2050",
                     "path": "results/x_driven/figures/scenario_delta_2050_main_model.png",
-                    "note": "2050 年各情景相对 baseline 的增量。",
+                    "note": "正文入口模型在 2050 年各情景相对 baseline 的增量。",
                 },
             ],
             "regional": [
@@ -266,7 +266,8 @@ def build_file_catalog() -> list[dict[str, object]]:
     compare_items: list[dict[str, str]] = []
     maybe_add(compare_items, "national_yearly_compare.csv", "results/baseline_mode_compare/national_yearly_compare.csv", "全国年序列双 baseline 合并表。")
     maybe_add(compare_items, "scenario_summary_2050_compare.csv", "results/baseline_mode_compare/scenario_summary_2050_compare.csv", "2050 情景总表，包含全部 role。")
-    maybe_add(compare_items, "main_model_2050_compare.csv", "results/baseline_mode_compare/main_model_2050_compare.csv", "主模型的 2050 对照表。")
+    maybe_add(compare_items, "model_role_2050_compare.csv", "results/baseline_mode_compare/model_role_2050_compare.csv", "12 个归档模型的 2050 双 baseline 对照总表。")
+    maybe_add(compare_items, "main_model_2050_compare.csv", "results/baseline_mode_compare/main_model_2050_compare.csv", "正文入口主模型的 2050 对照表。")
     maybe_add(compare_items, "regional_summary_2050_compare.csv", "results/baseline_mode_compare/regional_summary_2050_compare.csv", "七大区结果对照表。")
     maybe_add(compare_items, "baseline_mode_comparison.md", "results/baseline_mode_compare/baseline_mode_comparison.md", "两种 baseline 的解释说明。")
     groups.append({"title": "双 baseline 对照", "items": compare_items})
@@ -275,6 +276,8 @@ def build_file_catalog() -> list[dict[str, object]]:
         label = "Lancet ETS" if mode == "lancet_ets" else "X-driven"
         items: list[dict[str, str]] = []
         maybe_add(items, "projection_notes.md", f"results/{mode}/projection_notes.md", f"{label} 版本的结果说明。")
+        maybe_add(items, "model_role_detail_summary.csv", f"results/{mode}/model_role_detail_summary.csv", f"{label} 版本的 12 模型摘要表。")
+        maybe_add(items, "model_role_detailed_analysis.md", f"results/{mode}/model_role_detailed_analysis.md", f"{label} 版本的逐模型详细分析。")
         maybe_add(items, "national_yearly.csv", f"results/{mode}/projection_outputs/national_yearly.csv", "全国年序列结果。")
         maybe_add(items, "historical_national.csv", f"results/{mode}/projection_outputs/historical_national.csv", "历史全国序列。")
         maybe_add(items, "scenario_summary_2050.csv", f"results/{mode}/projection_outputs/scenario_summary_2050.csv", "2050 情景结果总表。")
@@ -290,7 +293,7 @@ def build_file_catalog() -> list[dict[str, object]]:
         groups.append({"title": f"{label} 输出", "items": items})
 
     provenance_items: list[dict[str, str]] = []
-    maybe_add(provenance_items, "selected_models_snapshot.csv", "results/model_screening/selected_models_snapshot.csv", "四个 role 的模型快照。")
+    maybe_add(provenance_items, "selected_models_snapshot.csv", "results/model_screening/selected_models_snapshot.csv", "当前归档模型快照。")
     maybe_add(provenance_items, "future_projection_coefficients.csv", "results/model_screening/future_projection_coefficients.csv", "用于未来投影的协变量系数。")
     maybe_add(provenance_items, "covariate_ets_methods_snapshot.csv", "results/model_screening/covariate_ets_methods_snapshot.csv", "协变量 ETS 方法快照。")
     maybe_add(provenance_items, "rx1day_future_aligned.csv", "results/common_inputs/rx1day_future_aligned.csv", "偏差订正后的未来 rx1day 路径。")
@@ -303,7 +306,10 @@ def build_file_catalog() -> list[dict[str, object]]:
 
 def build_data() -> dict[str, object]:
     run_metadata = read_json(RESULTS_DIR / "run_metadata.json")
-    selected_models = read_csv(RESULTS_DIR / "model_screening" / "selected_models_snapshot.csv")
+    selected_models_raw = read_csv(RESULTS_DIR / "model_screening" / "selected_models_snapshot.csv")
+    selected_models = [row for row in selected_models_raw if row["role_id"] == "main_model"] + [
+        row for row in selected_models_raw if row["role_id"] != "main_model"
+    ]
     role_order = [row["role_id"] for row in selected_models]
     role_rank = {role_id: index for index, role_id in enumerate(role_order)}
 
@@ -415,7 +421,7 @@ def build_data() -> dict[str, object]:
         "scenario_count": len([item for item in SCENARIO_META if item["family"] != "baseline"]),
         "uncertainty_paths": ["median", "p10", "p90"],
         "default_mode": "lancet_ets",
-        "default_role": "main_model",
+        "default_role": "main_model" if "main_model" in role_order else (role_order[0] if role_order else "main_model"),
         "default_scenario": "ssp585",
         "mode_meta": MODE_META,
         "scenario_meta": SCENARIO_META,
@@ -1174,7 +1180,7 @@ def build_body_framework() -> str:
         <div class="step">
           <div class="num">1</div>
           <h3>历史面板识别</h3>
-          <p>从固定效应模型里读取主模型和稳健性模型，保留协变量标准化口径与历史系数。</p>
+          <p>从统一的 12 模型归档里读取原始主线 4 个角色和严筛扩展 8 个角色，保留协变量标准化口径与历史系数。</p>
         </div>
         <div class="step">
           <div class="num">2</div>
@@ -1244,8 +1250,8 @@ def build_body_results() -> str:
         </div>
         <div class="panel-card">
           <div class="eyebrow">Figures</div>
-          <h3>当前 baseline 对应的现成图件</h3>
-          <p>这里直接连到脚本已经导出的 PNG，方便你和页面里的交互式读法互相核对。</p>
+          <h3>当前 baseline 的主模型静态图</h3>
+          <p>这里保留的是脚本已导出的正文入口主模型 PNG，方便你和页面里的交互式读法互相核对。它们不会随着上面的 <span class="code">Model Role</span> 一起切换；真正按 role 变化的是左侧交互图和下方结果表。</p>
           <div class="gallery-grid" id="nationalFigures"></div>
         </div>
       </div>
@@ -1275,8 +1281,8 @@ def build_body_results() -> str:
         </div>
         <div class="panel-card">
           <div class="eyebrow">Figures</div>
-          <h3>地区图件</h3>
-          <p>如果你想快速确认空间结构，这两张图通常比直接翻 CSV 更快。</p>
+          <h3>地区主模型图件</h3>
+          <p>这两张 PNG 同样对应正文入口主模型，用来快速核对空间结构；如果你切换了 <span class="code">Model Role</span>，请优先以上面的交互条形图和下表为准。</p>
           <div class="gallery-grid" id="regionalFigures"></div>
         </div>
       </div>
@@ -1317,7 +1323,8 @@ def build_body_results() -> str:
       </div>
       <div class="panel-card">
         <div class="eyebrow">Figures</div>
-        <h3>省级与双情景图件</h3>
+        <h3>省级主模型图件</h3>
+        <p>这里展示的也是正文入口主模型静态图。不同 role 的省级差异请以上面的排序表和双情景 gap 表为准。</p>
         <div class="gallery-grid" id="provincialFigures"></div>
       </div>
     </section>
@@ -1332,13 +1339,13 @@ def build_body_provenance() -> str:
           <h2>把这页背后的模型角色、系数和输入来源都摆出来。</h2>
         </div>
         <p>
-          结果页面如果只给图不给模型来源，很难写方法和讨论。这一节把四个 role 的变量组合、未来投影用到的系数、baseline 的 ETS 方法快照以及 rx1day bias correction 都并排放在一起。
+          结果页面如果只给图不给模型来源，很难写方法和讨论。这一节把 12 个归档模型角色的变量组合、未来投影用到的系数、baseline 的 ETS 方法快照以及 rx1day bias correction 都并排放在一起。
         </p>
       </div>
       <div class="two-col">
         <div class="panel-card">
           <div class="eyebrow">Selected Models</div>
-          <h3>四个 role 的模型快照</h3>
+          <h3>12 个 role 的模型快照</h3>
           <div id="modelCards"></div>
         </div>
         <div class="panel-card">
@@ -1378,11 +1385,13 @@ def build_body_provenance() -> str:
         <div class="method-card">
           <div class="eyebrow">Read This With</div>
           <h3>写作时最建议并排看的材料</h3>
-          <p>方法部分建议和 framework / baseline docs 一起读；结果部分建议全国总表、地区总表、省级双情景图件一起用，避免只盯着一条全国均值曲线。</p>
+          <p>方法部分建议和 framework / baseline docs 一起读；结果部分建议全国总表、逐模型总表、地区总表、省级双情景图件一起用，避免只盯着一条全国均值曲线或单一 role。</p>
           <div class="chip-row">
             <span class="chip">Framework note</span>
             <span class="chip">Baseline compare note</span>
             <span class="chip">scenario_summary_2050_compare.csv</span>
+            <span class="chip">model_role_2050_compare.csv</span>
+            <span class="chip">model_role_detailed_analysis.md</span>
             <span class="chip">region_summary_2050_compare.csv</span>
             <span class="chip">dual_scenario_compare_ssp119_vs_ssp585_delta.png</span>
           </div>
@@ -1741,7 +1750,7 @@ def build_script_renderers() -> str:
       el("heroStats").innerHTML = [
         { label: "Outcome", value: escapeHtml(DATA.outcome_label), hint: escapeHtml(DATA.outcome_note) },
         { label: "Projection Window", value: `${DATA.start_year}-${DATA.end_year}`, hint: `${DATA.province_count} 省份，${DATA.region_count} 大区` },
-        { label: "Model Roles", value: String(DATA.role_count), hint: "主模型 + 3 个稳健性角色" },
+        { label: "Model Roles", value: String(DATA.role_count), hint: "当前归档纳入的模型角色数量" },
         { label: "Scenario Space", value: String(DATA.scenario_count), hint: "SSP 情景；每个情景含 median / p10 / p90" }
       ].map(item => `
         <div class="stat">
@@ -2207,9 +2216,10 @@ def build_html(data: dict[str, object]) -> str:
 
 
 def main() -> None:
-    from tools.build_future_scenario_dashboard_report import main as report_main
-
-    report_main()
+    data = build_data()
+    html = build_html(data)
+    OUT_FILE.write_text(html, encoding="utf-8")
+    print(f"Wrote interactive dashboard to {OUT_FILE}")
 
 
 if __name__ == "__main__":

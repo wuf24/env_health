@@ -19,5 +19,6 @@
 
 - projection window: `2024-2050`
 - only `R1xday` is varied by future scenario at this stage
+- comparison should no longer be limited to `main_model`; use `model_role_2050_compare.csv` for the 12-role digest
 - national results remain arithmetic means across province-level AMR projections
 - the x-driven version is still a simplified Nature-like baseline rather than the full spatiotemporal Bayesian model

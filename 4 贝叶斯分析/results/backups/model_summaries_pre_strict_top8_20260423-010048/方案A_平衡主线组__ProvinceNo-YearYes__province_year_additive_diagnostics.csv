@@ -1,0 +1,14 @@
+﻿parameter,mean,sd,hdi_2.5%,hdi_97.5%,mcse_mean,mcse_sd,ess_bulk,ess_tail,r_hat,effect_scope,variable,variant_id,variant_label,model_id,scheme_id,scheme_source,fe_label
+alpha,0.01,0.095,-0.173,0.199,0.003,0.002,1215.0,1644.0,1.0,global,,province_year_additive,Province + year additive,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes
+beta_main[省平均气温],0.127,0.103,-0.074,0.328,0.003,0.002,1598.0,1900.0,1.0,main,省平均气温,province_year_additive,Province + year additive,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes
+beta_main[R1xday],-0.001,0.019,-0.039,0.034,0.0,0.0,5072.0,2763.0,1.0,main,R1xday,province_year_additive,Province + year additive,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes
+beta_main[PM2.5],0.01,0.023,-0.037,0.054,0.0,0.0,4836.0,2708.0,1.0,main,PM2.5,province_year_additive,Province + year additive,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes
+beta_main[抗菌药物使用强度],0.009,0.016,-0.023,0.041,0.0,0.0,5255.0,2140.0,1.0,main,抗菌药物使用强度,province_year_additive,Province + year additive,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes
+beta_main[GDP],0.026,0.049,-0.07,0.121,0.001,0.001,3074.0,2630.0,1.0,main,GDP,province_year_additive,Province + year additive,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes
+beta_main[文盲比例],0.028,0.036,-0.041,0.098,0.001,0.001,4089.0,2786.0,1.0,main,文盲比例,province_year_additive,Province + year additive,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes
+beta_main[人均日生活用水量(升)],0.009,0.042,-0.074,0.087,0.001,0.001,3892.0,2895.0,1.0,main,人均日生活用水量(升),province_year_additive,Province + year additive,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes
+"beta_main[牲畜饲养
+-猪年底头数]",0.003,0.063,-0.122,0.124,0.001,0.001,1986.0,2195.0,1.0,main,"牲畜饲养
+-猪年底头数",province_year_additive,Province + year additive,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes
+sigma_residual,0.187,0.009,0.17,0.203,0.0,0.0,4013.0,2844.0,1.0,global,,province_year_additive,Province + year additive,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes
+sigma_province,0.517,0.075,0.383,0.672,0.002,0.001,1272.0,1894.0,1.0,global,,province_year_additive,Province + year additive,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes

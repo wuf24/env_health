@@ -1,4 +1,4 @@
-﻿Province,scenario,statistic,overlap_n,rx1day_history_mean,rx1day_external_mean,additive_bias
+﻿Province,scenario,statistic,overlap_n,history_value_mean,external_value_mean,additive_bias
 上海,ssp119,median,9,96.20411082111112,58.559999999999995,37.64411082111111
 上海,ssp119,p10,9,96.20411082111112,39.37,56.83411082111112
 上海,ssp119,p90,9,96.20411082111112,85.00666666666666,11.197444154444446

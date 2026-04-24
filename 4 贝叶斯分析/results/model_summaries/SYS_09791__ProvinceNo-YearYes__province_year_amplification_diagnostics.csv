@@ -1,0 +1,16 @@
+﻿parameter,mean,sd,hdi_2.5%,hdi_97.5%,mcse_mean,mcse_sd,ess_bulk,ess_tail,r_hat,effect_scope,variable,variant_id,variant_label,model_id,scheme_id,scheme_source,fe_label
+alpha,0.006,0.092,-0.173,0.186,0.003,0.002,1127.0,1714.0,1.0,global,,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+beta_main[R1xday],-0.012,0.021,-0.054,0.026,0.0,0.0,5147.0,2947.0,1.0,main,R1xday,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+beta_main[抗菌药物使用强度],0.012,0.016,-0.02,0.042,0.0,0.0,5673.0,3513.0,1.0,main,抗菌药物使用强度,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+beta_main[TA（°C）],0.031,0.019,-0.006,0.067,0.0,0.0,5885.0,3304.0,1.0,main,TA（°C）,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+beta_main[PM2.5],0.001,0.022,-0.042,0.044,0.0,0.0,5010.0,3277.0,1.0,main,PM2.5,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+beta_main[医疗水平],0.127,0.051,0.032,0.232,0.001,0.001,3751.0,2633.0,1.0,main,医疗水平,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+beta_main[生活垃圾无害化处理率],-0.009,0.016,-0.04,0.022,0.0,0.0,5642.0,3206.0,1.0,main,生活垃圾无害化处理率,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+"beta_main[牲畜饲养
+-猪年底头数]",0.028,0.062,-0.092,0.148,0.001,0.001,2402.0,2664.0,1.0,main,"牲畜饲养
+-猪年底头数",province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+beta_main[PA（%）],0.014,0.014,-0.014,0.041,0.0,0.0,5762.0,3145.0,1.0,main,PA（%）,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+beta_main[食品消费量],-0.038,0.025,-0.083,0.013,0.0,0.0,4485.0,3086.0,1.0,main,食品消费量,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+beta_interaction[R1xday × 抗菌药物使用强度],0.016,0.014,-0.011,0.044,0.0,0.0,5505.0,3400.0,1.0,interaction,R1xday × 抗菌药物使用强度,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+sigma_residual,0.185,0.008,0.169,0.2,0.0,0.0,3967.0,2779.0,1.0,global,,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes
+sigma_province,0.492,0.072,0.358,0.635,0.002,0.001,1089.0,1924.0,1.01,global,,province_year_amplification,Province + year amplification,SYS_09791 | Province: No / Year: Yes,SYS_09791,systematic,Province: No / Year: Yes

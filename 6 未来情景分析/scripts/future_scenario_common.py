@@ -26,9 +26,13 @@ from config_future_scenario_projection import (
     HISTORICAL_START_YEAR,
     LOG_DIR,
     MIN_SERIES_POINTS_FOR_TREND,
+    PROVINCE_TAS_SSP_PATH,
+    PROVINCE_TAS_VARIABLE_NAME,
     RX1DAY_TIMESERIES_PATH,
     RX1DAY_VARIABLE_NAME,
     SELECTED_MODELS_DIR,
+    TA_FUTURE_PATH,
+    TA_VARIABLE_NAME,
     X_PATH,
     ensure_directories,
 )
@@ -175,9 +179,12 @@ def load_selected_models(outcome: str, roles: Iterable[str] | None = None) -> li
         raise FileNotFoundError(f"找不到 selected_models.csv: {path}")
 
     df = pd.read_csv(path)
-    df = df[df["role_id"].isin(roles)].copy()
+    if roles:
+        df = df[df["role_id"].isin(roles)].copy()
     if df.empty:
-        raise RuntimeError(f"selected_models.csv 中没有匹配的 role_id: {roles}")
+        raise RuntimeError(
+            f"selected_models.csv 中没有匹配的 role_id: {roles}" if roles else "selected_models.csv 为空。"
+        )
 
     return [
         SelectedModel(
@@ -481,32 +488,70 @@ def load_future_rx1day_panel() -> pd.DataFrame:
     return df[["Province", "Year", "scenario", "statistic", "rx1day"]].reset_index(drop=True)
 
 
-def align_future_rx1day_to_history(
+def load_future_ta_panel() -> pd.DataFrame:
+    if not TA_FUTURE_PATH.exists():
+        raise FileNotFoundError(f"找不到 TA future 面板文件: {TA_FUTURE_PATH}")
+
+    df = pd.read_csv(TA_FUTURE_PATH, encoding="utf-8-sig")
+    df["Province"] = df["Province"].astype(str).str.strip()
+    df["Year"] = pd.to_numeric(df["year"], errors="coerce").astype("Int64")
+    df[TA_VARIABLE_NAME] = to_float(df[TA_VARIABLE_NAME])
+
+    df = df[df["Province"].notna()].copy()
+    df = df[~df["Province"].isin(FUTURE_PROVINCE_EXCLUDE)].copy()
+    df = df[df["Year"].notna()].copy()
+    df["Year"] = df["Year"].astype(int)
+
+    return df[["Province", "Year", "scenario", "statistic", TA_VARIABLE_NAME]].reset_index(drop=True)
+
+
+def load_future_province_tas_panel() -> pd.DataFrame:
+    if not PROVINCE_TAS_SSP_PATH.exists():
+        raise FileNotFoundError(f"找不到 SSP 省平均气温面板文件: {PROVINCE_TAS_SSP_PATH}")
+
+    df = pd.read_csv(PROVINCE_TAS_SSP_PATH, encoding="utf-8-sig")
+    df["Province"] = df["Province"].astype(str).str.strip()
+    df["Year"] = pd.to_numeric(df["year"], errors="coerce").astype("Int64")
+    df[PROVINCE_TAS_VARIABLE_NAME] = to_float(df[PROVINCE_TAS_VARIABLE_NAME])
+
+    df = df[df["Province"].notna()].copy()
+    df = df[~df["Province"].isin(FUTURE_PROVINCE_EXCLUDE)].copy()
+    df = df[df["Year"].notna()].copy()
+    df["Year"] = df["Year"].astype(int)
+
+    return df[["Province", "Year", "scenario", "statistic", PROVINCE_TAS_VARIABLE_NAME]].reset_index(drop=True)
+
+
+def align_external_series_to_history(
     future_df: pd.DataFrame,
     historical_df: pd.DataFrame,
+    historical_value_col: str,
+    external_value_col: str,
+    aligned_value_col: str,
+    series_label: str,
     logger: logging.Logger | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     if EXTERNAL_ALIGNMENT_METHOD != "mean_bias":
         future_df = future_df.copy()
-        future_df["rx1day_aligned"] = future_df["rx1day"]
+        future_df[aligned_value_col] = future_df[external_value_col]
         return future_df, pd.DataFrame()
 
-    history = historical_df[["Province", "Year", RX1DAY_VARIABLE_NAME]].copy()
-    history = history.rename(columns={RX1DAY_VARIABLE_NAME: "rx1day_history"})
+    history = historical_df[["Province", "Year", historical_value_col]].copy()
+    history = history.rename(columns={historical_value_col: "history_value"})
 
     overlap = future_df.merge(history, on=["Province", "Year"], how="inner")
     if overlap.empty:
         future_df = future_df.copy()
-        future_df["rx1day_aligned"] = future_df["rx1day"]
+        future_df[aligned_value_col] = future_df[external_value_col]
         return future_df, pd.DataFrame()
 
     bias = (
-        overlap.assign(additive_bias=overlap["rx1day_history"] - overlap["rx1day"])
+        overlap.assign(additive_bias=overlap["history_value"] - overlap[external_value_col])
         .groupby(["Province", "scenario", "statistic"], dropna=False)
         .agg(
             overlap_n=("Year", "nunique"),
-            rx1day_history_mean=("rx1day_history", "mean"),
-            rx1day_external_mean=("rx1day", "mean"),
+            history_value_mean=("history_value", "mean"),
+            external_value_mean=(external_value_col, "mean"),
             additive_bias=("additive_bias", "mean"),
         )
         .reset_index()
@@ -520,12 +565,45 @@ def align_future_rx1day_to_history(
     )
     adjusted["additive_bias"] = adjusted["additive_bias"].fillna(0.0)
     adjusted["overlap_n"] = adjusted["overlap_n"].fillna(0).astype(int)
-    adjusted["rx1day_aligned"] = adjusted["rx1day"] + adjusted["additive_bias"]
+    adjusted[aligned_value_col] = adjusted[external_value_col] + adjusted["additive_bias"]
 
     if logger is not None:
         logger.info(
-            "Aligned external rx1day by province/scenario/statistic with mean-bias correction; overlap groups=%s",
+            "Aligned external %s by province/scenario/statistic with mean-bias correction; overlap groups=%s",
+            series_label,
             len(bias),
         )
 
     return adjusted, bias.sort_values(["Province", "scenario", "statistic"]).reset_index(drop=True)
+
+
+def align_future_rx1day_to_history(
+    future_df: pd.DataFrame,
+    historical_df: pd.DataFrame,
+    logger: logging.Logger | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    return align_external_series_to_history(
+        future_df=future_df,
+        historical_df=historical_df,
+        historical_value_col=RX1DAY_VARIABLE_NAME,
+        external_value_col="rx1day",
+        aligned_value_col="rx1day_aligned",
+        series_label="rx1day",
+        logger=logger,
+    )
+
+
+def align_future_province_tas_to_history(
+    future_df: pd.DataFrame,
+    historical_df: pd.DataFrame,
+    logger: logging.Logger | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    return align_external_series_to_history(
+        future_df=future_df,
+        historical_df=historical_df,
+        historical_value_col=PROVINCE_TAS_VARIABLE_NAME,
+        external_value_col=PROVINCE_TAS_VARIABLE_NAME,
+        aligned_value_col=f"{PROVINCE_TAS_VARIABLE_NAME}_aligned",
+        series_label=PROVINCE_TAS_VARIABLE_NAME,
+        logger=logger,
+    )

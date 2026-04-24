@@ -21,6 +21,8 @@ FE_LABEL_TO_SPEC = {
     "Province: Yes / Year: Yes": "YesYes_TwoWayFE",
 }
 
+LEGACY_ROLE_IDS = {"main_model", "robust_low_vif", "robust_systematic", "robust_systematic_2"}
+
 
 def fmt_num(value: object, digits: int = 3) -> str:
     if value is None or pd.isna(value):
@@ -59,8 +61,15 @@ def html_table(df: pd.DataFrame, columns: list[str], classes: str = "data-table"
     return f'<table class="{classes}"><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>'
 
 
-def load_inputs(outcome: str) -> dict[str, pd.DataFrame | Path]:
+def archive_group_counts(selected: pd.DataFrame) -> tuple[int, int]:
+    legacy_count = int(selected["role_id"].isin(LEGACY_ROLE_IDS).sum())
+    strict_count = int(selected.shape[0] - legacy_count)
+    return legacy_count, strict_count
+
+
+def load_inputs(outcome: str) -> dict[str, object]:
     base = RESULT_ROOT / outcome
+    metadata_path = base / "run_metadata.json"
     return {
         "base": base,
         "fe": pd.read_csv(base / "model_screening" / "fe_spec_comparison.csv"),
@@ -72,7 +81,71 @@ def load_inputs(outcome: str) -> dict[str, pd.DataFrame | Path]:
         "province_average": pd.read_csv(base / "counterfactual_outputs" / "province_average.csv"),
         "latest": pd.read_csv(base / "counterfactual_outputs" / "latest_year_province.csv"),
         "coefficients": pd.read_csv(FE_COEF_PATH),
+        "metadata": json.loads(metadata_path.read_text(encoding="utf-8")) if metadata_path.exists() else {},
     }
+
+
+def relativize_to_base(path_value: object, base: Path) -> str | None:
+    if path_value is None or (isinstance(path_value, float) and pd.isna(path_value)):
+        return None
+    raw = str(path_value).strip()
+    if not raw:
+        return None
+    path = Path(raw)
+    if not path.is_absolute():
+        return raw.replace("\\", "/")
+    try:
+        return path.resolve().relative_to(base.resolve()).as_posix()
+    except ValueError:
+        return raw.replace("\\", "/")
+
+
+def build_model_figure_records(selected: pd.DataFrame, base: Path, metadata: dict[str, object]) -> list[dict[str, str | None]]:
+    figure_meta = metadata.get("figures", {}) if isinstance(metadata, dict) else {}
+    national_by_role = (
+        figure_meta.get("national_yearly_by_role", {}) if isinstance(figure_meta, dict) else {}
+    )
+    province_by_role = (
+        figure_meta.get("province_map_latest_year_by_role", {}) if isinstance(figure_meta, dict) else {}
+    )
+    catalog = metadata.get("model_figure_catalog", []) if isinstance(metadata, dict) else []
+    catalog_by_model_id = {
+        str(item.get("model_id")): item
+        for item in catalog
+        if isinstance(item, dict) and item.get("model_id")
+    }
+
+    records: list[dict[str, str | None]] = []
+    for _, row in selected.iterrows():
+        role_id = str(row["role_id"])
+        model_id = str(row["model_id"])
+        catalog_item = catalog_by_model_id.get(model_id, {})
+        national_path = catalog_item.get("national_yearly") or national_by_role.get(role_id)
+        province_path = catalog_item.get("province_map_latest_year") or province_by_role.get(role_id)
+
+        if not national_path:
+            fallback = base / "figures" / f"national_yearly_{role_id}.png"
+            if fallback.exists():
+                national_path = str(fallback)
+        if not province_path:
+            fallback = base / "figures" / f"province_map_{role_id}_latest_year.png"
+            if fallback.exists():
+                province_path = str(fallback)
+
+        records.append(
+            {
+                "role_id": role_id,
+                "model_id": model_id,
+                "role_label": str(row["role_label"]),
+                "scheme_id": str(row["scheme_id"]),
+                "national_yearly": relativize_to_base(national_path, base),
+                "province_map_latest_year": relativize_to_base(province_path, base),
+                "province_map_scenario_label": str(
+                    catalog_item.get("province_map_scenario_label") or "所有气候变量恢复基准"
+                ),
+            }
+        )
+    return records
 
 
 def build_selected_model_cards(selected: pd.DataFrame) -> str:
@@ -197,11 +270,12 @@ def build_bayes_table(bayes: pd.DataFrame) -> str:
 
 
 def build_top_lists(province_average: pd.DataFrame, latest: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    main_role_id = "main_model" if (province_average["role_id"] == "main_model").any() else str(province_average.iloc[0]["role_id"])
     avg_main = province_average[
-        (province_average["role_id"] == "main_model") & (province_average["scenario_id"] == "all_climate_to_baseline")
+        (province_average["role_id"] == main_role_id) & (province_average["scenario_id"] == "all_climate_to_baseline")
     ].copy()
     latest_main = latest[
-        (latest["role_id"] == "main_model") & (latest["scenario_id"] == "all_climate_to_baseline")
+        (latest["role_id"] == main_role_id) & (latest["scenario_id"] == "all_climate_to_baseline")
     ].copy()
 
     def prep(df: pd.DataFrame, ascending: bool) -> pd.DataFrame:
@@ -227,9 +301,12 @@ def build_top_lists(province_average: pd.DataFrame, latest: pd.DataFrame) -> dic
 def build_summary_cards(fe: pd.DataFrame, selected: pd.DataFrame, overall: pd.DataFrame, province_average: pd.DataFrame, latest: pd.DataFrame) -> str:
     top_fe = fe.sort_values("fe_rank_by_top10").iloc[0]
     main = selected[selected["role_id"] == "main_model"].iloc[0]
+    selected_count = int(selected.shape[0])
+    legacy_count, strict_count = archive_group_counts(selected)
     all_climate = overall[overall["scenario_label"] == "所有气候变量恢复基准"]
     r1_only = overall[overall["scenario_label"] == "仅 R1xday 恢复基准"]
     temp_only = overall[overall["scenario_label"] == "仅温度变量恢复基准"]
+    year_fe_r1 = r1_only[r1_only["fe_label"] == top_fe["fe_label"]]
 
     avg_main = province_average[
         (province_average["role_id"] == "main_model") & (province_average["scenario_id"] == "all_climate_to_baseline")
@@ -246,14 +323,14 @@ def build_summary_cards(fe: pd.DataFrame, selected: pd.DataFrame, overall: pd.Da
         <p>Top10 平均综合分 {fmt_num(top_fe['top10_mean_score'])}，R1xday 为正比例 {fmt_pct_share(top_fe['share_r1xday_positive'])}。</p>
       </article>
       <article class="summary-card accent-blue">
-        <span class="eyebrow">主模型</span>
+        <span class="eyebrow">归档主模型</span>
         <h3>{escape(str(main['scheme_id']))}</h3>
-        <p>R1xday = {fmt_num(main['coef_R1xday'])}，AMC = {fmt_num(main['coef_AMC'])}，二者都在 Year FE 下保留正向信号。</p>
+        <p>R1xday = {fmt_num(main['coef_R1xday'])}，AMC = {fmt_num(main['coef_AMC'])}。当前 12 模型归档里，它仍是最适合承接正文主线的一套。</p>
       </article>
       <article class="summary-card accent-green">
         <span class="eyebrow">最稳结果</span>
         <h3>气候总体负担为正</h3>
-        <p>“所有气候变量恢复基准”情景下，{int((all_climate['actual_minus_counterfactual_mean'] > 0).sum())}/{all_climate.shape[0]} 个入选模型为正差值。</p>
+        <p>“所有气候变量恢复基准”情景下，{int((all_climate['actual_minus_counterfactual_mean'] > 0).sum())}/{selected_count} 个归档模型为正差值。</p>
       </article>
       <article class="summary-card accent-gold">
         <span class="eyebrow">最敏感结果</span>
@@ -263,7 +340,7 @@ def build_summary_cards(fe: pd.DataFrame, selected: pd.DataFrame, overall: pd.Da
       <article class="summary-card">
         <span class="eyebrow">R1xday 情景</span>
         <h3>{int((r1_only['actual_minus_counterfactual_mean'] > 0).sum())}/{r1_only.shape[0]} 模型为正</h3>
-        <p>Year FE 的 3 个模型都为正，但双向 FE 近似归零，说明极端降雨通道存在但更保守的识别会显著压缩它。</p>
+        <p>主推 FE 口径下为正的有 {int((year_fe_r1['actual_minus_counterfactual_mean'] > 0).sum())}/{max(len(year_fe_r1), 1)} 个，说明极端降雨通道在当前 {selected_count} 个归档模型里仍保持较稳的方向一致性。</p>
       </article>
       <article class="summary-card">
         <span class="eyebrow">空间异质性</span>
@@ -276,7 +353,7 @@ def build_summary_cards(fe: pd.DataFrame, selected: pd.DataFrame, overall: pd.Da
 
 def build_interpretation_blocks(selected: pd.DataFrame, overall: pd.DataFrame, province_average: pd.DataFrame, latest: pd.DataFrame) -> str:
     main = selected[selected["role_id"] == "main_model"].iloc[0]
-    strict = selected[selected["role_id"] == "robust_strict_fe"].iloc[0]
+    strict_pool = selected[selected["fe_label"] == "Province: Yes / Year: Yes"]
     all_climate = overall[overall["scenario_label"] == "所有气候变量恢复基准"].sort_values(
         "actual_minus_counterfactual_mean", ascending=False
     )
@@ -297,6 +374,12 @@ def build_interpretation_blocks(selected: pd.DataFrame, overall: pd.DataFrame, p
     neg_avg = ", ".join(avg_main.sort_values("actual_minus_counterfactual_mean", ascending=True).head(5)["Province"].tolist())
     pos_latest = ", ".join(latest_main.sort_values("actual_minus_counterfactual_mean", ascending=False).head(5)["Province"].tolist())
     neg_latest = ", ".join(latest_main.sort_values("actual_minus_counterfactual_mean", ascending=True).head(5)["Province"].tolist())
+    selected_count = int(selected.shape[0])
+    strict_text = (
+        f"双向 FE 归档模型里，R1xday 系数已收缩到 {fmt_num(strict_pool['coef_R1xday'].min())} 到 {fmt_num(strict_pool['coef_R1xday'].max())}。"
+        if not strict_pool.empty
+        else "当前这版归档全部来自同一主推 FE 口径，因此更适合比较变量组合而不是 FE 切换本身。"
+    )
 
     return f"""
     <div class="insight-grid">
@@ -306,15 +389,15 @@ def build_interpretation_blocks(selected: pd.DataFrame, overall: pd.DataFrame, p
       </article>
       <article class="insight-card">
         <h3>2. 哪些结果较稳</h3>
-        <p>“所有气候变量恢复基准”情景在 4 个入选模型中全部为正差值，范围为 {fmt_signed(all_climate['actual_minus_counterfactual_mean'].min())} 到 {fmt_signed(all_climate['actual_minus_counterfactual_mean'].max())}。总体气候负担方向较稳。</p>
+        <p>“所有气候变量恢复基准”情景在 {selected_count} 个归档模型里有 {int((all_climate['actual_minus_counterfactual_mean'] > 0).sum())} 个为正差值，范围为 {fmt_signed(all_climate['actual_minus_counterfactual_mean'].min())} 到 {fmt_signed(all_climate['actual_minus_counterfactual_mean'].max())}。总体气候负担方向较稳。</p>
       </article>
       <article class="insight-card">
         <h3>3. 哪些结果更敏感</h3>
-        <p>“仅 R1xday 恢复基准”在 3 个 Year FE 模型中都为正，但双向 FE 的差值仅为 {fmt_signed(r1_only[r1_only['role_label']=='稳健性模型 3']['actual_minus_counterfactual_mean'].iloc[0])}；“仅温度变量恢复基准”在主模型中接近 0，但在另外两个 Year FE 稳健性模型中明显为正。</p>
+        <p>“仅 R1xday 恢复基准”在 {int((r1_only['actual_minus_counterfactual_mean'] > 0).sum())}/{selected_count} 个模型中为正；“仅温度变量恢复基准”则只有 {int((temp_only['actual_minus_counterfactual_mean'] > 0).sum())}/{selected_count} 个模型为正，说明温度通道对变量代理更敏感。</p>
       </article>
       <article class="insight-card">
-        <h3>4. 双向 FE 应如何解释</h3>
-        <p>双向 FE 口径下，主模型同变量集的 <code>R1xday</code> 系数已收缩为 {fmt_num(strict['coef_R1xday'])}，说明它更适合作为保守下界，而不是正文中的主量化入口。</p>
+        <h3>4. FE 口径应如何解释</h3>
+        <p>{strict_text}</p>
       </article>
       <article class="insight-card wide">
         <h3>5. 分省异质性如何写</h3>
@@ -400,7 +483,7 @@ def build_model_equation_records(selected: pd.DataFrame, coef_df: pd.DataFrame) 
     return rows
 
 
-def build_dashboard_html(outcome: str, inputs: dict[str, pd.DataFrame | Path]) -> str:
+def build_dashboard_html(outcome: str, inputs: dict[str, object]) -> str:
     fe = inputs["fe"]
     selected = inputs["selected"]
     bayes = inputs["bayes"]
@@ -410,6 +493,8 @@ def build_dashboard_html(outcome: str, inputs: dict[str, pd.DataFrame | Path]) -
     province_average = inputs["province_average"]
     latest = inputs["latest"]
     coefficients = inputs["coefficients"]
+    metadata = inputs.get("metadata", {}) if isinstance(inputs, dict) else {}
+    base_path = Path(inputs["base"])
 
     top_lists = build_top_lists(province_average, latest)
     summary_cards = build_summary_cards(fe, selected, overall, province_average, latest)
@@ -422,10 +507,18 @@ def build_dashboard_html(outcome: str, inputs: dict[str, pd.DataFrame | Path]) -
     top_tables = build_top_tables(top_lists)
     focus_coefficient_records = build_focus_coefficient_records(selected, coefficients)
     model_equation_records = build_model_equation_records(selected, coefficients)
+    model_figure_records = build_model_figure_records(selected, base_path, metadata)
     default_focus_model_id = str(
         selected.loc[selected["role_id"] == "main_model", "model_id"].iloc[0]
         if (selected["role_id"] == "main_model").any()
         else selected.iloc[0]["model_id"]
+    )
+    selected_count = int(selected.shape[0])
+    legacy_count, strict_count = archive_group_counts(selected)
+    source_snapshot_link = (
+        '<a href="model_screening/selected_models_source_snapshot.csv">selected_models_source_snapshot.csv</a>'
+        if (inputs["base"] / "model_screening" / "selected_models_source_snapshot.csv").exists()
+        else ""
     )
     baseline_text = "2014"
     if isinstance(panel_predictions, pd.DataFrame) and not panel_predictions.empty and "baseline_years" in panel_predictions.columns:
@@ -485,7 +578,7 @@ def build_dashboard_html(outcome: str, inputs: dict[str, pd.DataFrame | Path]) -
         <span class="eyebrow">Counterfactual Dashboard</span>
         <h1>{escape(outcome)} 反事实推演结果与解释</h1>
         <p>这一页把“模型筛选 + 反事实推演 + 结果解释”合在一起展示。逻辑起点不是重新建一个普通回归，而是从你已有的大量固定效应候选模型中先做筛选，再用入选 FE 模型去比较 <strong>actual scenario</strong> 与 <strong>counterfactual benchmark</strong>。</p>
-        <p class="muted">当前网页聚焦 <code>AMR_AGG_z</code>。基准期默认取 2014 年，含主模型与 3 个稳健性模型，并串联你已经完成的 FE 与贝叶斯桥接结果。</p>
+        <p class="muted">当前网页聚焦 <code>AMR_AGG_z</code>。基准期默认取 2014 年，含 {selected_count} 个归档模型角色，其中手选 Year FE {legacy_count} 个、严筛扩展 {strict_count} 个，并串联固定效应筛选、贝叶斯桥接与反事实量化结果。</p>
         <div class="hero-notes">
           <div class="note"><strong>怎么读这页</strong><p>上半页负责“选模型”，下半页负责“定了一个模型之后怎么看”。绝对差值 <code>Actual - Counterfactual</code> 是本页的主解释量。</p></div>
           <div class="note"><strong>这页解决什么问题</strong><p>如果把气候变量恢复到基准状态，中国 AMR 综合风险会下降多少？这个结果在不同模型设定下是否一致？</p></div>
@@ -499,11 +592,11 @@ def build_dashboard_html(outcome: str, inputs: dict[str, pd.DataFrame | Path]) -
     <section id="equations"><div class="section-head"><div><span class="eyebrow">Counterfactual Equations</span><h2>反事实推演方程</h2><p>这一部分把“模型怎么写成方程”补完整。这里不是重新建一个普通 OLS，而是沿用已筛选固定效应模型的估计系数与固定效应项，再把指定气候变量替换为基准期值，得到反事实预测。</p></div></div><div class="equation-grid"><article class="equation-card"><h3>1. 固定效应主方程</h3><div class="formula-block">y_it = Σ_k (β_k · X_kit^(z)) + FE_i + FE_t + ε_it</div><p class="formula-caption">其中，<code>y_it</code> 是 <code>AMR_AGG_z</code>；<code>X_kit^(z)</code> 是进入当前模型的标准化解释变量；<code>FE_i</code> 表示省份固定效应，<code>FE_t</code> 表示年份固定效应。对于仅年份固定效应模型，仅保留 <code>FE_t</code>；对于双向固定效应模型，同时保留二者。本页当前输出的基准期是 <strong>{escape(baseline_text)}</strong>。</p></article><article class="equation-card"><h3>2. 反事实替换方程</h3><div class="formula-block">ŷ_it^cf(s) = Σ_(k∉S_s) (β̂_k · X_kit,actual^(z)) + Σ_(k∈S_s) (β̂_k · X_ki,base^(z)) + FÊ_i + FÊ_t</div><p class="formula-caption"><code>S_s</code> 是情景 <code>s</code> 下被恢复到基准期的变量集合，例如“仅 R1xday 恢复基准”或“所有气候变量恢复基准”。<code>X_ki,base</code> 取该省在基准期内的均值，其他变量保持实际观测值不变。</p></article><article class="equation-card"><h3>3. 结果差值与相对变化</h3><div class="formula-block">Δ_it^(s) = ŷ_it^actual - ŷ_it^cf(s)\nRelChange_it^(s) = 100 × Δ_it^(s) / |ŷ_it^cf(s)|</div><p class="formula-caption">当 <code>Δ_it^(s) &gt; 0</code> 时，表示相对于“恢复基准”的世界，实际气候轨迹对应更高的预测 AMR。网页中的全国年度平均、分省长期平均和最新年份结果，都是在这个差值基础上继续汇总得到的。</p></article><article class="equation-card"><h3>4. 汇总指标怎么来</h3><div class="formula-block">全国年度平均:  Δ̄_t^(s) = (1 / N_t) · Σ_i Δ_it^(s)\n分省长期平均:  Δ̄_i^(s) = (1 / T_i) · Σ_t Δ_it^(s)</div><p class="formula-caption">所以这页上你看到的时间序列图、分省地图和模型比较图，实质上都是对 <code>Δ_it^(s)</code> 在不同维度上的再汇总。</p></article></div></section>
     <section id="focus"><div class="section-head"><div><span class="eyebrow">Single Model View</span><h2>单模型聚焦分析</h2><p>如果上面的部分是在帮你“选模型”，这里就是帮你“定下一个模型后只看它”。切换模型后，页面不仅展示该模型下的全国情景结果、年度趋势、关键系数和分省异质性，也会把这个模型的具体估计方程展开给你看。</p></div></div><div class="focus-layout"><div class="focus-toolbar"><div class="control"><label for="focusModelSelect">当前模型</label><select id="focusModelSelect"></select></div><div class="control"><label for="focusScenarioSelect">当前情景</label><select id="focusScenarioSelect"></select></div></div><div class="focus-grid"><article class="focus-panel" id="focusModelMeta"></article><article class="focus-panel" id="focusInterpretation"></article></div><div class="focus-grid"><article class="focus-panel" id="focusScenarioTable"></article><article class="focus-panel" id="focusEquation"></article></div><div class="focus-grid"><article class="focus-panel wide" id="focusCoefficientTable"></article></div><div class="focus-grid"><article class="focus-panel wide" id="focusYearlyTrend"></article></div><div class="focus-grid"><article class="focus-panel" id="focusProvinceAverage"></article><article class="focus-panel" id="focusProvinceLatest"></article></div></div></section>
     <section><div class="section-head"><div><span class="eyebrow">Interpretation</span><h2>整体结果分析</h2><p>这里把“哪些结论较稳、哪些对模型设定敏感、R1xday 和抗菌药物使用强度在主模型里处于什么位置”直接写成可用于结果段落的解释。</p></div></div>{interpretation_blocks}</section>
-    <section id="figures"><div class="section-head"><div><span class="eyebrow">Figures</span><h2>图形总览</h2><p>四张图对应四个层面：主模型全国时间序列、2023 年模型比较、不同情景的全国平均对比，以及主情景下的分省地图。</p></div></div><div class="chart-grid"><article class="chart-card"><img src="figures/national_yearly_main_model.png" alt="主模型全国年度时间序列图" /><p>主模型里，“所有气候变量恢复基准”和“仅 R1xday 恢复基准”大多数年份给出正差值；温度单独情景则在主模型里接近于零。</p></article><article class="chart-card"><img src="figures/model_comparison_heatmap_latest_year.png" alt="不同模型比较热图" /><p>2023 年的热图显示：Year FE 稳健性模型普遍给出更大的正向差值，而双向 FE 显著收缩。</p></article><article class="chart-card"><img src="figures/scenario_comparison_bar.png" alt="不同情景比较柱状图" /><p>柱状图最适合看“哪种情景最稳、哪种情景最敏感”。总体气候和 R1xday 通道更稳，温度单独通道更依赖模型设定。</p></article><article class="chart-card"><img src="figures/province_map_main_model_latest_year.png" alt="分省地图" /><p>地图展示的是 2023 年主模型主情景下的省级差值。可以看到全国平均为正并不意味着所有省份都同方向。</p></article></div></section>
+    <section id="figures"><div class="section-head"><div><span class="eyebrow">Figures</span><h2>图形总览</h2><p>四张图对应四个层面：当前选中模型的全国时间序列、{selected_count} 个归档模型的横向比较、不同情景的全国平均对比，以及当前选中模型在主情景下的分省地图。第一张和第四张会跟随上方“单模型分析”的模型选择同步更新。</p></div></div><div class="chart-grid"><article class="chart-card" id="linkedNationalFigure"></article><article class="chart-card"><img src="figures/model_comparison_heatmap_latest_year.png" alt="不同模型比较热图" /><p>2023 年的热图把 {selected_count} 个归档模型并排放在一起，最适合看哪些情景方向稳定、哪些模型对温度更敏感。</p></article><article class="chart-card"><img src="figures/scenario_comparison_bar.png" alt="不同情景比较柱状图" /><p>柱状图最适合看“哪种情景最稳、哪种情景最敏感”。总体气候和 R1xday 通道更稳，温度单独通道更依赖模型设定。</p></article><article class="chart-card" id="linkedProvinceFigure"></article></div></section>
     <section id="scenarios"><div class="section-head"><div><span class="eyebrow">Scenario Comparison</span><h2>情景比较与稳健性</h2><p>表中展示的是全国平均的 <code>Actual - Counterfactual</code>。正值表示：相对于“恢复基准”的世界，实际气候轨迹对应更高的预测 AMR。</p></div></div><div class="table-wrap">{overall_matrix}</div></section>
     <section id="province"><div class="section-head"><div><span class="eyebrow">Province Heterogeneity</span><h2>省级异质性</h2><p>主模型在“所有气候变量恢复基准”情景下，长期平均有明显的正差值省份集群，但 2023 年的排序已经发生变化，说明空间分布存在动态性。</p></div></div><div class="mini-grid">{top_tables}</div></section>
     <section id="explorer"><div class="section-head"><div><span class="eyebrow">Explorer</span><h2>结果浏览器</h2><p>如果你想继续看某个模型、某个情景、某个年份的详细结果，这里可以直接筛选并浏览完整表。</p></div></div><div class="explorer-panel"><div class="explorer-controls"><div class="control"><label for="datasetSelect">数据层级</label><select id="datasetSelect"><option value="province_average">分省长期平均</option><option value="latest">2023 年分省结果</option><option value="yearly">全国年度结果</option></select></div><div class="control"><label for="roleSelect">模型</label><select id="roleSelect"></select></div><div class="control"><label for="scenarioSelect">情景</label><select id="scenarioSelect"></select></div><div class="control"><label for="searchInput">搜索省份 / 年份</label><input id="searchInput" type="text" placeholder="输入省份名或年份" /></div></div><div class="table-wrap"><table class="data-table" id="explorerTable"><thead></thead><tbody></tbody></table></div></div></section>
-    <section><div class="section-head"><div><span class="eyebrow">Files</span><h2>原始结果文件</h2><p>网页中的表和图都直接来自当前项目输出，下面这些链接可以继续追到 CSV、说明文档和图片源文件。</p></div></div><div class="footer-links"><a href="model_screening/selected_models.csv">selected_models.csv</a><a href="model_screening/fe_spec_comparison.csv">fe_spec_comparison.csv</a><a href="counterfactual_outputs/national_overall.csv">national_overall.csv</a><a href="counterfactual_outputs/national_yearly.csv">national_yearly.csv</a><a href="counterfactual_outputs/province_average.csv">province_average.csv</a><a href="counterfactual_outputs/latest_year_province.csv">latest_year_province.csv</a><a href="selection_and_writeup_notes.md">selection_and_writeup_notes.md</a></div></section>
+    <section><div class="section-head"><div><span class="eyebrow">Files</span><h2>原始结果文件</h2><p>网页中的表和图都直接来自当前项目输出，下面这些链接可以继续追到 CSV、说明文档和图片源文件。</p></div></div><div class="footer-links"><a href="model_screening/selected_models.csv">selected_models.csv</a>{source_snapshot_link}<a href="model_screening/fe_spec_comparison.csv">fe_spec_comparison.csv</a><a href="counterfactual_outputs/national_overall.csv">national_overall.csv</a><a href="counterfactual_outputs/national_yearly.csv">national_yearly.csv</a><a href="counterfactual_outputs/province_average.csv">province_average.csv</a><a href="counterfactual_outputs/latest_year_province.csv">latest_year_province.csv</a><a href="selection_and_writeup_notes.md">selection_and_writeup_notes.md</a></div></section>
   </div>
   <script>
     const selectedModels = {json_records(selected)};
@@ -513,6 +606,7 @@ def build_dashboard_html(outcome: str, inputs: dict[str, pd.DataFrame | Path]) -
     const yearly = {json_records(yearly)};
     const focusCoefficientRecords = {json.dumps(focus_coefficient_records, ensure_ascii=False)};
     const modelEquationRecords = {json.dumps(model_equation_records, ensure_ascii=False)};
+    const modelFigureRecords = {json.dumps(model_figure_records, ensure_ascii=False)};
     const defaultFocusModelId = {json.dumps(default_focus_model_id, ensure_ascii=False)};
     const temperatureVars = new Set(["主要城市平均气温", "省平均气温", "TA（°C）"]);
     const hydroVars = new Set(["R1xday", "R5xday", "主要城市降水量", "省平均降水", "PA（%）"]);
@@ -538,6 +632,8 @@ def build_dashboard_html(outcome: str, inputs: dict[str, pd.DataFrame | Path]) -
     const focusYearlyTrend = document.getElementById("focusYearlyTrend");
     const focusProvinceAverage = document.getElementById("focusProvinceAverage");
     const focusProvinceLatest = document.getElementById("focusProvinceLatest");
+    const linkedNationalFigure = document.getElementById("linkedNationalFigure");
+    const linkedProvinceFigure = document.getElementById("linkedProvinceFigure");
     function escapeHtml(value) {{
       return String(value ?? "")
         .replaceAll("&", "&amp;")
@@ -576,6 +672,9 @@ def build_dashboard_html(outcome: str, inputs: dict[str, pd.DataFrame | Path]) -
     }}
     function getModelMeta(modelId) {{
       return selectedModels.find(row => row.model_id === modelId);
+    }}
+    function getModelFigureRecord(modelId) {{
+      return modelFigureRecords.find(row => row.model_id === modelId) || null;
     }}
     function getModelOverall(modelId) {{
       return overallRecords.filter(row => row.model_id === modelId);
@@ -744,6 +843,20 @@ def build_dashboard_html(outcome: str, inputs: dict[str, pd.DataFrame | Path]) -
       focusProvinceAverage.innerHTML = `<div class="card-top"><div><span class="eyebrow">Province Average</span><h3 style="margin-top:8px;">分省长期平均结果</h3></div></div><p class="muted">当前模型与当前情景下，各省跨年份平均后的反事实差值。适合用来描述“长期空间格局”。</p><div class="focus-stat-grid"><div class="focus-stat"><strong>正差值省份</strong><span>${{avgRows.filter(row => Number(row.actual_minus_counterfactual_mean) > 0).length}} / ${{avgRows.length || 31}}</span></div><div class="focus-stat"><strong>最高省份</strong><span>${{avgTop[0] ? escapeHtml(avgTop[0].Province) : "—"}}</span></div><div class="focus-stat"><strong>最低省份</strong><span>${{avgBottom[0] ? escapeHtml(avgBottom[0].Province) : "—"}}</span></div><div class="focus-stat"><strong>当前情景</strong><span>${{escapeHtml(currentScenario.scenario_label)}}</span></div></div><div class="mini-grid" style="margin-top:16px;">${{buildProvinceTableCard("长期平均正差值最高的省份", avgTop)}}${{buildProvinceTableCard("长期平均负差值最高的省份", avgBottom)}}</div>`;
       focusProvinceLatest.innerHTML = `<div class="card-top"><div><span class="eyebrow">Latest Year</span><h3 style="margin-top:8px;">最新年份分省结果</h3></div></div><p class="muted">这里固定展示最新年份的分省结果。适合用来说明“当前格局”和长期平均是否一致。</p><div class="focus-stat-grid"><div class="focus-stat"><strong>正差值省份</strong><span>${{latestRows.filter(row => Number(row.actual_minus_counterfactual_mean) > 0).length}} / ${{latestRows.length || 31}}</span></div><div class="focus-stat"><strong>最高省份</strong><span>${{latestTop[0] ? escapeHtml(latestTop[0].Province) : "—"}}</span></div><div class="focus-stat"><strong>最低省份</strong><span>${{latestBottom[0] ? escapeHtml(latestBottom[0].Province) : "—"}}</span></div><div class="focus-stat"><strong>当前情景</strong><span>${{escapeHtml(currentScenario.scenario_label)}}</span></div></div><div class="mini-grid" style="margin-top:16px;">${{buildProvinceTableCard("最新年份正差值最高的省份", latestTop)}}${{buildProvinceTableCard("最新年份负差值最高的省份", latestBottom)}}</div>`;
     }}
+    function renderLinkedFigureCards(model) {{
+      const figureRecord = getModelFigureRecord(model.model_id);
+      if (!figureRecord || !figureRecord.national_yearly) {{
+        linkedNationalFigure.innerHTML = `<div class="focus-empty">当前模型还没有找到对应的全国年度静态图。</div>`;
+      }} else {{
+        linkedNationalFigure.innerHTML = `<img src="${{escapeHtml(figureRecord.national_yearly)}}" alt="${{escapeHtml(model.role_label)}}全国年度时间序列图" /><p>这里展示的是 <strong>${{escapeHtml(model.role_label)}}</strong>（${{escapeHtml(model.scheme_id)}}）的全国年度时间序列静态图。它和上方的交互式年度轨迹对应同一模型，只是更适合直接截图或写汇报。</p>`;
+      }}
+
+      if (!figureRecord || !figureRecord.province_map_latest_year) {{
+        linkedProvinceFigure.innerHTML = `<div class="focus-empty">当前模型还没有找到对应的最新年份省级地图。</div>`;
+      }} else {{
+        linkedProvinceFigure.innerHTML = `<img src="${{escapeHtml(figureRecord.province_map_latest_year)}}" alt="${{escapeHtml(model.role_label)}}省级地图" /><p>这里展示的是 <strong>${{escapeHtml(model.role_label)}}</strong> 在 <strong>${{escapeHtml(figureRecord.province_map_scenario_label || "所有气候变量恢复基准")}}</strong> 情景下的最新年份省级地图。这样切换模型时，地图也会同步到对应 role，而不是固定停留在主模型。</p>`;
+      }}
+    }}
     function renderFocus() {{
       const model = getModelMeta(focusModelSelect.value);
       const scenarioRows = getModelOverall(model.model_id);
@@ -757,6 +870,7 @@ def build_dashboard_html(outcome: str, inputs: dict[str, pd.DataFrame | Path]) -
       renderFocusCoefficientTable(model);
       renderFocusYearlyTrend(model, currentScenario);
       renderProvincePanels(model, currentScenario);
+      renderLinkedFigureCards(model);
     }}
     function initializeFocus() {{
       const modelOptions = selectedModels.map(model => ({{ value: model.model_id, label: `${{model.role_label}}｜${{model.scheme_id}}｜${{model.fe_label}}` }}));

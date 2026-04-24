@@ -15,6 +15,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_DIR = ROOT / "public_dashboards"
 RELEASES_DIR = PUBLIC_DIR / "releases"
+MODEL_ARCHIVE_BUILDER = ROOT / "tools" / "build_model_archive_12.py"
 
 
 @dataclass(frozen=True)
@@ -54,8 +55,17 @@ LATEST_BUNDLE = DashboardBundle(
         BundleLink(label="Open home", target="index.html", tone="primary"),
         BundleLink(label="Lancet subpage", target="results_dashboard_lancet.html"),
         BundleLink(label="Matrix view", target="results_dashboard_matrix.html"),
+        BundleLink(
+            label="12-model archive",
+            target="results/model_archive_12/selected_models.csv",
+        ),
+        BundleLink(
+            label="Strict top-8 archive",
+            target="results/strict_top8_archive/strict_top8_models.csv",
+        ),
         BundleLink(label="metadata.json", target="metadata.json", tone="ghost"),
     ),
+    copy_paths=("results/model_archive_12", "results/strict_top8_archive"),
 )
 
 LEGACY_PUBLIC_EXHAUSTIVE_BUNDLE = DashboardBundle(
@@ -115,11 +125,24 @@ FUTURE_SCENARIO_BUNDLE = DashboardBundle(
     },
     links=(
         BundleLink(label="Open dashboard", target="index.html", tone="primary"),
+        BundleLink(label="Temperature dashboard", target="temperature_dashboard.html"),
         BundleLink(label="README", target="README.md"),
         BundleLink(label="2050 compare CSV", target="results/baseline_mode_compare/scenario_summary_2050_compare.csv"),
+        BundleLink(
+            label="Selected models snapshot",
+            target="results/model_screening/selected_models_snapshot.csv",
+        ),
         BundleLink(label="metadata.json", target="metadata.json", tone="ghost"),
     ),
-    copy_paths=("results", "docs", "README.md", "data_processed/province_to_region_7zones.csv"),
+    copy_paths=(
+        "results",
+        "docs",
+        "README.md",
+        "temperature_dashboard.html",
+        "data_processed/province_to_region_7zones.csv",
+        "data_processed/TA_future_panel.csv",
+        "data_processed/ssp_province_mean_tas_panel.csv",
+    ),
 )
 
 BAYES_BUNDLE = DashboardBundle(
@@ -128,7 +151,7 @@ BAYES_BUNDLE = DashboardBundle(
     description="Bayesian model-grid dashboard with one-page interpretation plus downloadable summaries and diagnostics.",
     scope_note="Tracks the six Bayesian variants and publishes the CSV summaries alongside the page.",
     source_dir=PUBLIC_DIR / "bayes-analysis",
-    builder_script=ROOT / "tools" / "build_bayes_analysis_dashboard.py",
+    builder_script=ROOT / "tools" / "build_bayes_analysis_dashboard_v2.py",
     files={
         "home": "index.html",
     },
@@ -136,6 +159,7 @@ BAYES_BUNDLE = DashboardBundle(
         BundleLink(label="Open home", target="index.html", tone="primary"),
         BundleLink(label="Primary summary CSV", target="data/focus_primary_summary.csv"),
         BundleLink(label="Variant bridge CSV", target="data/focus_variant_bridge_summary.csv"),
+        BundleLink(label="12-model archive", target="data/selected_models.csv"),
         BundleLink(label="Diagnostics CSV", target="data/combined_diagnostics.csv", tone="ghost"),
     ),
     copy_paths=("data", "metadata.json"),
@@ -155,10 +179,44 @@ COUNTERFACTUAL_BUNDLE = DashboardBundle(
     links=(
         BundleLink(label="Open dashboard", target="index.html", tone="primary"),
         BundleLink(label="Model screening", target="model_screening/selected_models.csv"),
+        BundleLink(
+            label="Selected models snapshot",
+            target="model_screening/selected_models_source_snapshot.csv",
+        ),
         BundleLink(label="National summary", target="counterfactual_outputs/national_overall.csv"),
         BundleLink(label="Write-up notes", target="selection_and_writeup_notes.md", tone="ghost"),
     ),
     copy_paths=("figures", "counterfactual_outputs", "model_screening", "selection_and_writeup_notes.md"),
+)
+
+VARIABLE_GROUP_BUNDLE = DashboardBundle(
+    slug="variable-group-deep-dive",
+    label="Final Model Decision",
+    description="Final paper-facing decision page for the 12 candidate models: 8 strict high-correlation models plus 4 hand-picked Year FE models, integrated with FE, Bayesian, counterfactual, and future-scenario evidence.",
+    scope_note="Published as an independent entry for final model selection without touching the existing FE, Bayesian, counterfactual, or future dashboards.",
+    source_dir=PUBLIC_DIR / "variable-group-deep-dive",
+    builder_script=ROOT / "tools" / "build_variable_group_deep_dive_dashboard.py",
+    files={
+        "home": "index.html",
+    },
+    links=(
+        BundleLink(label="Open dashboard", target="index.html", tone="primary"),
+        BundleLink(label="Summary CSV", target="data/variable_group_scheme_summary.csv"),
+        BundleLink(label="Coefficients CSV", target="data/variable_group_scheme_coefficients.csv"),
+        BundleLink(label="VIF CSV", target="data/variable_group_scheme_vif.csv"),
+        BundleLink(label="metadata.json", target="metadata.json", tone="ghost"),
+    ),
+    copy_paths=("data",),
+)
+
+ALL_BUNDLES: tuple[DashboardBundle, ...] = (
+    LATEST_BUNDLE,
+    LEGACY_PUBLIC_EXHAUSTIVE_BUNDLE,
+    LEGACY_BUNDLE,
+    FUTURE_SCENARIO_BUNDLE,
+    BAYES_BUNDLE,
+    COUNTERFACTUAL_BUNDLE,
+    VARIABLE_GROUP_BUNDLE,
 )
 
 
@@ -195,6 +253,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-counterfactual",
         action="store_true",
         help="Do not publish the counterfactual simulation dashboard bundle.",
+    )
+    parser.add_argument(
+        "--skip-variable-group",
+        action="store_true",
+        help="Do not publish the variable-group deep-dive dashboard bundle.",
     )
     parser.add_argument(
         "--release-tag",
@@ -943,12 +1006,19 @@ def main() -> None:
         bundles.append(BAYES_BUNDLE)
     if not args.skip_counterfactual:
         bundles.append(COUNTERFACTUAL_BUNDLE)
+    if not args.skip_variable_group:
+        bundles.append(VARIABLE_GROUP_BUNDLE)
     if not bundles:
         raise SystemExit(
             "Nothing to publish. Remove skip flags or select at least one bundle."
         )
+    selected_slugs = {bundle.slug for bundle in bundles}
+    all_slugs = {bundle.slug for bundle in ALL_BUNDLES}
+    is_full_publish = selected_slugs == all_slugs
 
     if not args.skip_build:
+        if not args.skip_latest or not args.skip_bayes or not args.skip_counterfactual:
+            run_builder(MODEL_ARCHIVE_BUILDER)
         built_scripts: set[Path] = set()
         for bundle in bundles:
             if bundle.builder_script in built_scripts:
@@ -966,7 +1036,12 @@ def main() -> None:
         "public_dir": rel(PUBLIC_DIR),
         "bundles": published,
     }
-    write_manifest(manifest)
+    if is_full_publish:
+        write_manifest(manifest)
+    else:
+        print(
+            "Partial publish detected; kept existing public root index/manifest unchanged."
+        )
     prune_releases(args.retain_releases)
 
     print(f"Published dashboards to: {PUBLIC_DIR}")

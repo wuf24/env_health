@@ -1,0 +1,18 @@
+2026-04-23 14:24:56,020 | INFO | Log file: E:\MALA\Code_health\6 未来情景分析\logs\build_cckp_tas_future_panel_20260423_142456.log
+2026-04-23 14:24:56,022 | INFO | Loaded 34 province-code mappings
+2026-04-23 14:24:56,022 | INFO | Downloading https://cckpapi.worldbank.org/cckp/v1/cmip6-x0.25_timeseries_tas_timeseries_annual_1950-2014_median,p10,p90_historical_ensemble_all_mean/CHN.@?_format=json
+2026-04-23 14:24:57,398 | INFO | Saved E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_tas_timeseries\tas_timeseries_CHNprov_1950-2014_median_p10_p90_historical.json
+2026-04-23 14:24:57,399 | INFO | Downloading https://cckpapi.worldbank.org/cckp/v1/cmip6-x0.25_timeseries_tas_timeseries_annual_2015-2100_median,p10,p90_ssp119,ssp126,ssp245,ssp370,ssp585_ensemble_all_mean/CHN.@?_format=json
+2026-04-23 14:25:02,986 | INFO | Saved E:\MALA\Code_health\6 未来情景分析\data_raw\cckp_tas_timeseries\tas_timeseries_CHNprov_2015-2100_median_p10_p90.json
+2026-04-23 14:25:03,671 | INFO | Historical panel rows: 6045
+2026-04-23 14:25:03,672 | INFO | Future panel rows: 39990
+2026-04-23 14:25:03,672 | INFO | Combined panel rows: 46035
+2026-04-23 14:25:03,672 | INFO | Reference rows: 465
+2026-04-23 14:25:03,672 | INFO | TA future rows: 35805
+2026-04-23 14:25:03,674 | INFO | TA future provinces: 31
+2026-04-23 14:25:03,675 | INFO | TA future scenarios: ssp119, ssp126, ssp245, ssp370, ssp585
+2026-04-23 14:25:03,676 | INFO | TA future statistics: median, p10, p90
+2026-04-23 14:25:03,676 | INFO | Wrote E:\MALA\Code_health\6 未来情景分析\data_processed\cckp_tas_timeseries_historical_panel.csv
+2026-04-23 14:25:03,676 | INFO | Wrote E:\MALA\Code_health\6 未来情景分析\data_processed\cckp_tas_timeseries_combined_panel.csv
+2026-04-23 14:25:03,676 | INFO | Wrote E:\MALA\Code_health\6 未来情景分析\data_processed\cckp_tas_reference_1991_2020.csv
+2026-04-23 14:25:03,676 | INFO | Wrote E:\MALA\Code_health\6 未来情景分析\data_processed\TA_future_panel.csv

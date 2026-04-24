@@ -914,7 +914,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--candidate-file",
         type=Path,
-        default=Path(__file__).resolve().parent / "results" / "bayes_candidate_models.csv",
+        default=Path(__file__).resolve().parents[1] / "2 固定效应模型" / "results" / "model_archive_12" / "selected_models.csv",
     )
     parser.add_argument(
         "--output-dir",
