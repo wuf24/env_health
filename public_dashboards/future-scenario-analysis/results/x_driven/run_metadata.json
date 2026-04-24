@@ -3,7 +3,7 @@
   "outcome_label": "AMR_AGG_raw_mean",
   "baseline_mode": "x_driven",
   "baseline_mode_label": "X-driven / Nature-like simplified baseline",
-  "baseline_mode_description": "Use future covariate paths as the baseline driver; baseline R1xday and other covariates follow ETS extensions, then future AMR is reconstructed from the historical association model.",
+  "baseline_mode_description": "Use future covariate paths as the baseline driver; baseline covariates follow ETS extensions, then future AMR is reconstructed from the historical association model and perturbed by supported climate scenario inputs.",
   "start_year": 2024,
   "end_year": 2050,
   "selected_roles": [
@@ -42,7 +42,9 @@
     "p90"
   ],
   "controlled_future_variables": [
-    "R1xday"
+    "R1xday",
+    "TA（°C）",
+    "省平均气温"
   ],
   "province_map_size": 34,
   "outputs": {
@@ -61,6 +63,9 @@
     "selected_models_snapshot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\model_screening\\selected_models_snapshot.csv",
     "covariate_ets_methods_snapshot": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\model_screening\\covariate_ets_methods_snapshot.csv",
     "rx1day_future_aligned": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\common_inputs\\rx1day_future_aligned.csv",
-    "rx1day_bias_correction": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\common_inputs\\rx1day_bias_correction.csv"
+    "rx1day_bias_correction": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\common_inputs\\rx1day_bias_correction.csv",
+    "ta_future_panel": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\common_inputs\\ta_future_panel.csv",
+    "province_tas_future_aligned": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\common_inputs\\province_tas_future_aligned.csv",
+    "province_tas_bias_correction": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\common_inputs\\province_tas_bias_correction.csv"
   }
 }

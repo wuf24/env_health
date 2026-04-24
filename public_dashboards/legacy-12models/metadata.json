@@ -3,8 +3,8 @@
   "slug": "legacy-12models",
   "description": "旧版 4 套人工方案 × 3 种固定效应，共 12 个模型的三页式备份。",
   "scope_note": "用于和当前 exhaustive 版并排对照的历史快照。",
-  "generated_at": "2026-04-23 15:49:44",
-  "release_tag": "20260423-154944",
+  "generated_at": "2026-04-24 19:41:53",
+  "release_tag": "20260424-194153",
   "source_dir": "2 固定效应模型/backups/legacy_12models_dashboard_20260417",
   "builder_script": "2 固定效应模型/backups/legacy_12models_dashboard_20260417/process/build_results_dashboard_legacy_12models.py",
   "files": {

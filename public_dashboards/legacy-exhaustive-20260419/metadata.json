@@ -3,8 +3,8 @@
   "slug": "legacy-exhaustive-20260419",
   "description": "保留 2026-04-19 对外发布的 exhaustive dashboard，作为更新筛选逻辑前的公开快照。",
   "scope_note": "来源于 public_dashboards/legacy-exhaustive-20260419 这份已提交的公开快照，用于回看之前的 public latest 版本。",
-  "generated_at": "2026-04-23 15:49:44",
-  "release_tag": "20260423-154944",
+  "generated_at": "2026-04-24 19:41:53",
+  "release_tag": "20260424-194153",
   "source_dir": "public_dashboards/legacy-exhaustive-20260419",
   "builder_script": "tools/build_results_dashboard.py",
   "files": {

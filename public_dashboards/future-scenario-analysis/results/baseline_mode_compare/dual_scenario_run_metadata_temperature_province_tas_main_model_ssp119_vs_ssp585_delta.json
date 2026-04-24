@@ -1,0 +1,36 @@
+{
+  "outcome": "AMR_AGG_RAW",
+  "baseline_modes": [
+    "lancet_ets",
+    "x_driven"
+  ],
+  "scenario_pair": [
+    "ssp119",
+    "ssp585"
+  ],
+  "value_mode": "delta",
+  "metric_family": "temperature",
+  "role_id": "main_model",
+  "start_year": 2024,
+  "end_year": 2050,
+  "mapping_path": "E:\\MALA\\Code_health\\6 未来情景分析\\data_processed\\province_to_region_7zones.csv",
+  "mode_outputs": {
+    "lancet_ets": {
+      "comparison_table": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\dual_scenario_outputs\\dual_scenario_compare_temperature_province_tas_main_model_ssp119_vs_ssp585_delta_2050.csv",
+      "dual_scenario_figure": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\dual_scenario_figures\\dual_scenario_compare_temperature_province_tas_main_model_ssp119_vs_ssp585_delta.png",
+      "metric_family": "temperature",
+      "role_id": "main_model",
+      "role_label": "主模型",
+      "temperature_proxy_variable": "省平均气温"
+    },
+    "x_driven": {
+      "comparison_table": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\dual_scenario_outputs\\dual_scenario_compare_temperature_province_tas_main_model_ssp119_vs_ssp585_delta_2050.csv",
+      "dual_scenario_figure": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\dual_scenario_figures\\dual_scenario_compare_temperature_province_tas_main_model_ssp119_vs_ssp585_delta.png",
+      "metric_family": "temperature",
+      "role_id": "main_model",
+      "role_label": "主模型",
+      "temperature_proxy_variable": "省平均气温"
+    }
+  },
+  "log_path": "E:\\MALA\\Code_health\\6 未来情景分析\\logs\\run_dual_scenario_compare_figure_20260424_035439.log"
+}

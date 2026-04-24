@@ -7,7 +7,7 @@
     "selected_count": 12,
     "yearfe_count": 4,
     "strict_count": 8,
-    "build_time": "2026-04-23 15:49:50",
+    "build_time": "2026-04-24 19:42:01",
     "counterfactual_note_excerpt": [
       "# AMR_AGG_z 反事实推演说明",
       "",
@@ -30,7 +30,7 @@
       "",
       "## Core difference",
       "",
-      "- `lancet_ets`: future baseline comes from ETS on AMR itself, then future R1xday deltas are added."
+      "- `lancet_ets`: future baseline comes from ETS on AMR itself, then future climate deltas are added."
     ]
   },
   "models": [
@@ -467,42 +467,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1504776167680752,
-              "p10": 0.1773318159547536,
-              "p90": 0.0797809430350167
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.7436290423878734,
+              "p10": -0.8290528364441704,
+              "p90": -0.3083611152145524
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2103356551478408,
-              "p10": 0.2031333835329455,
-              "p90": 0.2030797529514952
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1405328906773586,
+              "p10": -0.523416302981878,
+              "p90": 0.8226765998307441
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2586399837549609,
-              "p10": 0.2149657620131314,
-              "p90": 0.3027779522893389
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.4770296468262726,
+              "p10": -0.2147315965387195,
+              "p90": 1.0852840191559132
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2210070892766105,
-              "p10": 0.1870768080784543,
-              "p90": 0.2409681813767597
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1520412103192891,
+              "p10": -0.1793086442444697,
+              "p90": 1.5160628365909414
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.2778428866545928,
-              "p10": 0.222830529045953,
-              "p90": 0.3238421518393381
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.310870140856497,
+              "p10": 0.6831778036967759,
+              "p90": 2.337984373724081
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546575
+          "mitigation_pct": 1.1072058065076813
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -516,50 +516,50 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1504776167680757,
-              "p10": 0.1773318159547536,
-              "p90": 0.0797809430350166
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.7436290423878729,
+              "p10": -0.8290528364441709,
+              "p90": -0.3083611152145529
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2103356551478408,
-              "p10": 0.2031333835329462,
-              "p90": 0.2030797529514956
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1405328906773581,
+              "p10": -0.5234163029818787,
+              "p90": 0.8226765998307439
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2586399837549601,
-              "p10": 0.2149657620131316,
-              "p90": 0.3027779522893387
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.4770296468262727,
+              "p10": -0.2147315965387198,
+              "p90": 1.0852840191559123
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2210070892766105,
-              "p10": 0.1870768080784543,
-              "p90": 0.24096818137676
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1520412103192891,
+              "p10": -0.1793086442444695,
+              "p90": 1.5160628365909414
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.2778428866545931,
-              "p10": 0.2228305290459532,
-              "p90": 0.323842151839338
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.3108701408564962,
+              "p10": 0.6831778036967756,
+              "p90": 2.337984373724081
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546664
+          "mitigation_pct": 1.107205806507681
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.278，SSP1-2.6 为 +0.210，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.311，SSP1-2.6 为 -0.141，相对可缓解 110.7%。"
       },
       "strengths": [
         "12 个候选里 R² 最高，适合作为纯拟合最强的参考上限。",
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=1.000，P(beta_AMC>0)=1.000。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.121（+48.2%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.278，SSP1-2.6 为 +0.210，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.311，SSP1-2.6 为 -0.141，相对可缓解 110.7%。"
       ],
       "caveats": [
         "这是一组严筛强相关规格，统计表现强，但变量组合的叙事可解释性略弱于手选 Year FE 组。"
@@ -568,7 +568,7 @@
         "In the selected Year FE specification (SYS_09851), R1xday remains positive (beta=+0.129, p=0.0345) alongside AMC (beta=+0.106, p=0.0193).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=1.000; P(beta_AMC>0)=1.000).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.121 on average (+48.2% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.278 under SSP5-8.5 versus +0.210 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +1.311 under SSP5-8.5 versus -0.141 under SSP1-2.6, implying a mitigation of 110.7%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     },
@@ -1005,42 +1005,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1568954486564741,
-              "p10": 0.1848949725736939,
-              "p90": 0.0831835798609686
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.7097100174008963,
+              "p10": -0.7905350075010168,
+              "p90": -0.2930198918851979
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2193064170715583,
-              "p10": 0.2117969704134138,
-              "p90": 0.2117410525013729
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1207700118041196,
+              "p10": -0.4924052891809822,
+              "p90": 0.8122801590598161
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2696709129456832,
-              "p10": 0.2241339968110544,
-              "p90": 0.3156913545550139
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.481343283137723,
+              "p10": -0.1923466052045689,
+              "p90": 1.0741288718527668
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2304329851379695,
-              "p10": 0.1950555861203471,
-              "p90": 0.2512454127135138
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.163588378777151,
+              "p10": -0.1600604757225248,
+              "p90": 1.4871203350547575
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.2896928147451252,
-              "p10": 0.2323341941473463,
-              "p90": 0.3376539368311564
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.2909459157148833,
+              "p10": 0.6785219732134615,
+              "p90": 2.289844585483748
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.2429690834254678
+          "mitigation_pct": 1.0935515658200452
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -1054,49 +1054,49 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1568954486564732,
-              "p10": 0.1848949725736943,
-              "p90": 0.0831835798609687
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.7097100174008959,
+              "p10": -0.7905350075010169,
+              "p90": -0.2930198918851979
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2193064170715582,
-              "p10": 0.2117969704134132,
-              "p90": 0.2117410525013728
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1207700118041191,
+              "p10": -0.4924052891809825,
+              "p90": 0.8122801590598167
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2696709129456827,
-              "p10": 0.2241339968110548,
-              "p90": 0.3156913545550139
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.481343283137723,
+              "p10": -0.1923466052045692,
+              "p90": 1.0741288718527668
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.23043298513797,
-              "p10": 0.1950555861203471,
-              "p90": 0.2512454127135143
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1635883787771515,
+              "p10": -0.1600604757225245,
+              "p90": 1.4871203350547568
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.2896928147451248,
-              "p10": 0.2323341941473468,
-              "p90": 0.3376539368311563
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.2909459157148846,
+              "p10": 0.6785219732134613,
+              "p90": 2.2898445854837486
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546708
+          "mitigation_pct": 1.0935515658200448
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.290，SSP1-2.6 为 +0.219，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.291，SSP1-2.6 为 -0.121，相对可缓解 109.4%。"
       },
       "strengths": [
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=1.000，P(beta_AMC>0)=1.000。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.122（+48.9%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.290，SSP1-2.6 为 +0.219，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.291，SSP1-2.6 为 -0.121，相对可缓解 109.4%。"
       ],
       "caveats": [
         "这是一组严筛强相关规格，统计表现强，但变量组合的叙事可解释性略弱于手选 Year FE 组。"
@@ -1105,7 +1105,7 @@
         "In the selected Year FE specification (SYS_10001), R1xday remains positive (beta=+0.135, p=0.0316) alongside AMC (beta=+0.106, p=0.0184).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=1.000; P(beta_AMC>0)=1.000).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.122 on average (+48.9% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.290 under SSP5-8.5 versus +0.219 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +1.291 under SSP5-8.5 versus -0.121 under SSP1-2.6, implying a mitigation of 109.4%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     },
@@ -1542,42 +1542,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1609397788982433,
-              "p10": 0.1896610530147408,
-              "p90": 0.0853278222244737
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -1.1490451958332222,
+              "p10": -1.2848260900376118,
+              "p90": -0.4833518304338294
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.224959529270616,
-              "p10": 0.2172565098703776,
-              "p90": 0.2171991505493941
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.2891094785262716,
+              "p10": -0.8472352518046358,
+              "p90": 1.124990801009789
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2766222823951541,
-              "p10": 0.2299115506488102,
-              "p90": 0.3238290035641161
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.5965921364729183,
+              "p10": -0.3996521346458597,
+              "p90": 1.4703042923167022
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2363729094536532,
-              "p10": 0.2000835790451116,
-              "p90": 0.2577218237849906
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1353287395237179,
+              "p10": -0.3367197570985991,
+              "p90": 2.1259048001513867
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.297160293384753,
-              "p10": 0.2383231263670729,
-              "p90": 0.3463577203995923
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.810682385670795,
+              "p10": 0.9127930084283964,
+              "p90": 3.2973435123318944
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546944
+          "mitigation_pct": 1.1596687971420048
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -1591,50 +1591,50 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1609397788982428,
-              "p10": 0.1896610530147407,
-              "p90": 0.0853278222244742
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -1.149045195833222,
+              "p10": -1.2848260900376125,
+              "p90": -0.4833518304338294
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2249595292706158,
-              "p10": 0.2172565098703773,
-              "p90": 0.2171991505493942
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.2891094785262719,
+              "p10": -0.8472352518046358,
+              "p90": 1.124990801009789
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2766222823951542,
-              "p10": 0.2299115506488102,
-              "p90": 0.3238290035641158
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.5965921364729185,
+              "p10": -0.3996521346458599,
+              "p90": 1.470304292316702
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2363729094536534,
-              "p10": 0.2000835790451119,
-              "p90": 0.2577218237849907
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1353287395237183,
+              "p10": -0.3367197570985992,
+              "p90": 2.1259048001513867
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.2971602933847522,
-              "p10": 0.2383231263670732,
-              "p90": 0.3463577203995922
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.8106823856707943,
+              "p10": 0.9127930084283968,
+              "p90": 3.297343512331894
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546797
+          "mitigation_pct": 1.159668797142005
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.297，SSP1-2.6 为 +0.225，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.811，SSP1-2.6 为 -0.289，相对可缓解 116.0%。"
       },
       "strengths": [
         "证据总分位居前列，说明 FE、Bayes、反事实和未来情景几条线的方向较一致。",
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=1.000，P(beta_AMC>0)=0.999。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.146（+50.1%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.297，SSP1-2.6 为 +0.225，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.811，SSP1-2.6 为 -0.289，相对可缓解 116.0%。"
       ],
       "caveats": [
         "这是一组严筛强相关规格，统计表现强，但变量组合的叙事可解释性略弱于手选 Year FE 组。"
@@ -1643,7 +1643,7 @@
         "In the selected Year FE specification (SYS_10002), R1xday remains positive (beta=+0.133, p=0.0483) alongside AMC (beta=+0.110, p=0.0152).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=1.000; P(beta_AMC>0)=0.999).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.146 on average (+50.1% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.297 under SSP5-8.5 versus +0.225 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +1.811 under SSP5-8.5 versus -0.289 under SSP1-2.6, implying a mitigation of 116.0%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     },
@@ -2107,42 +2107,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1722374921535873,
-              "p10": 0.2029749534521341,
-              "p90": 0.0913176979083754
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.7943663239073784,
+              "p10": -0.8850107308870307,
+              "p90": -0.3282962159751952
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2407513258864397,
-              "p10": 0.2325075669314438,
-              "p90": 0.2324461810785158
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1385668145807863,
+              "p10": -0.5529531970070526,
+              "p90": 0.9022820116025828
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2960407210678918,
-              "p10": 0.2460509711892363,
-              "p90": 0.3465612780277493
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.5321381480932951,
+              "p10": -0.2184876856636626,
+              "p90": 1.1925155526979732
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2529659069749647,
-              "p10": 0.2141291240224291,
-              "p90": 0.2758134807059827
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1784080440002314,
+              "p10": -0.1819640855940656,
+              "p90": 1.6542970731808226
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3180204673486905,
-              "p10": 0.255053025974521,
-              "p90": 0.3706714744984068
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.4348090247107037,
+              "p10": 0.7527267965857511,
+              "p90": 2.54812708097067
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546958
+          "mitigation_pct": 1.0965750927087492
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -2156,49 +2156,49 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1722374921535875,
-              "p10": 0.2029749534521337,
-              "p90": 0.091317697908376
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.7943663239073785,
+              "p10": -0.8850107308870302,
+              "p90": -0.3282962159751949
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.24075132588644,
-              "p10": 0.2325075669314438,
-              "p90": 0.2324461810785158
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1385668145807866,
+              "p10": -0.5529531970070527,
+              "p90": 0.9022820116025831
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2960407210678916,
-              "p10": 0.2460509711892359,
-              "p90": 0.3465612780277496
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.5321381480932954,
+              "p10": -0.2184876856636625,
+              "p90": 1.1925155526979727
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2529659069749642,
-              "p10": 0.2141291240224291,
-              "p90": 0.2758134807059824
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1784080440002313,
+              "p10": -0.1819640855940656,
+              "p90": 1.6542970731808222
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3180204673486901,
-              "p10": 0.2550530259745213,
-              "p90": 0.3706714744984068
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.4348090247107033,
+              "p10": 0.752726796585751,
+              "p90": 2.54812708097067
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.2429690834254677
+          "mitigation_pct": 1.0965750927087494
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.318，SSP1-2.6 为 +0.241，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.435，SSP1-2.6 为 -0.139，相对可缓解 109.7%。"
       },
       "strengths": [
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=1.000，P(beta_AMC>0)=1.000。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.135（+53.9%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.318，SSP1-2.6 为 +0.241，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.435，SSP1-2.6 为 -0.139，相对可缓解 109.7%。"
       ],
       "caveats": [
         "这是一组严筛强相关规格，统计表现强，但变量组合的叙事可解释性略弱于手选 Year FE 组。"
@@ -2207,7 +2207,7 @@
         "In the selected Year FE specification (SYS_09941), R1xday remains positive (beta=+0.143, p=0.0486) alongside AMC (beta=+0.122, p=0.0074).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=1.000; P(beta_AMC>0)=1.000).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.135 on average (+53.9% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.318 under SSP5-8.5 versus +0.241 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +1.435 under SSP5-8.5 versus -0.139 under SSP1-2.6, implying a mitigation of 109.7%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     },
@@ -2644,42 +2644,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1665979983918492,
-              "p10": 0.1963290369941676,
-              "p90": 0.0883277241154964
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.8476791859949224,
+              "p10": -0.9453166281984492,
+              "p90": -0.35198175121612
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2328685148707293,
-              "p10": 0.2248946775606591,
-              "p90": 0.224835301636755
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1651577799847618,
+              "p10": -0.5993053916469856,
+              "p90": 0.9277077597178378
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2863475945667577,
-              "p10": 0.2379946363010462,
-              "p90": 0.3352139799391622
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.5340894610329504,
+              "p10": -0.2494552920798011,
+              "p90": 1.2228911291242943
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2446831594936813,
-              "p10": 0.2071179916375356,
-              "p90": 0.2667826455237236
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1664480666093201,
+              "p10": -0.2085107269016829,
+              "p90": 1.7132537163668349
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3076076680255397,
-              "p10": 0.2467019409063927,
-              "p90": 0.358534747227529
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.479476777887469,
+              "p10": 0.7689212229031747,
+              "p90": 2.643383518733498
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546597
+          "mitigation_pct": 1.1116325598706518
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -2693,49 +2693,49 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.16659799839185,
-              "p10": 0.1963290369941678,
-              "p90": 0.0883277241154962
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.8476791859949225,
+              "p10": -0.9453166281984492,
+              "p90": -0.3519817512161199
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2328685148707295,
-              "p10": 0.2248946775606586,
-              "p90": 0.2248353016367553
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1651577799847622,
+              "p10": -0.5993053916469856,
+              "p90": 0.927707759717838
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2863475945667577,
-              "p10": 0.2379946363010462,
-              "p90": 0.3352139799391621
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.5340894610329502,
+              "p10": -0.2494552920798003,
+              "p90": 1.2228911291242943
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2446831594936808,
-              "p10": 0.2071179916375354,
-              "p90": 0.2667826455237237
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1664480666093203,
+              "p10": -0.2085107269016833,
+              "p90": 1.7132537163668349
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3076076680255402,
-              "p10": 0.2467019409063927,
-              "p90": 0.3585347472275295
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.479476777887469,
+              "p10": 0.7689212229031744,
+              "p90": 2.643383518733497
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546655
+          "mitigation_pct": 1.111632559870652
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.308，SSP1-2.6 为 +0.233，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.479，SSP1-2.6 为 -0.165，相对可缓解 111.2%。"
       },
       "strengths": [
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=1.000，P(beta_AMC>0)=1.000。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.135（+53.9%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.308，SSP1-2.6 为 +0.233，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.479，SSP1-2.6 为 -0.165，相对可缓解 111.2%。"
       ],
       "caveats": [
         "这是一组严筛强相关规格，统计表现强，但变量组合的叙事可解释性略弱于手选 Year FE 组。"
@@ -2744,7 +2744,7 @@
         "In the selected Year FE specification (SYS_09926), R1xday remains positive (beta=+0.144, p=0.0275) alongside AMC (beta=+0.122, p=0.0074).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=1.000; P(beta_AMC>0)=1.000).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.135 on average (+53.9% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.308 under SSP5-8.5 versus +0.233 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +1.479 under SSP5-8.5 versus -0.165 under SSP1-2.6, implying a mitigation of 111.2%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     },
@@ -3181,42 +3181,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1726438617727552,
-              "p10": 0.2034538436955049,
-              "p90": 0.0915331488979272
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -1.2967746263608102,
+              "p10": -1.450487774192525,
+              "p90": -0.5463584388378644
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2413193440536315,
-              "p10": 0.2330561351336756,
-              "p90": 0.2329946044496463
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.3353151355808177,
+              "p10": -0.9609910526150064,
+              "p90": 1.2512702795834243
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2967391866201612,
-              "p10": 0.2466314931081749,
-              "p90": 0.3473789395764038
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.6556514095055015,
+              "p10": -0.4595541017450228,
+              "p90": 1.633387571718659
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2535627436914922,
-              "p10": 0.2146343309288572,
-              "p90": 0.2764642229904558
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1402208548323532,
+              "p10": -0.3875013895843044,
+              "p90": 2.3720169641597986
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3187707909547075,
-              "p10": 0.2556547869484942,
-              "p90": 0.3715460205919722
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 2.0164981599725147,
+              "p10": 1.0122119486772658,
+              "p90": 3.681685575264105
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546564
+          "mitigation_pct": 1.1662858624107983
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -3230,49 +3230,49 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1726438617727558,
-              "p10": 0.2034538436955052,
-              "p90": 0.091533148897927
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -1.2967746263608095,
+              "p10": -1.450487774192525,
+              "p90": -0.5463584388378644
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2413193440536317,
-              "p10": 0.2330561351336756,
-              "p90": 0.2329946044496463
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.335315135580818,
+              "p10": -0.9609910526150058,
+              "p90": 1.251270279583424
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2967391866201613,
-              "p10": 0.2466314931081747,
-              "p90": 0.3473789395764031
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.655651409505501,
+              "p10": -0.4595541017450221,
+              "p90": 1.633387571718658
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2535627436914923,
-              "p10": 0.214634330928857,
-              "p90": 0.2764642229904557
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1402208548323532,
+              "p10": -0.3875013895843043,
+              "p90": 2.372016964159799
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3187707909547078,
-              "p10": 0.2556547869484945,
-              "p90": 0.3715460205919725
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 2.016498159972515,
+              "p10": 1.0122119486772665,
+              "p90": 3.681685575264104
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.2429690834254657
+          "mitigation_pct": 1.1662858624107986
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.319，SSP1-2.6 为 +0.241，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +2.016，SSP1-2.6 为 -0.335，相对可缓解 116.6%。"
       },
       "strengths": [
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=1.000，P(beta_AMC>0)=1.000。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.160（+57.9%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.319，SSP1-2.6 为 +0.241，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +2.016，SSP1-2.6 为 -0.335，相对可缓解 116.6%。"
       ],
       "caveats": [
         "这是一组严筛强相关规格，统计表现强，但变量组合的叙事可解释性略弱于手选 Year FE 组。"
@@ -3281,7 +3281,7 @@
         "In the selected Year FE specification (SYS_09927), R1xday remains positive (beta=+0.143, p=0.0403) alongside AMC (beta=+0.125, p=0.0071).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=1.000; P(beta_AMC>0)=1.000).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.160 on average (+57.9% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.319 under SSP5-8.5 versus +0.241 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +2.016 under SSP5-8.5 versus -0.335 under SSP1-2.6, implying a mitigation of 116.6%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     },
@@ -3745,42 +3745,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1732768064954995,
-              "p10": 0.2041997435807751,
-              "p90": 0.0918687265602673
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.9280176433942556,
+              "p10": -1.035390433711319,
+              "p90": -0.3862159517515626
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2422040659530737,
-              "p10": 0.233910562562031,
-              "p90": 0.233848806294993
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1899698567005805,
+              "p10": -0.6609996018284978,
+              "p90": 0.997022373620246
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2978270880391514,
-              "p10": 0.2475356903406872,
-              "p90": 0.3486524958114143
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.5668233217555806,
+              "p10": -0.2817337332336462,
+              "p90": 1.3124855906893156
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2544923521864365,
-              "p10": 0.2154212205737363,
-              "p90": 0.2774777925965366
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1695452835680615,
+              "p10": -0.2358652797913225,
+              "p90": 1.848045076143116
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3199394643603406,
-              "p10": 0.2565920652657278,
-              "p90": 0.3729081778709818
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.5923460279255703,
+              "p10": 0.8236137884608346,
+              "p90": 2.8537795901745966
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546725
+          "mitigation_pct": 1.1193018686698795
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -3794,50 +3794,50 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1732768064954994,
-              "p10": 0.2041997435807752,
-              "p90": 0.0918687265602671
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.9280176433942546,
+              "p10": -1.035390433711319,
+              "p90": -0.3862159517515624
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.242204065953074,
-              "p10": 0.2339105625620316,
-              "p90": 0.2338488062949933
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1899698567005804,
+              "p10": -0.6609996018284982,
+              "p90": 0.9970223736202448
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2978270880391513,
-              "p10": 0.247535690340687,
-              "p90": 0.3486524958114148
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.566823321755581,
+              "p10": -0.2817337332336463,
+              "p90": 1.3124855906893151
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2544923521864368,
-              "p10": 0.2154212205737364,
-              "p90": 0.2774777925965359
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1695452835680611,
+              "p10": -0.235865279791322,
+              "p90": 1.8480450761431169
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3199394643603409,
-              "p10": 0.2565920652657278,
-              "p90": 0.3729081778709818
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.5923460279255703,
+              "p10": 0.823613788460834,
+              "p90": 2.8537795901745966
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546694
+          "mitigation_pct": 1.1193018686698792
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.320，SSP1-2.6 为 +0.242，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.592，SSP1-2.6 为 -0.190，相对可缓解 111.9%。"
       },
       "strengths": [
         "证据总分位居前列，说明 FE、Bayes、反事实和未来情景几条线的方向较一致。",
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=1.000，P(beta_AMC>0)=1.000。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.145（+58.9%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.320，SSP1-2.6 为 +0.242，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.592，SSP1-2.6 为 -0.190，相对可缓解 111.9%。"
       ],
       "caveats": [
         "这是一组严筛强相关规格，统计表现强，但变量组合的叙事可解释性略弱于手选 Year FE 组。"
@@ -3846,7 +3846,7 @@
         "In the selected Year FE specification (SYS_09791), R1xday remains positive (beta=+0.147, p=0.0446) alongside AMC (beta=+0.121, p=0.0088).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=1.000; P(beta_AMC>0)=1.000).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.145 on average (+58.9% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.320 under SSP5-8.5 versus +0.242 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +1.592 under SSP5-8.5 versus -0.190 under SSP1-2.6, implying a mitigation of 111.9%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     },
@@ -4283,42 +4283,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1679103752123342,
-              "p10": 0.1978756202654341,
-              "p90": 0.0890235263391381
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.9777760639595592,
+              "p10": -1.0916810976462965,
+              "p90": -0.4083322287657315
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.23470293811763,
-              "p10": 0.2266662868520669,
-              "p90": 0.2266064431939349
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.2148914483769003,
+              "p10": -0.7043167392786444,
+              "p90": 1.020542712378356
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2886032996132684,
-              "p10": 0.2398694406029964,
-              "p90": 0.3378546302556201
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.5684424808495651,
+              "p10": -0.310734261538734,
+              "p90": 1.3405387957276518
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2466106526807679,
-              "p10": 0.2087495649694739,
-              "p90": 0.2688842275563572
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1582394595151078,
+              "p10": -0.2607278065920986,
+              "p90": 1.9027593812416277
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3100308494395852,
-              "p10": 0.2486453370572436,
-              "p90": 0.3613591070406231
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.6337267466956964,
+              "p10": 0.8385230932245833,
+              "p90": 2.942231765292926
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546775
+          "mitigation_pct": 1.1315345107812738
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -4332,49 +4332,49 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1679103752123346,
-              "p10": 0.1978756202654338,
-              "p90": 0.089023526339138
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.9777760639595592,
+              "p10": -1.091681097646297,
+              "p90": -0.4083322287657312
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2347029381176298,
-              "p10": 0.2266662868520669,
-              "p90": 0.2266064431939355
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.2148914483768998,
+              "p10": -0.7043167392786446,
+              "p90": 1.0205427123783557
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2886032996132683,
-              "p10": 0.2398694406029955,
-              "p90": 0.33785463025562
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.5684424808495648,
+              "p10": -0.3107342615387336,
+              "p90": 1.3405387957276518
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2466106526807678,
-              "p10": 0.2087495649694743,
-              "p90": 0.2688842275563575
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1582394595151075,
+              "p10": -0.2607278065920991,
+              "p90": 1.902759381241628
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3100308494395851,
-              "p10": 0.248645337057244,
-              "p90": 0.3613591070406237
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.6337267466956962,
+              "p10": 0.8385230932245834,
+              "p90": 2.9422317652929264
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.2429690834254681
+          "mitigation_pct": 1.1315345107812733
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.310，SSP1-2.6 为 +0.235，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.634，SSP1-2.6 为 -0.215，相对可缓解 113.2%。"
       },
       "strengths": [
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=1.000，P(beta_AMC>0)=1.000。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.144（+58.7%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.310，SSP1-2.6 为 +0.235，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.634，SSP1-2.6 为 -0.215，相对可缓解 113.2%。"
       ],
       "caveats": [
         "这是一组严筛强相关规格，统计表现强，但变量组合的叙事可解释性略弱于手选 Year FE 组。"
@@ -4383,7 +4383,7 @@
         "In the selected Year FE specification (SYS_09776), R1xday remains positive (beta=+0.147, p=0.0241) alongside AMC (beta=+0.121, p=0.0088).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=1.000; P(beta_AMC>0)=1.000).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.144 on average (+58.7% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.310 under SSP5-8.5 versus +0.235 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +1.634 under SSP5-8.5 versus -0.215 under SSP1-2.6, implying a mitigation of 113.2%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     },
@@ -4847,42 +4847,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.187146730125014,
-              "p10": 0.2205448904351836,
-              "p90": 0.099222349050792
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.414487091321385,
+              "p10": -0.4566394679045124,
+              "p90": -0.1619538622853427
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2615912647679031,
-              "p10": 0.2526339087760341,
-              "p90": 0.2525672092351399
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": 0.0254959601546578,
+              "p10": -0.2362528027727222,
+              "p90": 0.6694866169219177
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.321666625767537,
-              "p10": 0.2673496584651145,
-              "p90": 0.3765603479235755
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.4686184532844241,
+              "p10": -0.0217886241364507,
+              "p90": 0.903099447585749
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2748631655717408,
-              "p10": 0.2326645893659246,
-              "p90": 0.2996884731257854
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.2284568393447641,
+              "p10": -0.0138718585467854,
+              "p90": 1.1576846218700283
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3455489849101145,
-              "p10": 0.2771309499621481,
-              "p90": 0.4027575734854266
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.040660835648908,
+              "p10": 0.5868931994705735,
+              "p90": 1.758050109873641
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546794
+          "mitigation_pct": 0.9755002213196966
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -4896,50 +4896,50 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1871467301250135,
-              "p10": 0.2205448904351837,
-              "p90": 0.0992223490507922
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.414487091321385,
+              "p10": -0.4566394679045125,
+              "p90": -0.1619538622853421
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2615912647679032,
-              "p10": 0.2526339087760345,
-              "p90": 0.2525672092351402
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": 0.0254959601546578,
+              "p10": -0.236252802772722,
+              "p90": 0.6694866169219177
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.3216666257675367,
-              "p10": 0.2673496584651142,
-              "p90": 0.3765603479235752
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.4686184532844236,
+              "p10": -0.0217886241364505,
+              "p90": 0.9030994475857494
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2748631655717406,
-              "p10": 0.232664589365924,
-              "p90": 0.2996884731257856
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.2284568393447645,
+              "p10": -0.0138718585467856,
+              "p90": 1.1576846218700283
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3455489849101148,
-              "p10": 0.2771309499621483,
-              "p90": 0.402757573485427
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.040660835648908,
+              "p10": 0.5868931994705733,
+              "p90": 1.7580501098736412
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.2429690834254685
+          "mitigation_pct": 0.9755002213196966
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.346，SSP1-2.6 为 +0.262，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.041，SSP1-2.6 为 +0.025，相对可缓解 97.6%。"
       },
       "strengths": [
         "当前最适合作为论文主模型的平衡解：统计证据、故事完整性和写作连续性最均衡。",
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=1.000，P(beta_AMC>0)=1.000。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.093（+30.0%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.346，SSP1-2.6 为 +0.262，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.041，SSP1-2.6 为 +0.025，相对可缓解 97.6%。"
       ],
       "caveats": [
         "目前没有特别突出的硬伤，更像是主规格或第一备选之间的细节权衡。"
@@ -4948,7 +4948,7 @@
         "In the selected Year FE specification (SYS_09556), R1xday remains positive (beta=+0.181, p=0.0218) alongside AMC (beta=+0.116, p=0.0054).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=1.000; P(beta_AMC>0)=1.000).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.093 on average (+30.0% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.346 under SSP5-8.5 versus +0.262 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +1.041 under SSP5-8.5 versus +0.025 under SSP1-2.6, implying a mitigation of 97.6%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     },
@@ -5412,42 +5412,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1890914679762732,
-              "p10": 0.2228366857342237,
-              "p90": 0.1002534194721723
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.6728447757608705,
+              "p10": -0.7473377315576882,
+              "p90": -0.2739230887755813
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2643095940372061,
-              "p10": 0.255259157555857,
-              "p90": 0.255191764905755
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.0739345218489021,
+              "p10": -0.4451488992124123,
+              "p90": 0.8524951999731475
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.3250092289869425,
-              "p10": 0.2701278261626813,
-              "p90": 0.3804733800209106
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.5355411201557296,
+              "p10": -0.1441088014043176,
+              "p90": 1.134824477923718
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2777194099829975,
-              "p10": 0.2350823266851155,
-              "p90": 0.3028026900660697
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.2112349586641571,
+              "p10": -0.1181203894575844,
+              "p90": 1.5320187866804724
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3491397619970036,
-              "p10": 0.2800107600864664,
-              "p90": 0.4069428344168657
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.3449981666368265,
+              "p10": 0.7237945040770745,
+              "p90": 2.348615187827801
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546647
+          "mitigation_pct": 1.0549699796496939
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -5461,49 +5461,49 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1890914679762733,
-              "p10": 0.2228366857342234,
-              "p90": 0.100253419472172
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.6728447757608709,
+              "p10": -0.7473377315576883,
+              "p90": -0.2739230887755816
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2643095940372059,
-              "p10": 0.2552591575558569,
-              "p90": 0.255191764905755
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.0739345218489026,
+              "p10": -0.4451488992124127,
+              "p90": 0.8524951999731476
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.3250092289869427,
-              "p10": 0.2701278261626805,
-              "p90": 0.3804733800209105
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.535541120155729,
+              "p10": -0.1441088014043175,
+              "p90": 1.1348244779237178
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2777194099829975,
-              "p10": 0.2350823266851149,
-              "p90": 0.3028026900660694
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.2112349586641573,
+              "p10": -0.1181203894575839,
+              "p90": 1.5320187866804724
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.3491397619970038,
-              "p10": 0.2800107600864661,
-              "p90": 0.4069428344168651
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.344998166636826,
+              "p10": 0.723794504077074,
+              "p90": 2.3486151878278023
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.2429690834254676
+          "mitigation_pct": 1.0549699796496945
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.349，SSP1-2.6 为 +0.264，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.345，SSP1-2.6 为 -0.074，相对可缓解 105.5%。"
       },
       "strengths": [
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=1.000，P(beta_AMC>0)=1.000。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.094（+32.3%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.349，SSP1-2.6 为 +0.264，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.345，SSP1-2.6 为 -0.074，相对可缓解 105.5%。"
       ],
       "caveats": [
         "贝叶斯桥接结果来自备份焦点汇总，而不是当前主汇总；正文引用时需注明来源一致性。"
@@ -5512,7 +5512,7 @@
         "In the selected Year FE specification (SYS_09557), R1xday remains positive (beta=+0.178, p=0.0277) alongside AMC (beta=+0.117, p=0.0049).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=1.000; P(beta_AMC>0)=1.000).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.094 on average (+32.3% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.349 under SSP5-8.5 versus +0.264 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +1.345 under SSP5-8.5 versus -0.074 under SSP1-2.6, implying a mitigation of 105.5%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     },
@@ -5964,42 +5964,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1535577186105488,
-              "p10": 0.1809615920289801,
-              "p90": 0.0814139661710433
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.8085045944336271,
+              "p10": -0.9019122872608468,
+              "p90": -0.3362284286432619
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2146409814340565,
-              "p10": 0.2072912876938818,
-              "p90": 0.2072365593567898
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1628949661112814,
+              "p10": -0.5744790579266594,
+              "p90": 0.8739252251433166
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2639340434803268,
-              "p10": 0.2193658612030717,
-              "p90": 0.3089754649077376
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.4989221875096617,
+              "p10": -0.2429902016268586,
+              "p90": 1.1509550978202483
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2255308474108833,
-              "p10": 0.1909060528101442,
-              "p90": 0.2459005198559103
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.15132328799796,
+              "p10": -0.2033261476974336,
+              "p90": 1.6179074284093775
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.2835300074735113,
-              "p10": 0.2273916108720404,
-              "p90": 0.3304708241294385
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.3950714320205069,
+              "p10": 0.7227271050425482,
+              "p90": 2.49769584694229
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.2429690834254669
+          "mitigation_pct": 1.1167646060068463
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -6013,49 +6013,49 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1535577186105491,
-              "p10": 0.18096159202898,
-              "p90": 0.0814139661710434
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": -0.8085045944336271,
+              "p10": -0.9019122872608464,
+              "p90": -0.3362284286432619
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2146409814340565,
-              "p10": 0.2072912876938822,
-              "p90": 0.2072365593567894
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": -0.1628949661112813,
+              "p10": -0.574479057926659,
+              "p90": 0.8739252251433167
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2639340434803267,
-              "p10": 0.219365861203072,
-              "p90": 0.3089754649077376
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.4989221875096616,
+              "p10": -0.2429902016268583,
+              "p90": 1.150955097820248
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2255308474108832,
-              "p10": 0.1909060528101443,
-              "p90": 0.2459005198559107
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.1513232879979603,
+              "p10": -0.2033261476974334,
+              "p90": 1.6179074284093773
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.2835300074735117,
-              "p10": 0.2273916108720405,
-              "p90": 0.3304708241294384
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 1.3950714320205069,
+              "p10": 0.7227271050425479,
+              "p90": 2.49769584694229
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.2429690834254679
+          "mitigation_pct": 1.1167646060068463
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.284，SSP1-2.6 为 +0.215，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.395，SSP1-2.6 为 -0.163，相对可缓解 111.7%。"
       },
       "strengths": [
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=1.000，P(beta_AMC>0)=1.000。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.109（+43.7%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.284，SSP1-2.6 为 +0.215，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +1.395，SSP1-2.6 为 -0.163，相对可缓解 111.7%。"
       ],
       "caveats": [
         "目前没有特别突出的硬伤，更像是主规格或第一备选之间的细节权衡。"
@@ -6064,7 +6064,7 @@
         "In the selected Year FE specification (方案F_低VIF主线组), R1xday remains positive (beta=+0.134, p=0.0511) alongside AMC (beta=+0.128, p=0.0034).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=1.000; P(beta_AMC>0)=1.000).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.109 on average (+43.7% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.284 under SSP5-8.5 versus +0.215 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +1.395 under SSP5-8.5 versus -0.163 under SSP1-2.6, implying a mitigation of 111.7%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     },
@@ -6501,42 +6501,42 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1528147075741835,
-              "p10": 0.1800859834223116,
-              "p90": 0.0810200330237766
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": 0.1446322778145984,
+              "p10": 0.1724331943760379,
+              "p90": 0.0755470778365189
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2136024102732918,
-              "p10": 0.2062882790799712,
-              "p90": 0.206233815553783
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": 0.2097660979131538,
+              "p10": 0.2004258995195214,
+              "p90": 0.2095785828983877
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2626569607719297,
-              "p10": 0.2183044280341601,
-              "p90": 0.3074804428243813
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.264887656271291,
+              "p10": 0.2151609493546188,
+              "p90": 0.3129202072507854
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2244395840723597,
-              "p10": 0.1899823265042943,
-              "p90": 0.2447106949369538
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.2254937584321379,
+              "p10": 0.1908550444239176,
+              "p90": 0.2555682302194412
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.2821581068839497,
-              "p10": 0.2262913439627402,
-              "p90": 0.328871793668797
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 0.2905907242843538,
+              "p10": 0.2317499610063032,
+              "p90": 0.3446687146469561
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546594
+          "mitigation_pct": 0.2781390444249353
         },
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
@@ -6550,49 +6550,49 @@
             },
             "ssp119": {
               "scenario_id": "ssp119",
-              "scenario_label": "SSP1-1.9（rx1day）",
-              "median": 0.1528147075741837,
-              "p10": 0.1800859834223115,
-              "p90": 0.0810200330237767
+              "scenario_label": "SSP1-1.9（climate）",
+              "median": 0.1446322778145983,
+              "p10": 0.1724331943760375,
+              "p90": 0.0755470778365191
             },
             "ssp126": {
               "scenario_id": "ssp126",
-              "scenario_label": "SSP1-2.6（rx1day）",
-              "median": 0.2136024102732917,
-              "p10": 0.2062882790799712,
-              "p90": 0.2062338155537835
+              "scenario_label": "SSP1-2.6（climate）",
+              "median": 0.2097660979131541,
+              "p10": 0.2004258995195217,
+              "p90": 0.2095785828983873
             },
             "ssp245": {
               "scenario_id": "ssp245",
-              "scenario_label": "SSP2-4.5（rx1day）",
-              "median": 0.2626569607719297,
-              "p10": 0.2183044280341599,
-              "p90": 0.3074804428243813
+              "scenario_label": "SSP2-4.5（climate）",
+              "median": 0.2648876562712912,
+              "p10": 0.2151609493546184,
+              "p90": 0.3129202072507855
             },
             "ssp370": {
               "scenario_id": "ssp370",
-              "scenario_label": "SSP3-7.0（rx1day）",
-              "median": 0.2244395840723597,
-              "p10": 0.189982326504294,
-              "p90": 0.2447106949369538
+              "scenario_label": "SSP3-7.0（climate）",
+              "median": 0.2254937584321383,
+              "p10": 0.1908550444239176,
+              "p90": 0.2555682302194415
             },
             "ssp585": {
               "scenario_id": "ssp585",
-              "scenario_label": "SSP5-8.5（rx1day）",
-              "median": 0.2821581068839499,
-              "p10": 0.22629134396274,
-              "p90": 0.3288717936687967
+              "scenario_label": "SSP5-8.5（climate）",
+              "median": 0.2905907242843537,
+              "p10": 0.2317499610063035,
+              "p90": 0.3446687146469563
             }
           },
           "monotonicity": 0.75,
-          "mitigation_pct": 0.24296908342546678
+          "mitigation_pct": 0.278139044424934
         },
-        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.282，SSP1-2.6 为 +0.214，相对可缓解 24.3%。"
+        "headline_text": "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.291，SSP1-2.6 为 +0.210，相对可缓解 27.8%。"
       },
       "strengths": [
         "Bayes year-only 主效应稳定：P(beta_R1xday>0)=0.999，P(beta_AMC>0)=1.000。",
         "把全部气候变量回拨到基准期后，全国平均 AMR 指标下降 +0.020（+8.9%）。",
-        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.282，SSP1-2.6 为 +0.214，相对可缓解 24.3%。"
+        "2050 年 x-driven 基线下，SSP5-8.5 的气候增量为 +0.291，SSP1-2.6 为 +0.210，相对可缓解 27.8%。"
       ],
       "caveats": [
         "共线性压力偏高，正文写作时需要强调这是一组故事导向的主线规格。"
@@ -6601,7 +6601,7 @@
         "In the selected Year FE specification (方案A_平衡主线组), R1xday remains positive (beta=+0.151, p=0.0426) alongside AMC (beta=+0.131, p=0.0034).",
         "Bayesian year-only inference keeps the two core effects positive (P(beta_R1xday>0)=0.999; P(beta_AMC>0)=1.000).",
         "Counterfactual rollback of all climate variables to the baseline period lowers the national AMR signal by +0.020 on average (+8.9% relative change).",
-        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.282 under SSP5-8.5 versus +0.214 under SSP1-2.6, implying a mitigation of 24.3%.",
+        "By 2050 under the x-driven baseline, the climate-driven increment reaches +0.291 under SSP5-8.5 versus +0.210 under SSP1-2.6, implying a mitigation of 27.8%.",
         "This specification is therefore useful not only for fit comparison, but also for writing a coherent causal and scenario-based narrative."
       ]
     }
@@ -6620,8 +6620,8 @@
       "story_score": 0.7552007496103195,
       "r2_model": 0.4276299979124666,
       "counterfactual_all": 0.1214592970342473,
-      "future_xdriven_585": 0.2778428866545928,
-      "future_xdriven_126": 0.2103356551478408,
+      "future_xdriven_585": 1.310870140856497,
+      "future_xdriven_126": -0.1405328906773586,
       "bayes_year_r1_prob": 0.99975,
       "bayes_year_amc_prob": 0.9995,
       "bayes_amp_prob": 0.939,
@@ -6640,8 +6640,8 @@
       "story_score": 0.7553112940435344,
       "r2_model": 0.425447482788186,
       "counterfactual_all": 0.1218900030092957,
-      "future_xdriven_585": 0.2896928147451252,
-      "future_xdriven_126": 0.2193064170715583,
+      "future_xdriven_585": 1.2909459157148833,
+      "future_xdriven_126": -0.1207700118041196,
       "bayes_year_r1_prob": 0.99975,
       "bayes_year_amc_prob": 1.0,
       "bayes_amp_prob": 0.9465,
@@ -6660,8 +6660,8 @@
       "story_score": 0.7757933352110592,
       "r2_model": 0.4230334045458238,
       "counterfactual_all": 0.1455703816738172,
-      "future_xdriven_585": 0.297160293384753,
-      "future_xdriven_126": 0.224959529270616,
+      "future_xdriven_585": 1.810682385670795,
+      "future_xdriven_126": -0.2891094785262716,
       "bayes_year_r1_prob": 1.0,
       "bayes_year_amc_prob": 0.99925,
       "bayes_amp_prob": 0.9515,
@@ -6680,8 +6680,8 @@
       "story_score": 0.7261205406777018,
       "r2_model": 0.4088373371756515,
       "counterfactual_all": 0.1349154801906424,
-      "future_xdriven_585": 0.3180204673486905,
-      "future_xdriven_126": 0.2407513258864397,
+      "future_xdriven_585": 1.4348090247107037,
+      "future_xdriven_126": -0.1385668145807863,
       "bayes_year_r1_prob": 1.0,
       "bayes_year_amc_prob": 1.0,
       "bayes_amp_prob": 0.9535,
@@ -6700,8 +6700,8 @@
       "story_score": 0.7680110582362498,
       "r2_model": 0.4088370488758063,
       "counterfactual_all": 0.1346915195349367,
-      "future_xdriven_585": 0.3076076680255397,
-      "future_xdriven_126": 0.2328685148707293,
+      "future_xdriven_585": 1.479476777887469,
+      "future_xdriven_126": -0.1651577799847618,
       "bayes_year_r1_prob": 1.0,
       "bayes_year_amc_prob": 1.0,
       "bayes_amp_prob": 0.95675,
@@ -6720,8 +6720,8 @@
       "story_score": 0.7889266333077399,
       "r2_model": 0.4084681874472157,
       "counterfactual_all": 0.1596542369717797,
-      "future_xdriven_585": 0.3187707909547075,
-      "future_xdriven_126": 0.2413193440536315,
+      "future_xdriven_585": 2.0164981599725147,
+      "future_xdriven_126": -0.3353151355808177,
       "bayes_year_r1_prob": 1.0,
       "bayes_year_amc_prob": 1.0,
       "bayes_amp_prob": 0.94975,
@@ -6740,8 +6740,8 @@
       "story_score": 0.7343734204450438,
       "r2_model": 0.405048472432325,
       "counterfactual_all": 0.1452171166806056,
-      "future_xdriven_585": 0.3199394643603406,
-      "future_xdriven_126": 0.2422040659530737,
+      "future_xdriven_585": 1.5923460279255703,
+      "future_xdriven_126": -0.1899698567005805,
       "bayes_year_r1_prob": 1.0,
       "bayes_year_amc_prob": 1.0,
       "bayes_amp_prob": 0.97525,
@@ -6760,8 +6760,8 @@
       "story_score": 0.7754977563066033,
       "r2_model": 0.4050423247347506,
       "counterfactual_all": 0.1441970658955626,
-      "future_xdriven_585": 0.3100308494395852,
-      "future_xdriven_126": 0.23470293811763,
+      "future_xdriven_585": 1.6337267466956964,
+      "future_xdriven_126": -0.2148914483769003,
       "bayes_year_r1_prob": 1.0,
       "bayes_year_amc_prob": 1.0,
       "bayes_amp_prob": 0.969,
@@ -6780,8 +6780,8 @@
       "story_score": 0.8695506847677138,
       "r2_model": 0.361691613754023,
       "counterfactual_all": 0.0928359011075002,
-      "future_xdriven_585": 0.3455489849101145,
-      "future_xdriven_126": 0.2615912647679031,
+      "future_xdriven_585": 1.040660835648908,
+      "future_xdriven_126": 0.0254959601546578,
       "bayes_year_r1_prob": 1.0,
       "bayes_year_amc_prob": 1.0,
       "bayes_amp_prob": 0.9775,
@@ -6800,8 +6800,8 @@
       "story_score": 0.8300468414258523,
       "r2_model": 0.3614007612845442,
       "counterfactual_all": 0.0941372214452295,
-      "future_xdriven_585": 0.3491397619970036,
-      "future_xdriven_126": 0.2643095940372061,
+      "future_xdriven_585": 1.3449981666368265,
+      "future_xdriven_126": -0.0739345218489021,
       "bayes_year_r1_prob": 1.0,
       "bayes_year_amc_prob": 1.0,
       "bayes_amp_prob": 0.98,
@@ -6820,8 +6820,8 @@
       "story_score": 0.8998117409623857,
       "r2_model": 0.3450624353022486,
       "counterfactual_all": 0.1085282982704455,
-      "future_xdriven_585": 0.2835300074735113,
-      "future_xdriven_126": 0.2146409814340565,
+      "future_xdriven_585": 1.3950714320205069,
+      "future_xdriven_126": -0.1628949661112814,
       "bayes_year_r1_prob": 0.99975,
       "bayes_year_amc_prob": 0.99975,
       "bayes_amp_prob": 0.9545,
@@ -6840,8 +6840,8 @@
       "story_score": 0.779925,
       "r2_model": 0.3338148826961948,
       "counterfactual_all": 0.0200630536705133,
-      "future_xdriven_585": 0.2821581068839497,
-      "future_xdriven_126": 0.2136024102732918,
+      "future_xdriven_585": 0.2905907242843538,
+      "future_xdriven_126": 0.2097660979131538,
       "bayes_year_r1_prob": 0.999,
       "bayes_year_amc_prob": 1.0,
       "bayes_amp_prob": 0.98075,

@@ -1,0 +1,34 @@
+{
+  "outcome": "AMR_AGG_RAW",
+  "baseline_modes": [
+    "lancet_ets",
+    "x_driven"
+  ],
+  "start_year": 2024,
+  "end_year": 2050,
+  "metric_family": "temperature",
+  "role_id": "robust_low_vif",
+  "temperature_proxy_variable": "TA（°C）",
+  "mapping_path": "E:\\MALA\\Code_health\\6 未来情景分析\\data_processed\\province_to_region_7zones.csv",
+  "mode_outputs": {
+    "lancet_ets": {
+      "projection_path": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\projection_outputs\\future_scenario_projection_panel.csv",
+      "province_order_path": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\provincial_outputs\\province_order_2050_temperature_ta_robust_low_vif.csv",
+      "provincial_future_scenario_panel": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\provincial_figures\\provincial_future_scenario_panel_temperature_ta_robust_low_vif.png",
+      "metric_family": "temperature",
+      "role_id": "robust_low_vif",
+      "role_label": "稳健性模型 1",
+      "temperature_proxy_variable": "TA（°C）"
+    },
+    "x_driven": {
+      "projection_path": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\projection_outputs\\future_scenario_projection_panel.csv",
+      "province_order_path": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\provincial_outputs\\province_order_2050_temperature_ta_robust_low_vif.csv",
+      "provincial_future_scenario_panel": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\provincial_figures\\provincial_future_scenario_panel_temperature_ta_robust_low_vif.png",
+      "metric_family": "temperature",
+      "role_id": "robust_low_vif",
+      "role_label": "稳健性模型 1",
+      "temperature_proxy_variable": "TA（°C）"
+    }
+  },
+  "log_path": "E:\\MALA\\Code_health\\6 未来情景分析\\logs\\run_provincial_future_figure_20260424_035935.log"
+}
