@@ -18,8 +18,11 @@ SELECTED_YEAR_FE_ROLE_META = {
     "main_model": {
         "bayes_role": "curated_main_story",
         "role_label": "主模型",
-        "selection_rule": "hand-picked + Year FE + story-first candidate",
-        "reason": "Most directly aligned with the paper's main narrative and intended interpretation.",
+        "selection_rule": "SYS_08952-prioritized + Year FE + story-first candidate",
+        "reason": (
+            "SYS_08952 is prioritized as the final paper's main model because it is a compact "
+            "high-ranking Year FE specification with positive and significant R1xday, AMC, TA, and NOx signals."
+        ),
     },
     "robust_low_vif": {
         "bayes_role": "curated_low_vif_reference",

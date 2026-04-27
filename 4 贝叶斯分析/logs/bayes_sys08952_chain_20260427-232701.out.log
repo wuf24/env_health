@@ -1,0 +1,90 @@
+Loaded merged frame with 310 rows and 31 provinces.
+Preparing 12 candidate combinations across 6 Bayesian variants.
+Variants: ['year_only_additive', 'year_only_amplification', 'province_only_additive', 'province_only_amplification', 'province_year_additive', 'province_year_amplification']
+Interaction pairs: [('R1xday', '抗菌药物使用强度')]
+Selection source: E:\MALA\Code_health\4 贝叶斯分析\model_selection.toml
+- SYS_08952 | Province: No / Year: Yes: n_obs=300, n_vars=8, vars=['R1xday', '抗菌药物使用强度', 'TA（°C）', '氮氧化物', '医疗水平', '人均日生活用水量(升)', '牲畜饲养\n-猪年底头数', '文盲比例'], imputed={'抗菌药物使用强度': 71}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+- SYS_09851 | Province: No / Year: Yes: n_obs=300, n_vars=8, vars=['R1xday', '抗菌药物使用强度', 'TA（°C）', 'PM2.5', '医疗水平', '卫生程度\n（日污水处理能力）', '牲畜饲养\n-猪年底头数', '食品消费量'], imputed={'抗菌药物使用强度': 71, '食品消费量': 31}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+- SYS_10001 | Province: No / Year: Yes: n_obs=300, n_vars=8, vars=['R1xday', '抗菌药物使用强度', 'TA（°C）', 'PM2.5', '医疗水平', '饮用水\n供水综合生产能力(万立方米/日)', '牲畜饲养\n-猪年底头数', '食品消费量'], imputed={'抗菌药物使用强度': 71, '食品消费量': 31}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+- SYS_10002 | Province: No / Year: Yes: n_obs=300, n_vars=8, vars=['R1xday', '抗菌药物使用强度', 'TA（°C）', 'PM2.5', '医疗水平', '饮用水\n供水综合生产能力(万立方米/日)', '牲畜饲养\n-猪年底头数', '文盲比例'], imputed={'抗菌药物使用强度': 71}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+- SYS_09941 | Province: No / Year: Yes: n_obs=300, n_vars=9, vars=['R1xday', '抗菌药物使用强度', 'TA（°C）', 'PM2.5', '医疗水平', '城市用水普及率', '牲畜饲养\n-猪年底头数', 'PA（%）', '食品消费量'], imputed={'抗菌药物使用强度': 71, '食品消费量': 31}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+- SYS_09926 | Province: No / Year: Yes: n_obs=300, n_vars=8, vars=['R1xday', '抗菌药物使用强度', 'TA（°C）', 'PM2.5', '医疗水平', '城市用水普及率', '牲畜饲养\n-猪年底头数', '食品消费量'], imputed={'抗菌药物使用强度': 71, '食品消费量': 31}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+- SYS_09927 | Province: No / Year: Yes: n_obs=300, n_vars=8, vars=['R1xday', '抗菌药物使用强度', 'TA（°C）', 'PM2.5', '医疗水平', '城市用水普及率', '牲畜饲养\n-猪年底头数', '文盲比例'], imputed={'抗菌药物使用强度': 71}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+- SYS_09791 | Province: No / Year: Yes: n_obs=300, n_vars=9, vars=['R1xday', '抗菌药物使用强度', 'TA（°C）', 'PM2.5', '医疗水平', '生活垃圾无害化处理率', '牲畜饲养\n-猪年底头数', 'PA（%）', '食品消费量'], imputed={'抗菌药物使用强度': 71, '生活垃圾无害化处理率': 2, '食品消费量': 31}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+- SYS_09776 | Province: No / Year: Yes: n_obs=300, n_vars=8, vars=['R1xday', '抗菌药物使用强度', 'TA（°C）', 'PM2.5', '医疗水平', '生活垃圾无害化处理率', '牲畜饲养\n-猪年底头数', '食品消费量'], imputed={'抗菌药物使用强度': 71, '生活垃圾无害化处理率': 2, '食品消费量': 31}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+- SYS_09556 | Province: No / Year: Yes: n_obs=300, n_vars=9, vars=['R1xday', '抗菌药物使用强度', 'TA（°C）', 'PM2.5', 'GDP', '城市用水普及率', '牲畜饲养\n-猪年底头数', '主要城市降水量', '食品消费量'], imputed={'抗菌药物使用强度': 71, '食品消费量': 31}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+- SYS_09557 | Province: No / Year: Yes: n_obs=300, n_vars=9, vars=['R1xday', '抗菌药物使用强度', 'TA（°C）', 'PM2.5', 'GDP', '城市用水普及率', '牲畜饲养\n-猪年底头数', '主要城市降水量', '文盲比例'], imputed={'抗菌药物使用强度': 71}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+- 方案F_低VIF主线组 | Province: No / Year: Yes: n_obs=300, n_vars=9, vars=['TA（°C）', 'R1xday', 'PM2.5', '抗菌药物使用强度', 'GDP', '文盲比例', '人均日生活用水量(升)', '牲畜饲养\n-猪年底头数', '主要城市日照时数'], imputed={'抗菌药物使用强度': 71}
+  * year_only_additive: blocks=['main'], provinces=30, years=10
+  * year_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_only_additive: blocks=['main'], provinces=30, years=10
+  * province_only_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+  * province_year_additive: blocks=['main'], provinces=30, years=10
+  * province_year_amplification: blocks=['main', 'interaction'], provinces=30, years=10
+Saved Bayesian model-grid outputs to E:\MALA\Code_health\4 贝叶斯分析\results\model_summaries

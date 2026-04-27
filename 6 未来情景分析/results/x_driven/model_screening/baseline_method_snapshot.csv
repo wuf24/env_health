@@ -1,4 +1,6 @@
 ﻿role_id,role_label,model_id,scheme_id,baseline_mode,component,method,value,baseline_mode_label
+main_model,主模型,SYS_08952 | Province: No / Year: Yes,SYS_08952,x_driven,overall_level,historical_mean_remainder,32.61362392108941,X-driven / Nature-like simplified baseline
+main_model,主模型,SYS_08952 | Province: No / Year: Yes,SYS_08952,x_driven,time_effect,ets_add_damped,0.021792580017792985,X-driven / Nature-like simplified baseline
 strict_main_model,严筛主模型,SYS_09851 | Province: No / Year: Yes,SYS_09851,x_driven,overall_level,historical_mean_remainder,32.60682799435571,X-driven / Nature-like simplified baseline
 strict_main_model,严筛主模型,SYS_09851 | Province: No / Year: Yes,SYS_09851,x_driven,time_effect,ets_add_damped,0.027335016462042682,X-driven / Nature-like simplified baseline
 strict_top_02,严筛模型 2,SYS_10001 | Province: No / Year: Yes,SYS_10001,x_driven,overall_level,historical_mean_remainder,32.608745198994576,X-driven / Nature-like simplified baseline
@@ -21,5 +23,3 @@ robust_systematic_2,稳健性模型 3,SYS_09557 | Province: No / Year: Yes,SYS_0
 robust_systematic_2,稳健性模型 3,SYS_09557 | Province: No / Year: Yes,SYS_09557,x_driven,time_effect,ets_add_damped,0.01856232032153853,X-driven / Nature-like simplified baseline
 robust_low_vif,稳健性模型 1,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,x_driven,overall_level,historical_mean_remainder,32.61162719630687,X-driven / Nature-like simplified baseline
 robust_low_vif,稳健性模型 1,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,x_driven,time_effect,ets_add_damped,0.016597217891720573,X-driven / Nature-like simplified baseline
-main_model,主模型,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,x_driven,overall_level,historical_mean_remainder,32.60898930908603,X-driven / Nature-like simplified baseline
-main_model,主模型,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,x_driven,time_effect,ets_add_damped,0.01408362071707856,X-driven / Nature-like simplified baseline

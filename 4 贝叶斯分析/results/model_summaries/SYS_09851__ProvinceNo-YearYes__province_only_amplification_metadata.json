@@ -13,8 +13,8 @@
   "variant_label": "Province-only amplification",
   "variant_rationale": "Mirror Province FE only and directly test amplification.",
   "run_config": {
-    "draws": 1000,
-    "tune": 1000,
+    "draws": 800,
+    "tune": 800,
     "chains": 4,
     "cores": 2,
     "target_accept": 0.9

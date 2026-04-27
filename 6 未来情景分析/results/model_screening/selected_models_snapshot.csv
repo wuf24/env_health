@@ -1,4 +1,6 @@
 ﻿role_id,role_label,model_id,scheme_id,scheme_source,fe_label,variables
+main_model,主模型,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | 氮氧化物 | 医疗水平 | 人均日生活用水量(升) | 牲畜饲养
+-猪年底头数 | 文盲比例"
 strict_main_model,严筛主模型,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes,"R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | 医疗水平 | 卫生程度
 （日污水处理能力） | 牲畜饲养
 -猪年底头数 | 食品消费量"
@@ -24,5 +26,3 @@ robust_systematic_2,稳健性模型 3,SYS_09557 | Province: No / Year: Yes,SYS_0
 -猪年底头数 | 主要城市降水量 | 文盲比例"
 robust_low_vif,稳健性模型 1,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes,"TA（°C） | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
 -猪年底头数 | 主要城市日照时数"
-main_model,主模型,方案A_平衡主线组 | Province: No / Year: Yes,方案A_平衡主线组,curated,Province: No / Year: Yes,"省平均气温 | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养
--猪年底头数"

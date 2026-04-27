@@ -1,16 +1,16 @@
 ﻿parameter,mean,sd,hdi_2.5%,hdi_97.5%,mcse_mean,mcse_sd,ess_bulk,ess_tail,r_hat,effect_scope,variable,variant_id,variant_label,model_id,scheme_id,scheme_source,fe_label
-alpha,0.011,0.113,-0.208,0.228,0.004,0.003,669.0,1076.0,1.01,global,,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
-beta_main[R1xday],0.002,0.022,-0.041,0.044,0.0,0.0,2899.0,2920.0,1.0,main,R1xday,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
-beta_main[抗菌药物使用强度],0.001,0.02,-0.039,0.038,0.0,0.0,3169.0,2830.0,1.0,main,抗菌药物使用强度,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
-beta_main[TA（°C）],0.005,0.019,-0.034,0.041,0.0,0.0,3100.0,2350.0,1.0,main,TA（°C）,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
-beta_main[PM2.5],0.084,0.028,0.026,0.137,0.001,0.0,2543.0,2508.0,1.0,main,PM2.5,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
-beta_main[医疗水平],-0.245,0.029,-0.301,-0.189,0.001,0.0,2494.0,2528.0,1.0,main,医疗水平,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
+alpha,0.003,0.117,-0.225,0.226,0.005,0.003,626.0,1193.0,1.0,global,,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
+beta_main[R1xday],0.001,0.022,-0.043,0.042,0.0,0.0,2732.0,2406.0,1.0,main,R1xday,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
+beta_main[抗菌药物使用强度],0.002,0.02,-0.037,0.041,0.0,0.0,2681.0,2188.0,1.0,main,抗菌药物使用强度,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
+beta_main[TA（°C）],0.005,0.019,-0.03,0.044,0.0,0.0,2780.0,2287.0,1.0,main,TA（°C）,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
+beta_main[PM2.5],0.084,0.027,0.032,0.137,0.001,0.0,2060.0,2513.0,1.0,main,PM2.5,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
+beta_main[医疗水平],-0.245,0.03,-0.303,-0.186,0.001,0.001,2266.0,2271.0,1.0,main,医疗水平,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
 "beta_main[卫生程度
-（日污水处理能力）]",-0.029,0.063,-0.16,0.092,0.002,0.001,1650.0,1801.0,1.0,main,"卫生程度
+（日污水处理能力）]",-0.027,0.064,-0.159,0.091,0.002,0.001,1424.0,1735.0,1.0,main,"卫生程度
 （日污水处理能力）",province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
 "beta_main[牲畜饲养
--猪年底头数]",0.142,0.063,0.023,0.267,0.001,0.001,1768.0,2111.0,1.0,main,"牲畜饲养
+-猪年底头数]",0.142,0.067,0.013,0.268,0.002,0.001,1124.0,1607.0,1.0,main,"牲畜饲养
 -猪年底头数",province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
-beta_main[食品消费量],0.023,0.029,-0.033,0.081,0.001,0.0,2871.0,2482.0,1.0,main,食品消费量,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
-sigma_residual,0.234,0.01,0.215,0.256,0.0,0.0,2730.0,2428.0,1.0,global,,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
-sigma_province,0.63,0.087,0.475,0.815,0.003,0.002,668.0,1610.0,1.01,global,,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
+beta_main[食品消费量],0.022,0.029,-0.034,0.079,0.001,0.001,2186.0,1796.0,1.0,main,食品消费量,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
+sigma_residual,0.234,0.01,0.215,0.255,0.0,0.0,2245.0,1927.0,1.0,global,,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes
+sigma_province,0.629,0.084,0.485,0.804,0.003,0.002,786.0,986.0,1.0,global,,province_only_additive,Province-only additive,SYS_09851 | Province: No / Year: Yes,SYS_09851,systematic,Province: No / Year: Yes

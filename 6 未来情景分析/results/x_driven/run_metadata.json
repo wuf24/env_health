@@ -7,6 +7,7 @@
   "start_year": 2024,
   "end_year": 2050,
   "selected_roles": [
+    "main_model",
     "strict_main_model",
     "strict_top_02",
     "strict_top_03",
@@ -17,8 +18,7 @@
     "strict_top_08",
     "robust_systematic",
     "robust_systematic_2",
-    "robust_low_vif",
-    "main_model"
+    "robust_low_vif"
   ],
   "model_source_outcome": "AMR_AGG",
   "scenario_ids": [

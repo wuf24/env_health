@@ -1,0 +1,15 @@
+﻿parameter,mean,sd,hdi_2.5%,hdi_97.5%,mcse_mean,mcse_sd,ess_bulk,ess_tail,r_hat,effect_scope,variable,variant_id,variant_label,model_id,scheme_id,scheme_source,fe_label
+alpha,0.013,0.089,-0.161,0.185,0.003,0.002,904.0,1510.0,1.01,global,,province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[R1xday],-0.004,0.02,-0.045,0.034,0.0,0.0,4760.0,2185.0,1.0,main,R1xday,province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[抗菌药物使用强度],0.012,0.016,-0.018,0.045,0.0,0.0,5190.0,2280.0,1.0,main,抗菌药物使用强度,province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[TA（°C）],0.024,0.018,-0.011,0.06,0.0,0.0,5516.0,2411.0,1.0,main,TA（°C）,province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[氮氧化物],0.085,0.033,0.018,0.146,0.001,0.001,4118.0,2203.0,1.0,main,氮氧化物,province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[医疗水平],0.116,0.05,0.022,0.218,0.001,0.001,3322.0,2292.0,1.0,main,医疗水平,province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[人均日生活用水量(升)],0.013,0.038,-0.058,0.09,0.001,0.001,3268.0,2420.0,1.0,main,人均日生活用水量(升),province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+"beta_main[牲畜饲养
+-猪年底头数]",0.015,0.059,-0.1,0.126,0.001,0.001,2337.0,2392.0,1.0,main,"牲畜饲养
+-猪年底头数",province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[文盲比例],0.03,0.037,-0.04,0.102,0.001,0.001,3747.0,2356.0,1.0,main,文盲比例,province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_interaction[R1xday × 抗菌药物使用强度],0.018,0.014,-0.009,0.047,0.0,0.0,4130.0,2530.0,1.0,interaction,R1xday × 抗菌药物使用强度,province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+sigma_residual,0.184,0.008,0.167,0.199,0.0,0.0,3452.0,2622.0,1.0,global,,province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+sigma_province,0.48,0.07,0.353,0.615,0.002,0.001,1139.0,1781.0,1.0,global,,province_year_amplification,Province + year amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes

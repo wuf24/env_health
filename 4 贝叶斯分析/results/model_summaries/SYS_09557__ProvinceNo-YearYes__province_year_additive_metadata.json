@@ -3,8 +3,8 @@
   "scheme_id": "SYS_09557",
   "scheme_source": "systematic",
   "fe_label": "Province: No / Year: Yes",
-  "performance_rank": 65,
-  "performance_score": 0.7642202278382038,
+  "performance_rank": 282,
+  "performance_score": 0.9986258816487692,
   "freq_coef_R1xday": 0.1784084705607142,
   "freq_p_R1xday": 0.0277135674869211,
   "freq_coef_AMC": 0.1166271193804089,
@@ -13,8 +13,8 @@
   "variant_label": "Province + year additive",
   "variant_rationale": "Bridge model closest to a two-way panel adjustment without decomposition.",
   "run_config": {
-    "draws": 1000,
-    "tune": 1000,
+    "draws": 800,
+    "tune": 800,
     "chains": 4,
     "cores": 2,
     "target_accept": 0.9

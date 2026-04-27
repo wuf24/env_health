@@ -1,0 +1,26 @@
+{
+  "label": "SYS_08952 Paper Analysis",
+  "slug": "sys-08952-paper-analysis",
+  "description": "只聚焦最终论文主模型 SYS_08952 的中文论文陈述式证据链，串联固定效应、Bayes、反事实和未来情景。",
+  "scope_note": "面向最终论文分析撰写，不展示其他候选模型；用于解释 SYS_08952 为什么可作为正文主模型以及每一层结果应如何表述。",
+  "generated_at": "2026-04-28 00:52:30",
+  "release_tag": "20260428-005230",
+  "source_dir": "public_dashboards/sys-08952-paper-analysis",
+  "builder_script": "tools/build_sys08952_paper_analysis.py",
+  "files": {
+    "home": "index.html",
+    "directory_index": "index.html"
+  },
+  "links": [
+    {
+      "label": "Open paper analysis",
+      "target": "index.html",
+      "tone": "primary"
+    },
+    {
+      "label": "Payload JSON",
+      "target": "data/sys08952_paper_payload.json",
+      "tone": "ghost"
+    }
+  ]
+}

@@ -1,6 +1,37 @@
 [
   {
     "archive_rank": 1,
+    "archive_group": "selected_yearfe4",
+    "archive_group_label": "手选 Year FE 4 模型",
+    "group_rank": 1,
+    "role_id": "main_model",
+    "role_label": "主模型",
+    "selection_rule": "SYS_08952-prioritized + Year FE + story-first candidate",
+    "reason": "SYS_08952 is prioritized as the final paper's main model because it is a compact high-ranking Year FE specification with positive and significant R1xday, AMC, TA, and NOx signals.",
+    "model_id": "SYS_08952 | Province: No / Year: Yes",
+    "scheme_id": "SYS_08952",
+    "scheme_source": "systematic",
+    "fe_label": "Province: No / Year: Yes",
+    "variables": "R1xday | 抗菌药物使用强度 | TA（°C） | 氮氧化物 | 医疗水平 | 人均日生活用水量(升) | 牲畜饲养\n-猪年底头数 | 文盲比例",
+    "performance_rank": 3,
+    "performance_score": 0.9999887002447656,
+    "coef_R1xday": 0.1378604346402795,
+    "p_R1xday": 0.0469488814481784,
+    "coef_AMC": 0.1215112893312374,
+    "p_AMC": 0.0055387531920609,
+    "temperature_proxy": "TA（°C）",
+    "coef_temperature_proxy": 0.103957461089064,
+    "p_temperature_proxy": 0.0175326575390897,
+    "coef_TA": 0.103957461089064,
+    "p_TA": 0.0175326575390897,
+    "pollution_proxy": "氮氧化物",
+    "coef_pollution_proxy": 0.182959229579551,
+    "p_pollution_proxy": 0.0383178136041286,
+    "r2_model": 0.4578397599580358,
+    "max_vif_z": 1.7080196846881843
+  },
+  {
+    "archive_rank": 2,
     "archive_group": "strict_screened8",
     "archive_group_label": "严筛强相关 8 模型",
     "group_rank": 1,
@@ -31,7 +62,7 @@
     "max_vif_z": 1.7211445207083764
   },
   {
-    "archive_rank": 2,
+    "archive_rank": 3,
     "archive_group": "strict_screened8",
     "archive_group_label": "严筛强相关 8 模型",
     "group_rank": 2,
@@ -62,7 +93,7 @@
     "max_vif_z": 1.7285688726687878
   },
   {
-    "archive_rank": 3,
+    "archive_rank": 4,
     "archive_group": "strict_screened8",
     "archive_group_label": "严筛强相关 8 模型",
     "group_rank": 3,
@@ -93,7 +124,7 @@
     "max_vif_z": 1.822409026507411
   },
   {
-    "archive_rank": 4,
+    "archive_rank": 5,
     "archive_group": "strict_screened8",
     "archive_group_label": "严筛强相关 8 模型",
     "group_rank": 4,
@@ -124,7 +155,7 @@
     "max_vif_z": 1.789640299554322
   },
   {
-    "archive_rank": 5,
+    "archive_rank": 6,
     "archive_group": "strict_screened8",
     "archive_group_label": "严筛强相关 8 模型",
     "group_rank": 5,
@@ -155,7 +186,7 @@
     "max_vif_z": 1.7490463540320311
   },
   {
-    "archive_rank": 6,
+    "archive_rank": 7,
     "archive_group": "strict_screened8",
     "archive_group_label": "严筛强相关 8 模型",
     "group_rank": 6,
@@ -186,7 +217,7 @@
     "max_vif_z": 1.861589862732211
   },
   {
-    "archive_rank": 7,
+    "archive_rank": 8,
     "archive_group": "strict_screened8",
     "archive_group_label": "严筛强相关 8 模型",
     "group_rank": 7,
@@ -217,7 +248,7 @@
     "max_vif_z": 1.8432958857286188
   },
   {
-    "archive_rank": 8,
+    "archive_rank": 9,
     "archive_group": "strict_screened8",
     "archive_group_label": "严筛强相关 8 模型",
     "group_rank": 8,
@@ -248,10 +279,10 @@
     "max_vif_z": 1.801001555430177
   },
   {
-    "archive_rank": 9,
+    "archive_rank": 10,
     "archive_group": "selected_yearfe4",
     "archive_group_label": "手选 Year FE 4 模型",
-    "group_rank": 1,
+    "group_rank": 2,
     "role_id": "robust_systematic",
     "role_label": "稳健性模型 2",
     "selection_rule": "hand-picked + Year FE + systematic bridge candidate",
@@ -261,8 +292,8 @@
     "scheme_source": "systematic",
     "fe_label": "Province: No / Year: Yes",
     "variables": "R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | GDP | 城市用水普及率 | 牲畜饲养\n-猪年底头数 | 主要城市降水量 | 食品消费量",
-    "performance_rank": 49,
-    "performance_score": 0.7665352008628431,
+    "performance_rank": 277,
+    "performance_score": 0.9986299918054908,
     "coef_R1xday": 0.1812432996167564,
     "p_R1xday": 0.0218372297507352,
     "coef_AMC": 0.1164206832956922,
@@ -279,10 +310,10 @@
     "max_vif_z": 1.8630223924966105
   },
   {
-    "archive_rank": 10,
+    "archive_rank": 11,
     "archive_group": "selected_yearfe4",
     "archive_group_label": "手选 Year FE 4 模型",
-    "group_rank": 2,
+    "group_rank": 3,
     "role_id": "robust_systematic_2",
     "role_label": "稳健性模型 3",
     "selection_rule": "hand-picked + Year FE + adjacent systematic candidate",
@@ -292,8 +323,8 @@
     "scheme_source": "systematic",
     "fe_label": "Province: No / Year: Yes",
     "variables": "R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | GDP | 城市用水普及率 | 牲畜饲养\n-猪年底头数 | 主要城市降水量 | 文盲比例",
-    "performance_rank": 65,
-    "performance_score": 0.7642202278382038,
+    "performance_rank": 282,
+    "performance_score": 0.9986258816487692,
     "coef_R1xday": 0.1784084705607142,
     "p_R1xday": 0.0277135674869211,
     "coef_AMC": 0.1166271193804089,
@@ -310,10 +341,10 @@
     "max_vif_z": 1.80401653941866
   },
   {
-    "archive_rank": 11,
+    "archive_rank": 12,
     "archive_group": "selected_yearfe4",
     "archive_group_label": "手选 Year FE 4 模型",
-    "group_rank": 3,
+    "group_rank": 4,
     "role_id": "robust_low_vif",
     "role_label": "稳健性模型 1",
     "selection_rule": "hand-picked + Year FE + lower-collinearity reference",
@@ -323,8 +354,8 @@
     "scheme_source": "curated",
     "fe_label": "Province: No / Year: Yes",
     "variables": "TA（°C） | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养\n-猪年底头数 | 主要城市日照时数",
-    "performance_rank": 156,
-    "performance_score": 0.754215661360927,
+    "performance_rank": 18465,
+    "performance_score": 0.0048093786670531,
     "coef_R1xday": 0.1343718513136075,
     "p_R1xday": 0.0511176547836138,
     "coef_AMC": 0.1282545796871254,
@@ -339,36 +370,5 @@
     "p_pollution_proxy": 0.8094636158313826,
     "r2_model": 0.3450624353022486,
     "max_vif_z": 1.8204312093552328
-  },
-  {
-    "archive_rank": 12,
-    "archive_group": "selected_yearfe4",
-    "archive_group_label": "手选 Year FE 4 模型",
-    "group_rank": 4,
-    "role_id": "main_model",
-    "role_label": "主模型",
-    "selection_rule": "hand-picked + Year FE + story-first candidate",
-    "reason": "Most directly aligned with the paper's main narrative and intended interpretation.",
-    "model_id": "方案A_平衡主线组 | Province: No / Year: Yes",
-    "scheme_id": "方案A_平衡主线组",
-    "scheme_source": "curated",
-    "fe_label": "Province: No / Year: Yes",
-    "variables": "省平均气温 | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养\n-猪年底头数",
-    "performance_rank": 972,
-    "performance_score": 0.7218422485555385,
-    "coef_R1xday": 0.1508246294759486,
-    "p_R1xday": 0.042609775295463,
-    "coef_AMC": 0.1310341033515701,
-    "p_AMC": 0.0033854032562117,
-    "temperature_proxy": "省平均气温",
-    "coef_temperature_proxy": -0.0336319833322305,
-    "p_temperature_proxy": 0.7127677698324457,
-    "coef_TA": -0.0336319833322305,
-    "p_TA": 0.7127677698324457,
-    "pollution_proxy": "PM2.5",
-    "coef_pollution_proxy": 0.0208598182750053,
-    "p_pollution_proxy": 0.82231536083783,
-    "r2_model": 0.3338148826961948,
-    "max_vif_z": 3.0544803429981107
   }
 ]

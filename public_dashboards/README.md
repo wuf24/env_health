@@ -20,7 +20,8 @@ public_dashboards/
   bayes-analysis/
   counterfactual-amr-agg/
   variable-group-deep-dive/
-  releases/20260424-194153/
+  sys-08952-paper-analysis/
+  releases/20260428-005230/
 ```
 
 ## 维护命令
@@ -52,6 +53,7 @@ python -X utf8 tools/deploy_public_dashboards.py --retain-releases 12
 - bayes-analysis builder：`tools/build_bayes_analysis_dashboard_v2.py`
 - counterfactual-amr-agg builder：`5 反事实推演/build_counterfactual_dashboard.py`
 - variable-group-deep-dive builder：`tools/build_variable_group_deep_dive_dashboard.py`
+- sys-08952-paper-analysis builder：`tools/build_sys08952_paper_analysis.py`
 
 ## GitHub Pages
 

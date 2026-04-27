@@ -8,8 +8,24 @@ import pandas as pd
 
 DEFAULT_FE_LABEL = "Province: No / Year: Yes"
 CURATED_TARGETS = [
-    ("方案A_平衡主线组", "curated_main_story"),
-    ("方案F_低VIF主线组", "curated_low_vif_reference"),
+    {
+        "scheme_id": "SYS_08952",
+        "role": "curated_main_story",
+        "why_selected": (
+            "最终论文主模型：Year FE 系统穷举排名第 3，R1xday、AMC、TA 和氮氧化物均为正且达到 0.05 显著；"
+            "变量组比前两名更紧凑，适合作为主叙事入口。"
+        ),
+    },
+    {
+        "scheme_id": "方案A_平衡主线组",
+        "role": "curated_legacy_main_story",
+        "why_selected": "原人工平衡主线组，保留为与 SYS_08952 对照的历史主线参考。",
+    },
+    {
+        "scheme_id": "方案F_低VIF主线组",
+        "role": "curated_low_vif_reference",
+        "why_selected": "人工主线中共线性最低，适合与 SYS_08952 和方案A做稳健性对照。",
+    },
 ]
 SYSTEMATIC_TARGETS = [
     ("SYS_09556", "systematic_amplification_1"),
@@ -31,7 +47,9 @@ def load_tables(results_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 def pick_curated_models(ranking: pd.DataFrame) -> list[dict[str, object]]:
     picked: list[dict[str, object]] = []
-    for scheme_id, role in CURATED_TARGETS:
+    for target in CURATED_TARGETS:
+        scheme_id = str(target["scheme_id"])
+        role = str(target["role"])
         rows = ranking[
             (ranking["scheme_id"] == scheme_id)
             & (ranking["fe_label"] == DEFAULT_FE_LABEL)
@@ -40,10 +58,7 @@ def pick_curated_models(ranking: pd.DataFrame) -> list[dict[str, object]]:
             continue
         row = rows.iloc[0].to_dict()
         row["bayes_role"] = role
-        row["why_selected"] = {
-            "curated_main_story": "人工主线中最适合承接论文叙事，当前 R1xday 与 AMC 同时为正，且 R1xday 达到 0.05 显著。",
-            "curated_low_vif_reference": "人工主线中共线性最低，适合与方案A做稳健性对照。",
-        }[role]
+        row["why_selected"] = str(target["why_selected"])
         picked.append(row)
     return picked
 

@@ -1,0 +1,1474 @@
+Initializing NUTS using jitter+adapt_diag...
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pytensor\link\c\cmodule.py:2986: UserWarning: PyTensor could not link to a BLAS installation. Operations that might benefit from BLAS will be severely degraded.
+This usually happens when PyTensor is installed via pip. We recommend it be installed via conda/mamba/pixi instead.
+Alternatively, you can use an experimental backend such as Numba or JAX that perform their own BLAS optimizations, by setting `pytensor.config.mode == 'NUMBA'` or passing `mode='NUMBA'` when compiling a PyTensor function.
+For more options and details see https://pytensor.readthedocs.io/en/latest/troubleshooting.html#how-do-i-configure-test-my-blas-library
+  warnings.warn(
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.288     15        656.13    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.311     23        530.35    0:00:03   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.204     7         276.60    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.282     15        305.50    0:00:05   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 17 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.276     7         553.29    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.242     31        682.46    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.225     15        216.81    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.246     15        200.65    0:00:07   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 19 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.089     31        251.42    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.118     31        230.47    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.136     63        126.49    0:00:12   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.127     15        120.25    0:00:13   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 24 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.111     31        200.65    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.110     31        233.64    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.121     15        109.92    0:00:14   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.114     31        105.39    0:00:15   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 26 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.116     63        187.43    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.098     63        170.00    0:00:09   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.105     127       92.53     0:00:17   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.085     127       89.15     0:00:17   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 29 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.086     63        71.56     0:00:22   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.104     63        66.84     0:00:23   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.094     63        20.31     0:01:18   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.087     127       20.80     0:01:16   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 90 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.287     15        379.00    0:00:04   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.325     15        442.94    0:00:03   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.268     15        220.55    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.256     31        199.88    0:00:08   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 21 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.315     15        643.72    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.241     15        527.55    0:00:03   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.219     15        263.77    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.287     31        236.89    0:00:06   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 18 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.103     95        307.32    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.111     31        253.33    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.132     31        134.30    0:00:11   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.108     15        126.81    0:00:12   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 23 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.115     15        258.45    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.110     63        237.45    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.124     63        119.27    0:00:13   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.093     63        113.08    0:00:14   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 25 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.112     127       214.54    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.116     63        202.25    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.084     63        98.69     0:00:16   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.078     63        103.37    0:00:15   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 28 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.087     47        157.93    0:00:10   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.089     63        149.40    0:00:10   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.088     127       80.20     0:00:19   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.102     63        76.77     0:00:20   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 32 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.356     15        793.55    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.326     15        793.55    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.200     15        321.80    0:00:04   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.291     31        357.80    0:00:04   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 16 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.316     15        736.19    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.231     15        594.87    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.249     15        289.88    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.235     7         263.08    0:00:06   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 16 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.106     95        239.66    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.101     15        260.38    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.131     63        120.68    0:00:13   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.140     15        116.29    0:00:13   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 24 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.104     15        274.37    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.121     63        248.41    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.115     63        123.00    0:00:13   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.114     63        117.76    0:00:13   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 24 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.100     127       182.41    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.106     63        169.15    0:00:09   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.082     127       80.39     0:00:19   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.083     63        77.53     0:00:20   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 31 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.090     63        165.32    0:00:09   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.085     63        187.41    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.092     63        86.28     0:00:18   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.082     127       80.58     0:00:19   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 30 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.285     31        635.79    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.354     15        787.30    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.202     15        340.00    0:00:04   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.309     15        310.12    0:00:05   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 16 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.299     15        574.97    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.295     31        710.67    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.241     15        216.81    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.229     7         202.25    0:00:07   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 20 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.085     127       252.09    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.117     47        288.32    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.147     63        134.13    0:00:11   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.124     15        128.25    0:00:12   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 23 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.122     63        238.55    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.130     47        238.55    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.111     31        120.83    0:00:13   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.110     127       115.89    0:00:13   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 24 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.094     63        184.05    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.113     31        194.19    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.097     63        92.78     0:00:17   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.075     63        89.53     0:00:17   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 28 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.093     63        177.04    0:00:09   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.088     127       163.46    0:00:09   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.074     63        84.99     0:00:18   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.081     63        81.87     0:00:19   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 30 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.295     15        812.09    0:00:01   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.259     31        651.85    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.258     15        337.77    0:00:04   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.272     7         298.38    0:00:05   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 16 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.223     15        631.77    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.309     15        775.46    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.233     15        317.83    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.228     15        282.71    0:00:05   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 17 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.115     31        357.80    0:00:04   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.116     31        322.83    0:00:04   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.127     31        153.88    0:00:10   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.124     31        164.79    0:00:09   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 21 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.121     15        281.91    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.141     31        313.90    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.121     31        148.30    0:00:10   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.131     31        138.48    0:00:11   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 22 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.089     31        201.06    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.092     63        214.11    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.084     127       90.17     0:00:17   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.100     63        93.46     0:00:17   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 28 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.089     127       150.49    0:00:10   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.091     63        163.48    0:00:09   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.104     127       82.00     0:00:19   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.084     127       78.18     0:00:20   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 31 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.293     15        601.81    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.297     15        492.00    0:00:03   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.262     15        244.23    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.261     31        200.65    0:00:07   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 20 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.322     15        550.24    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.244     15        467.27    0:00:03   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.265     15        239.66    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.247     7         265.84    0:00:06   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 24 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.102     79        349.20    0:00:04   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.122     15        410.95    0:00:03   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.117     15        173.73    0:00:09   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.137     15        162.17    0:00:09   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 21 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+The effective sample size per chain is smaller than 100 for some parameters.  A higher number is needed for reliable rhat and ess computation. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.119     63        308.21    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.116     31        336.63    0:00:04   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.133     31        155.53    0:00:10   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.124     31        144.75    0:00:11   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 21 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.109     79        202.23    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.117     255       179.22    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.101     63        84.22     0:00:18   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.093     63        79.76     0:00:20   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 31 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.085     63        145.15    0:00:11   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.101     15        154.58    0:00:10   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.091     127       31.35     0:00:51   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.089     63        32.60     0:00:49   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 64 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.360     15        140.39    0:00:11   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.354     15        122.71    0:00:13   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.237     7         58.68     0:00:27   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.279     15        62.51     0:00:25   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 39 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.360     15        126.18    0:00:12   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.235     31        111.96    0:00:14   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.230     15        55.02     0:00:29   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.269     15        51.66     0:00:30   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 43 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.102     79        68.91     0:00:23   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.119     31        66.97     0:00:23   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.136     63        54.87     0:00:29   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.117     15        56.63     0:00:28   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 39 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+The effective sample size per chain is smaller than 100 for some parameters.  A higher number is needed for reliable rhat and ess computation. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.114     63        223.92    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.099     63        243.08    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.121     63        131.19    0:00:12   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.122     63        126.65    0:00:12   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 23 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.103     127       32.38     0:00:49   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.105     127       33.05     0:00:48   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.093     63        18.52     0:01:26   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.081     63        18.16     0:01:28   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 100 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.082     63        49.03     0:00:32   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.088     63        52.11     0:00:30   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.081     127       17.70     0:01:30   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.095     63        16.97     0:01:34   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 106 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.286     15        127.92    0:00:12   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.265     15        147.47    0:00:10   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.237     15        64.00     0:00:24   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.270     15        56.51     0:00:28   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 40 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.222     7         103.06    0:00:15   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.280     31        114.73    0:00:13   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.271     15        51.37     0:00:31   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.219     7         48.00     0:00:33   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 44 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.111     31        63.13     0:00:25   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.104     47        64.93     0:00:24   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.107     63        53.24     0:00:30   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.119     15        54.06     0:00:29   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 40 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+The effective sample size per chain is smaller than 100 for some parameters.  A higher number is needed for reliable rhat and ess computation. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.104     15        307.32    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.116     47        262.39    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.121     15        125.88    0:00:12   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.133     63        133.07    0:00:12   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 23 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.087     127       195.67    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.104     63        182.41    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.102     127       93.54     0:00:17   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.109     127       90.48     0:00:17   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 28 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.085     127       131.54    0:00:12   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.104     63        149.17    0:00:10   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.096     63        71.31     0:00:22   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.124     63        67.64     0:00:23   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 34 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.286     31        628.04    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.334     15        787.30    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.224     15        272.91    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.276     23        302.78    0:00:05   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 18 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.356     15        568.43    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.266     15        691.31    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.230     15        298.32    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.259     15        266.50    0:00:06   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 16 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.092     63        281.12    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.127     31        311.03    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.114     127       138.09    0:00:11   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.115     15        145.15    0:00:11   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 22 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+The effective sample size per chain is smaller than 100 for some parameters.  A higher number is needed for reliable rhat and ess computation. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.114     31        278.81    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.107     31        253.93    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.116     63        134.12    0:00:11   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.113     63        122.12    0:00:13   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 24 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.100     31        168.32    0:00:09   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.100     127       183.73    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.102     63        83.81     0:00:19   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.108     63        80.52     0:00:19   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 31 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.082     31        157.43    0:00:10   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.108     63        167.21    0:00:09   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.085     63        79.27     0:00:20   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.083     63        81.93     0:00:19   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 32 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.320     15        812.50    0:00:01   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.272     31        656.13    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.266     15        285.89    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.315     7         313.96    0:00:05   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 17 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.227     7         747.20    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.300     15        612.88    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.263     15        287.49    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.214     15        252.09    0:00:06   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 19 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.128     15        258.45    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.116     63        227.94    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.120     15        131.71    0:00:12   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.122     63        120.40    0:00:13   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 25 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.113     15        225.43    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.110     47        251.45    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.139     31        125.11    0:00:12   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.113     63        118.58    0:00:13   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 24 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.103     63        206.32    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.083     127       194.19    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.091     127       94.32     0:00:16   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.089     127       90.89     0:00:17   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 28 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.083     127       73.25     0:00:21   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.100     63        75.36     0:00:21   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.096     127       45.91     0:00:34   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.082     63        47.05     0:00:34   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 47 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.333     15        533.00    0:00:03   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.258     31        442.94    0:00:03   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.242     31        256.46    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.256     7         233.64    0:00:06   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 19 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.226     7         448.91    0:00:03   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.336     15        374.91    0:00:04   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.320     31        226.42    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.232     15        205.90    0:00:07   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 21 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.113     63        272.17    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.098     31        238.55    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.115     63        107.16    0:00:14   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.107     63        102.03    0:00:15   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 28 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\arviz\__init__.py:50: FutureWarning: 
+ArviZ is undergoing a major refactor to improve flexibility and extensibility while maintaining a user-friendly interface.
+Some upcoming changes may be backward incompatible.
+For details and migration guidance, visit: https://python.arviz.org/en/latest/user_guide/migration_guide.html
+  warn(
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.102     63        255.19    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.107     31        284.27    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.105     63        133.60    0:00:11   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.112     31        126.34    0:00:12   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 22 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.078     63        192.72    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.103     79        181.77    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.087     127       97.55     0:00:16   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.100     63        93.72     0:00:17   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 27 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.085     127       162.17    0:00:09   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.085     63        172.57    0:00:09   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.087     127       81.16     0:00:19   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.075     127       83.00     0:00:19   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 29 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.265     15        656.13    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.236     31        818.74    0:00:01   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.244     15        361.60    0:00:04   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.308     7         324.87    0:00:04   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 14 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.288     15        746.85    0:00:02   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.369     15        938.93    0:00:01   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.302     15        379.00    0:00:04   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.218     15        334.45    0:00:04   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 14 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.119     63        315.88    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.090     63        285.89    0:00:05   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.098     31        144.55    0:00:11   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.125     63        137.74    0:00:11   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 21 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.124     15        266.50    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.098     95        229.48    0:00:06   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.107     63        125.26    0:00:12   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.097     31        116.83    0:00:13   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 23 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.088     63        205.90    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.080     127       219.13    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.089     63        102.54    0:00:15   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.082     191       99.35     0:00:16   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 26 seconds.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 2 jobs)
+NUTS: [beta_main, beta_interaction, alpha, sigma_province, province_offset, year_raw, sigma_residual]
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+D:\anaconda3\envs\code_health_bayes\Lib\site-packages\pymc\step_methods\hmc\quadpotential.py:316: RuntimeWarning: overflow encountered in dot
+  return 0.5 * np.dot(x, v_out)
+                                                                               
+                             Step      Grad                                    
+  Progre…   Draw   Diverg…   size      evals     Speed     Elapsed   Remaini…  
+ ───────────────────────────────────────────────────────────────────────────── 
+  -------   1600   0         0.091     127       202.25    0:00:07   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.101     63        184.05    0:00:08   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.111     127       93.80     0:00:17   0:00:00   
+                                                 draws/s                       
+  -------   1600   0         0.085     127       90.16     0:00:17   0:00:00   
+                                                 draws/s                       
+                                                                               
+Sampling 4 chains for 800 tune and 800 draw iterations (3_200 + 3_200 draws total) took 28 seconds.

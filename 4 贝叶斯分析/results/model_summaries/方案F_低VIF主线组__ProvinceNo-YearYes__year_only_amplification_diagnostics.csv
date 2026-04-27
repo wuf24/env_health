@@ -1,15 +1,15 @@
 ﻿parameter,mean,sd,hdi_2.5%,hdi_97.5%,mcse_mean,mcse_sd,ess_bulk,ess_tail,r_hat,effect_scope,variable,variant_id,variant_label,model_id,scheme_id,scheme_source,fe_label
-alpha,0.009,0.025,-0.042,0.059,0.0,0.0,5097.0,2307.0,1.0,global,,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
-beta_main[TA（°C）],0.07,0.039,-0.003,0.146,0.001,0.001,4378.0,3014.0,1.0,main,TA（°C）,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
-beta_main[R1xday],0.105,0.034,0.041,0.171,0.001,0.001,3499.0,2807.0,1.0,main,R1xday,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
-beta_main[PM2.5],0.009,0.034,-0.059,0.073,0.001,0.001,3726.0,2904.0,1.0,main,PM2.5,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
-beta_main[抗菌药物使用强度],0.111,0.029,0.052,0.163,0.0,0.001,4412.0,2807.0,1.0,main,抗菌药物使用强度,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
-beta_main[GDP],0.162,0.033,0.097,0.223,0.0,0.001,4411.0,3082.0,1.0,main,GDP,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
-beta_main[文盲比例],-0.094,0.033,-0.156,-0.028,0.001,0.0,4180.0,3057.0,1.0,main,文盲比例,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
-beta_main[人均日生活用水量(升)],-0.141,0.033,-0.202,-0.075,0.001,0.001,4135.0,3032.0,1.0,main,人均日生活用水量(升),year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+alpha,0.009,0.025,-0.038,0.059,0.0,0.0,3996.0,2529.0,1.0,global,,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[TA（°C）],0.069,0.039,-0.006,0.145,0.001,0.001,3292.0,2465.0,1.0,main,TA（°C）,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[R1xday],0.106,0.033,0.04,0.169,0.001,0.001,3027.0,2363.0,1.0,main,R1xday,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[PM2.5],0.01,0.034,-0.056,0.075,0.001,0.001,3256.0,2502.0,1.0,main,PM2.5,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[抗菌药物使用强度],0.11,0.029,0.054,0.165,0.0,0.001,3274.0,2073.0,1.0,main,抗菌药物使用强度,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[GDP],0.162,0.033,0.094,0.224,0.001,0.001,3265.0,2405.0,1.0,main,GDP,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[文盲比例],-0.093,0.032,-0.155,-0.03,0.001,0.001,3105.0,2461.0,1.0,main,文盲比例,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[人均日生活用水量(升)],-0.14,0.033,-0.207,-0.08,0.001,0.001,3241.0,2084.0,1.0,main,人均日生活用水量(升),year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
 "beta_main[牲畜饲养
--猪年底头数]",0.052,0.032,-0.014,0.11,0.0,0.0,4178.0,3308.0,1.0,main,"牲畜饲养
+-猪年底头数]",0.052,0.032,-0.01,0.116,0.001,0.001,3294.0,2123.0,1.0,main,"牲畜饲养
 -猪年底头数",year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
-beta_main[主要城市日照时数],-0.056,0.034,-0.124,0.01,0.001,0.001,3679.0,3002.0,1.0,main,主要城市日照时数,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
-beta_interaction[R1xday × 抗菌药物使用强度],0.039,0.028,-0.017,0.092,0.0,0.0,4569.0,2959.0,1.0,interaction,R1xday × 抗菌药物使用强度,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
-sigma_residual,0.434,0.018,0.4,0.47,0.0,0.0,4247.0,2932.0,1.0,global,,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_main[主要城市日照时数],-0.056,0.034,-0.121,0.012,0.001,0.001,2322.0,2269.0,1.0,main,主要城市日照时数,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+beta_interaction[R1xday × 抗菌药物使用强度],0.039,0.028,-0.017,0.093,0.0,0.0,3729.0,2267.0,1.0,interaction,R1xday × 抗菌药物使用强度,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes
+sigma_residual,0.435,0.019,0.398,0.47,0.0,0.0,3509.0,2311.0,1.0,global,,year_only_amplification,Year-only amplification,方案F_低VIF主线组 | Province: No / Year: Yes,方案F_低VIF主线组,curated,Province: No / Year: Yes

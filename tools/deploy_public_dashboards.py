@@ -209,6 +209,23 @@ VARIABLE_GROUP_BUNDLE = DashboardBundle(
     copy_paths=("data",),
 )
 
+SYS08952_PAPER_BUNDLE = DashboardBundle(
+    slug="sys-08952-paper-analysis",
+    label="SYS_08952 Paper Analysis",
+    description="只聚焦最终论文主模型 SYS_08952 的中文论文陈述式证据链，串联固定效应、Bayes、反事实和未来情景。",
+    scope_note="面向最终论文分析撰写，不展示其他候选模型；用于解释 SYS_08952 为什么可作为正文主模型以及每一层结果应如何表述。",
+    source_dir=PUBLIC_DIR / "sys-08952-paper-analysis",
+    builder_script=ROOT / "tools" / "build_sys08952_paper_analysis.py",
+    files={
+        "home": "index.html",
+    },
+    links=(
+        BundleLink(label="Open paper analysis", target="index.html", tone="primary"),
+        BundleLink(label="Payload JSON", target="data/sys08952_paper_payload.json", tone="ghost"),
+    ),
+    copy_paths=("data",),
+)
+
 ALL_BUNDLES: tuple[DashboardBundle, ...] = (
     LATEST_BUNDLE,
     LEGACY_PUBLIC_EXHAUSTIVE_BUNDLE,
@@ -217,6 +234,7 @@ ALL_BUNDLES: tuple[DashboardBundle, ...] = (
     BAYES_BUNDLE,
     COUNTERFACTUAL_BUNDLE,
     VARIABLE_GROUP_BUNDLE,
+    SYS08952_PAPER_BUNDLE,
 )
 
 
@@ -258,6 +276,11 @@ def parse_args() -> argparse.Namespace:
         "--skip-variable-group",
         action="store_true",
         help="Do not publish the variable-group deep-dive dashboard bundle.",
+    )
+    parser.add_argument(
+        "--skip-sys08952-paper",
+        action="store_true",
+        help="Do not publish the SYS_08952 paper-analysis dashboard bundle.",
     )
     parser.add_argument(
         "--release-tag",
@@ -1008,6 +1031,8 @@ def main() -> None:
         bundles.append(COUNTERFACTUAL_BUNDLE)
     if not args.skip_variable_group:
         bundles.append(VARIABLE_GROUP_BUNDLE)
+    if not args.skip_sys08952_paper:
+        bundles.append(SYS08952_PAPER_BUNDLE)
     if not bundles:
         raise SystemExit(
             "Nothing to publish. Remove skip flags or select at least one bundle."

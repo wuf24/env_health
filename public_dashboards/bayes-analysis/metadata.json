@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-04-24 19:41:58",
+  "generated_at": "2026-04-28 00:52:35",
   "model_count": 12,
   "variant_count": 6,
   "bridge_rows": 72,
   "primary_rows": 180,
-  "diagnostic_rows": 828,
+  "diagnostic_rows": 834,
   "source_dir": "4 贝叶斯分析/results/model_summaries",
   "archive_path": "2 固定效应模型/results/model_archive_12/selected_models.csv",
   "downloads": [

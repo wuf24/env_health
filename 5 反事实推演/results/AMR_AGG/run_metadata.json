@@ -7,8 +7,27 @@
   ],
   "target_year": 2023,
   "primary_fe_label": "Province: No / Year: Yes",
-  "selected_models_source": "E:\\MALA\\Code_health\\2 固定效应模型\\results\\model_archive_12\\selected_models.csv",
+  "selected_models_source": "2 固定效应模型\\results\\model_archive_12\\selected_models.csv",
   "selected_models": [
+    {
+      "role_id": "main_model",
+      "role_label": "主模型",
+      "selection_rule": "SYS_08952-prioritized + Year FE + story-first candidate",
+      "reason": "SYS_08952 is prioritized as the final paper's main model because it is a compact high-ranking Year FE specification with positive and significant R1xday, AMC, TA, and NOx signals.",
+      "model_id": "SYS_08952 | Province: No / Year: Yes",
+      "scheme_id": "SYS_08952",
+      "scheme_source": "systematic",
+      "fe_label": "Province: No / Year: Yes",
+      "variables": "R1xday | 抗菌药物使用强度 | TA（°C） | 氮氧化物 | 医疗水平 | 人均日生活用水量(升) | 牲畜饲养\n-猪年底头数 | 文盲比例",
+      "performance_rank": 3,
+      "performance_score": 0.9999887002447656,
+      "coef_R1xday": 0.1378604346402795,
+      "p_R1xday": 0.0469488814481784,
+      "coef_AMC": 0.1215112893312374,
+      "p_AMC": 0.0055387531920609,
+      "r2_model": 0.4578397599580358,
+      "max_vif_z": 1.7080196846881843
+    },
     {
       "role_id": "strict_main_model",
       "role_label": "严筛主模型",
@@ -171,8 +190,8 @@
       "scheme_source": "systematic",
       "fe_label": "Province: No / Year: Yes",
       "variables": "R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | GDP | 城市用水普及率 | 牲畜饲养\n-猪年底头数 | 主要城市降水量 | 食品消费量",
-      "performance_rank": 49,
-      "performance_score": 0.7665352008628431,
+      "performance_rank": 277,
+      "performance_score": 0.9986299918054908,
       "coef_R1xday": 0.1812432996167564,
       "p_R1xday": 0.0218372297507352,
       "coef_AMC": 0.1164206832956922,
@@ -190,8 +209,8 @@
       "scheme_source": "systematic",
       "fe_label": "Province: No / Year: Yes",
       "variables": "R1xday | 抗菌药物使用强度 | TA（°C） | PM2.5 | GDP | 城市用水普及率 | 牲畜饲养\n-猪年底头数 | 主要城市降水量 | 文盲比例",
-      "performance_rank": 65,
-      "performance_score": 0.7642202278382038,
+      "performance_rank": 282,
+      "performance_score": 0.9986258816487692,
       "coef_R1xday": 0.1784084705607142,
       "p_R1xday": 0.0277135674869211,
       "coef_AMC": 0.1166271193804089,
@@ -209,33 +228,14 @@
       "scheme_source": "curated",
       "fe_label": "Province: No / Year: Yes",
       "variables": "TA（°C） | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养\n-猪年底头数 | 主要城市日照时数",
-      "performance_rank": 156,
-      "performance_score": 0.754215661360927,
+      "performance_rank": 18465,
+      "performance_score": 0.0048093786670531,
       "coef_R1xday": 0.1343718513136075,
       "p_R1xday": 0.0511176547836138,
       "coef_AMC": 0.1282545796871254,
       "p_AMC": 0.0033740699130591,
       "r2_model": 0.3450624353022486,
       "max_vif_z": 1.8204312093552328
-    },
-    {
-      "role_id": "main_model",
-      "role_label": "主模型",
-      "selection_rule": "hand-picked + Year FE + story-first candidate",
-      "reason": "Most directly aligned with the paper's main narrative and intended interpretation.",
-      "model_id": "方案A_平衡主线组 | Province: No / Year: Yes",
-      "scheme_id": "方案A_平衡主线组",
-      "scheme_source": "curated",
-      "fe_label": "Province: No / Year: Yes",
-      "variables": "省平均气温 | R1xday | PM2.5 | 抗菌药物使用强度 | GDP | 文盲比例 | 人均日生活用水量(升) | 牲畜饲养\n-猪年底头数",
-      "performance_rank": 972,
-      "performance_score": 0.7218422485555385,
-      "coef_R1xday": 0.1508246294759486,
-      "p_R1xday": 0.042609775295463,
-      "coef_AMC": 0.1310341033515701,
-      "p_AMC": 0.0033854032562117,
-      "r2_model": 0.3338148826961948,
-      "max_vif_z": 3.0544803429981107
     }
   ],
   "figures": {
@@ -244,6 +244,7 @@
     "scenario_comparison_bar": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\scenario_comparison_bar.png",
     "province_map_main_model_latest_year": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_main_model_latest_year.png",
     "national_yearly_by_role": {
+      "main_model": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_main_model.png",
       "strict_main_model": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_strict_main_model.png",
       "strict_top_02": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_strict_top_02.png",
       "strict_top_03": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_strict_top_03.png",
@@ -254,10 +255,10 @@
       "strict_top_08": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_strict_top_08.png",
       "robust_systematic": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_robust_systematic.png",
       "robust_systematic_2": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_robust_systematic_2.png",
-      "robust_low_vif": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_robust_low_vif.png",
-      "main_model": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_main_model.png"
+      "robust_low_vif": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_robust_low_vif.png"
     },
     "province_map_latest_year_by_role": {
+      "main_model": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_main_model_latest_year.png",
       "strict_main_model": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_strict_main_model_latest_year.png",
       "strict_top_02": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_strict_top_02_latest_year.png",
       "strict_top_03": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_strict_top_03_latest_year.png",
@@ -268,11 +269,19 @@
       "strict_top_08": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_strict_top_08_latest_year.png",
       "robust_systematic": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_robust_systematic_latest_year.png",
       "robust_systematic_2": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_robust_systematic_2_latest_year.png",
-      "robust_low_vif": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_robust_low_vif_latest_year.png",
-      "main_model": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_main_model_latest_year.png"
+      "robust_low_vif": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_robust_low_vif_latest_year.png"
     }
   },
   "model_figure_catalog": [
+    {
+      "role_id": "main_model",
+      "model_id": "SYS_08952 | Province: No / Year: Yes",
+      "role_label": "主模型",
+      "national_yearly": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_main_model.png",
+      "province_map_latest_year": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_main_model_latest_year.png",
+      "province_map_scenario_id": "all_climate_to_baseline",
+      "province_map_scenario_label": "所有气候变量恢复基准"
+    },
     {
       "role_id": "strict_main_model",
       "model_id": "SYS_09851 | Province: No / Year: Yes",
@@ -369,15 +378,6 @@
       "role_label": "稳健性模型 1",
       "national_yearly": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_robust_low_vif.png",
       "province_map_latest_year": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_robust_low_vif_latest_year.png",
-      "province_map_scenario_id": "all_climate_to_baseline",
-      "province_map_scenario_label": "所有气候变量恢复基准"
-    },
-    {
-      "role_id": "main_model",
-      "model_id": "方案A_平衡主线组 | Province: No / Year: Yes",
-      "role_label": "主模型",
-      "national_yearly": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\national_yearly_main_model.png",
-      "province_map_latest_year": "E:\\MALA\\Code_health\\5 反事实推演\\results\\AMR_AGG\\figures\\province_map_main_model_latest_year.png",
       "province_map_scenario_id": "all_climate_to_baseline",
       "province_map_scenario_label": "所有气候变量恢复基准"
     }

@@ -1,16 +1,16 @@
 ﻿parameter,mean,sd,hdi_2.5%,hdi_97.5%,mcse_mean,mcse_sd,ess_bulk,ess_tail,r_hat,effect_scope,variable,variant_id,variant_label,model_id,scheme_id,scheme_source,fe_label
-alpha,0.011,0.125,-0.235,0.259,0.004,0.003,847.0,1200.0,1.0,global,,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
-beta_main[R1xday],-0.024,0.027,-0.076,0.026,0.0,0.0,3824.0,2849.0,1.0,main,R1xday,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
-beta_main[抗菌药物使用强度],0.025,0.021,-0.015,0.065,0.0,0.0,3762.0,2989.0,1.0,main,抗菌药物使用强度,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
-beta_main[TA（°C）],-0.024,0.019,-0.063,0.012,0.0,0.0,3927.0,3164.0,1.0,main,TA（°C）,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
-beta_main[PM2.5],0.107,0.027,0.051,0.158,0.0,0.0,3186.0,2673.0,1.0,main,PM2.5,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
-beta_main[GDP],-0.177,0.06,-0.291,-0.057,0.001,0.001,2399.0,2459.0,1.0,main,GDP,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
-beta_main[城市用水普及率],-0.058,0.025,-0.106,-0.007,0.0,0.0,3899.0,2786.0,1.0,main,城市用水普及率,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+alpha,0.014,0.123,-0.227,0.263,0.005,0.003,666.0,936.0,1.01,global,,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+beta_main[R1xday],-0.023,0.027,-0.074,0.029,0.0,0.0,3271.0,2525.0,1.0,main,R1xday,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+beta_main[抗菌药物使用强度],0.025,0.021,-0.014,0.065,0.0,0.0,3092.0,2590.0,1.0,main,抗菌药物使用强度,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+beta_main[TA（°C）],-0.024,0.019,-0.06,0.013,0.0,0.0,3393.0,2333.0,1.0,main,TA（°C）,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+beta_main[PM2.5],0.105,0.027,0.051,0.157,0.001,0.0,2538.0,2274.0,1.0,main,PM2.5,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+beta_main[GDP],-0.178,0.061,-0.289,-0.051,0.001,0.001,1957.0,1888.0,1.0,main,GDP,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+beta_main[城市用水普及率],-0.058,0.025,-0.109,-0.008,0.0,0.0,3809.0,2368.0,1.0,main,城市用水普及率,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
 "beta_main[牲畜饲养
--猪年底头数]",0.14,0.067,0.007,0.273,0.001,0.001,2150.0,2278.0,1.0,main,"牲畜饲养
+-猪年底头数]",0.141,0.07,0.008,0.279,0.002,0.001,1575.0,1533.0,1.0,main,"牲畜饲养
 -猪年底头数",province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
-beta_main[主要城市降水量],-0.0,0.041,-0.085,0.079,0.001,0.001,3284.0,2793.0,1.0,main,主要城市降水量,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
-beta_main[文盲比例],0.121,0.033,0.056,0.184,0.001,0.001,3913.0,2616.0,1.0,main,文盲比例,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
-beta_interaction[R1xday × 抗菌药物使用强度],0.037,0.019,0.001,0.073,0.0,0.0,3668.0,2708.0,1.0,interaction,R1xday × 抗菌药物使用强度,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
-sigma_residual,0.245,0.011,0.225,0.267,0.0,0.0,3622.0,2905.0,1.0,global,,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
-sigma_province,0.67,0.097,0.497,0.864,0.003,0.002,987.0,1672.0,1.0,global,,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+beta_main[主要城市降水量],-0.002,0.041,-0.082,0.077,0.001,0.001,2544.0,2046.0,1.0,main,主要城市降水量,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+beta_main[文盲比例],0.121,0.034,0.051,0.186,0.001,0.001,3058.0,2420.0,1.0,main,文盲比例,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+beta_interaction[R1xday × 抗菌药物使用强度],0.037,0.019,-0.001,0.073,0.0,0.0,3337.0,2001.0,1.0,interaction,R1xday × 抗菌药物使用强度,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+sigma_residual,0.245,0.011,0.224,0.267,0.0,0.0,2809.0,2309.0,1.0,global,,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
+sigma_province,0.672,0.094,0.495,0.859,0.003,0.002,905.0,1032.0,1.0,global,,province_only_amplification,Province-only amplification,SYS_09557 | Province: No / Year: Yes,SYS_09557,systematic,Province: No / Year: Yes
