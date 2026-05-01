@@ -16,9 +16,9 @@ from config_future_scenario_projection import (
     DEFAULT_BASELINE_MODES,
     DEFAULT_OUTCOME,
     FUTURE_END_YEAR,
+    FUTURE_SCENARIO_IDS,
     FUTURE_START_YEAR,
     RX1DAY_MAIN_STATISTIC,
-    RX1DAY_SCENARIOS,
     SCENARIO_LABELS,
     resolve_results_output_dir,
 )
@@ -40,6 +40,7 @@ SCENARIO_PALETTE = {
     "ssp245": "#377eb8",
     "ssp370": "#ff7f00",
     "ssp585": "#d7301f",
+    "amc_reduce_50": "#7c3aed",
 }
 
 REGION_PALETTE = {
@@ -162,7 +163,7 @@ def prepare_provincial_panel(
     keep_statistics = {RX1DAY_MAIN_STATISTIC, "p10", "p90"}
     plot_df = projection_panel[
         projection_panel["role_id"].eq(role_id)
-        & projection_panel["scenario_id"].isin(RX1DAY_SCENARIOS)
+        & projection_panel["scenario_id"].isin(FUTURE_SCENARIO_IDS)
         & projection_panel["statistic"].isin(keep_statistics)
         & projection_panel["Year"].between(start_year, end_year)
     ].copy()
@@ -242,27 +243,29 @@ def plot_provincial_panel(
     national = summarize_national_delta(plot_df, metric_meta=metric_meta)
     median_df = plot_df[plot_df["statistic"].eq(RX1DAY_MAIN_STATISTIC)].copy()
     value_col = metric_meta["delta_col"]
+    scenario_ids = [scenario_id for scenario_id in FUTURE_SCENARIO_IDS if scenario_id in set(median_df["scenario_id"])]
 
     abs_limit = float(median_df[value_col].abs().max())
     abs_limit = max(abs_limit, 1e-6)
     norm = TwoSlopeNorm(vmin=-abs_limit, vcenter=0.0, vmax=abs_limit)
     cmap = mpl.colormaps["RdBu_r"]
 
-    fig = plt.figure(figsize=(21, 14.5), facecolor="white")
+    fig_width = max(21, 2.95 * max(len(scenario_ids), 1) + 4.6)
+    fig = plt.figure(figsize=(fig_width, 14.5), facecolor="white")
     outer_grid = fig.add_gridspec(2, 1, height_ratios=[1.15, 6.6], hspace=0.16)
     ax_top = fig.add_subplot(outer_grid[0, 0])
     heatmap_grid = outer_grid[1, 0].subgridspec(
         1,
-        7,
-        width_ratios=[0.42, 1, 1, 1, 1, 1, 0.09],
+        len(scenario_ids) + 2,
+        width_ratios=[0.42, *([1] * len(scenario_ids)), 0.09],
         wspace=0.07,
     )
     region_ax = fig.add_subplot(heatmap_grid[0, 0])
-    heat_axes = [fig.add_subplot(heatmap_grid[0, idx]) for idx in range(1, 6)]
-    colorbar_ax = fig.add_subplot(heatmap_grid[0, 6])
+    heat_axes = [fig.add_subplot(heatmap_grid[0, idx]) for idx in range(1, len(scenario_ids) + 1)]
+    colorbar_ax = fig.add_subplot(heatmap_grid[0, len(scenario_ids) + 1])
 
-    for scenario_id in RX1DAY_SCENARIOS:
-        color = SCENARIO_PALETTE[scenario_id]
+    for scenario_id in scenario_ids:
+        color = SCENARIO_PALETTE.get(scenario_id, "#4b5563")
         median_line = national[
             national["scenario_id"].eq(scenario_id) & national["statistic"].eq(RX1DAY_MAIN_STATISTIC)
         ].sort_values("Year")
@@ -286,14 +289,14 @@ def plot_provincial_panel(
             median_line["delta_mean"],
             color=color,
             linewidth=2.3,
-            label=SCENARIO_LABELS[scenario_id],
+            label=SCENARIO_LABELS.get(scenario_id, scenario_id),
         )
 
     ax_top.axhline(0, color="#475569", linestyle="--", linewidth=1.1, alpha=0.9)
     ax_top.set_xlim(start_year, end_year)
     ax_top.set_ylabel(metric_meta["top_label"])
     ax_top.set_xlabel("")
-    ax_top.legend(loc="upper left", ncol=5, frameon=False, bbox_to_anchor=(0, 1.15))
+    ax_top.legend(loc="upper left", ncol=min(6, max(len(scenario_ids), 1)), frameon=False, bbox_to_anchor=(0, 1.15))
     ax_top.spines["top"].set_visible(False)
     ax_top.spines["right"].set_visible(False)
     ax_top.grid(axis="y", color="#e2e8f0", linewidth=0.9)
@@ -335,7 +338,8 @@ def plot_provincial_panel(
         region_ax.axhline(boundary, color="#e2e8f0", linewidth=1.2)
     region_ax.axvline(0.98, color="#e2e8f0", linewidth=1.0)
 
-    for ax, scenario_id in zip(heat_axes, RX1DAY_SCENARIOS):
+    im = None
+    for ax, scenario_id in zip(heat_axes, scenario_ids):
         scenario_df = median_df[median_df["scenario_id"].eq(scenario_id)].copy()
         matrix = (
             scenario_df.pivot_table(index="Province", columns="Year", values=value_col, aggfunc="mean")
@@ -349,7 +353,12 @@ def plot_provincial_panel(
         for tick_pos in year_tick_positions:
             ax.axvline(tick_pos - 0.5, color="white", linewidth=0.6, alpha=0.5)
 
-        ax.set_title(SCENARIO_LABELS[scenario_id], fontsize=12, fontweight="bold", color=SCENARIO_PALETTE[scenario_id])
+        ax.set_title(
+            SCENARIO_LABELS.get(scenario_id, scenario_id),
+            fontsize=12,
+            fontweight="bold",
+            color=SCENARIO_PALETTE.get(scenario_id, "#4b5563"),
+        )
         panel_tick_values = year_tick_values if ax is heat_axes[0] else [year for year in year_tick_values if year != start_year]
         panel_tick_positions = [years.index(year) for year in panel_tick_values]
         ax.set_xticks(panel_tick_positions)
@@ -366,8 +375,9 @@ def plot_provincial_panel(
         else:
             ax.set_yticks([])
 
-    colorbar = fig.colorbar(im, cax=colorbar_ax)
-    colorbar.set_label(metric_meta["delta_label"])
+    if im is not None:
+        colorbar = fig.colorbar(im, cax=colorbar_ax)
+        colorbar.set_label(metric_meta["delta_label"])
 
     fig.suptitle(
         f"\u7701\u7ea7\u5c3a\u5ea6\u672a\u6765\u60c5\u666f\u6a21\u62df | {baseline_label} | {role_label} | {metric_meta['title_label']}",

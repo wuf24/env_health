@@ -7,7 +7,7 @@
     "selected_count": 12,
     "yearfe_count": 4,
     "strict_count": 8,
-    "build_time": "2026-04-28 00:52:38",
+    "build_time": "2026-04-30 18:35:58",
     "counterfactual_note_excerpt": [
       "# AMR_AGG_z 反事实推演说明",
       "",
@@ -458,6 +458,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.5189486859243144,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -507,6 +514,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.5189486859243146,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",
@@ -997,6 +1011,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.3208584778138457,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -1046,6 +1067,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.3208584778138457,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",
@@ -1534,6 +1562,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.3053810104479284,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -1583,6 +1618,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.3053810104479284,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",
@@ -2071,6 +2113,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.3763797356990637,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -2120,6 +2169,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.3763797356990626,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",
@@ -2636,6 +2692,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.5555348213553086,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -2685,6 +2748,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.5555348213553088,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",
@@ -3173,6 +3243,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.5532713684593151,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -3222,6 +3299,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.5532713684593162,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",
@@ -3710,6 +3794,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.5945517943831324,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -3759,6 +3850,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.594551794383132,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",
@@ -4274,6 +4372,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.5308282166694076,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -4323,6 +4428,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.5308282166694076,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",
@@ -4812,6 +4924,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.5289781036097656,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -4861,6 +4980,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.528978103609766,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",
@@ -5377,6 +5503,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.445568311006857,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -5426,6 +5559,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.4455683110068562,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",
@@ -5941,6 +6081,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.476918120138239,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -5990,6 +6137,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.4769181201382393,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",
@@ -6493,6 +6647,13 @@
         "x_driven": {
           "label": "X-driven / Nature-like simplified baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.5675982188633228,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (X-driven)",
@@ -6542,6 +6703,13 @@
         "lancet_ets": {
           "label": "Lancet-like ETS baseline",
           "scenarios": {
+            "amc_reduce_50": {
+              "scenario_id": "amc_reduce_50",
+              "scenario_label": "AMC reduces 50% by 2050",
+              "median": -1.567598218863323,
+              "p10": null,
+              "p90": null
+            },
             "baseline_ets": {
               "scenario_id": "baseline_ets",
               "scenario_label": "Baseline (ETS)",

@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SYS_08952 论文分析专页</title>
+  <title>SYS_08952 完整论文分析</title>
   <style>
     :root {
       --bg: #f7f9fb;
       --surface: #ffffff;
-      --surface-2: #eef4f6;
+      --soft: #eef4f6;
       --ink: #17252c;
-      --muted: #61717a;
+      --muted: #62737c;
       --line: #d8e1e6;
       --teal: #0f766e;
       --blue: #2563eb;
-      --amber: #b45309;
       --rose: #be123c;
-      --shadow: 0 18px 40px rgba(21, 32, 39, 0.10);
+      --amber: #b45309;
+      --shadow: 0 14px 34px rgba(21, 32, 39, 0.09);
       --serif: Georgia, "Times New Roman", serif;
       --sans: "Segoe UI", "Microsoft YaHei UI", Arial, sans-serif;
     }
@@ -24,363 +24,80 @@
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: var(--sans);
       color: var(--ink);
-      background:
-        linear-gradient(180deg, #edf3f5 0%, #f7f9fb 32%, #eef4f6 100%);
+      background: linear-gradient(180deg, #edf3f5 0%, #f7f9fb 34%, #eef4f6 100%);
+      font-family: var(--sans);
     }
     a { color: inherit; }
-    .page {
-      width: min(1180px, calc(100vw - 28px));
-      margin: 0 auto;
-      padding: 18px 0 42px;
-    }
+    .page { width: min(1240px, calc(100vw - 28px)); margin: 0 auto; padding: 16px 0 44px; }
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 14px;
-      font-size: 14px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; font-size: 14px;
     }
-    .topbar a {
-      text-decoration: none;
-      color: var(--muted);
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.72);
-      padding: 9px 12px;
-      border-radius: 8px;
-      transition: border-color 180ms ease, color 180ms ease, background 180ms ease;
-    }
-    .topbar a:hover, .topbar a:focus-visible {
-      color: var(--teal);
-      border-color: rgba(15, 118, 110, 0.38);
-      background: #fff;
-      outline: none;
-    }
+    .topbar a { text-decoration: none; color: var(--muted); border: 1px solid var(--line); background: rgba(255,255,255,.78); padding: 9px 12px; border-radius: 8px; }
+    .topbar a:hover { color: var(--teal); border-color: rgba(15,118,110,.42); }
     .hero {
-      border-radius: 8px;
-      background: linear-gradient(135deg, #16343a 0%, #0f766e 58%, #204564 100%);
-      color: #f9fcfb;
-      padding: clamp(24px, 5vw, 46px);
-      box-shadow: var(--shadow);
-      overflow: hidden;
+      border-radius: 8px; background: linear-gradient(135deg, #16343a 0%, #0f766e 60%, #204564 100%);
+      color: #f9fcfb; padding: clamp(24px, 4vw, 44px); box-shadow: var(--shadow);
     }
-    .eyebrow {
-      margin: 0 0 10px;
-      font-size: 12px;
-      line-height: 1.4;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-      color: rgba(249, 252, 251, 0.78);
-    }
-    h1, h2, h3 {
-      margin: 0;
-      letter-spacing: 0;
-    }
-    h1 {
-      max-width: 960px;
-      font-family: var(--serif);
-      font-size: clamp(34px, 5vw, 58px);
-      line-height: 1.05;
-    }
-    .hero p {
-      max-width: 980px;
-      margin: 18px 0 0;
-      color: rgba(249, 252, 251, 0.90);
-      line-height: 1.8;
-      font-size: 17px;
-    }
-    .hero strong { color: #ffffff; }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 26px;
-    }
-    .metric {
-      min-height: 126px;
-      border: 1px solid rgba(255, 255, 255, 0.20);
-      background: rgba(255, 255, 255, 0.10);
-      border-radius: 8px;
-      padding: 14px;
-    }
-    .metric span {
-      display: block;
-      min-height: 30px;
-      color: rgba(249, 252, 251, 0.74);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-    .metric strong {
-      display: block;
-      margin: 8px 0 6px;
-      font-size: clamp(21px, 2.5vw, 34px);
-      line-height: 1;
-      overflow-wrap: anywhere;
-    }
-    .metric em {
-      display: block;
-      font-style: normal;
-      color: rgba(249, 252, 251, 0.82);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-    .nav {
-      position: sticky;
-      top: 0;
-      z-index: 3;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 14px 0;
-      padding: 10px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(247, 249, 251, 0.94);
-      backdrop-filter: blur(12px);
-    }
-    .nav a {
-      text-decoration: none;
-      padding: 8px 10px;
-      border-radius: 8px;
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 13px;
-    }
-    .nav a:hover, .nav a:focus-visible {
-      color: var(--teal);
-      background: #e7f3f1;
-      outline: none;
-    }
-    section.block {
-      margin-top: 14px;
-      border: 1px solid var(--line);
-      background: var(--surface);
-      border-radius: 8px;
-      box-shadow: 0 10px 28px rgba(21, 32, 39, 0.06);
-      padding: clamp(20px, 3vw, 30px);
-    }
-    .section-head {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 18px;
-      align-items: start;
-      margin-bottom: 18px;
-    }
-    .section-head .eyebrow { color: var(--teal); }
-    h2 {
-      font-family: var(--serif);
-      font-size: clamp(26px, 3vw, 38px);
-      line-height: 1.12;
-    }
-    h3 {
-      font-size: 18px;
-      line-height: 1.25;
-    }
-    p {
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.85;
-      font-size: 15px;
-    }
-    .callout {
-      border-left: 4px solid var(--teal);
-      background: #f1f7f6;
-      padding: 14px 16px;
-      border-radius: 8px;
-      color: #284247;
-      line-height: 1.85;
-    }
-    .grid {
-      display: grid;
-      gap: 12px;
-    }
-    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .mini-card {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
-      background: #fbfdfe;
-    }
-    .mini-card strong {
-      display: block;
-      font-size: 22px;
-      line-height: 1.1;
-      margin-top: 8px;
-    }
-    .mini-card span {
-      display: block;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-    .mini-card p { font-size: 14px; }
-    .tag-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      min-height: 30px;
-      border: 1px solid #cddae0;
-      background: #f6fafb;
-      color: #284247;
-      border-radius: 8px;
-      padding: 5px 9px;
-      font-size: 13px;
-    }
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-    }
-    table {
-      width: 100%;
-      min-width: 760px;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-    th {
-      text-align: left;
-      padding: 11px 12px;
-      background: #edf4f6;
-      color: #34484f;
-      border-bottom: 1px solid var(--line);
-      white-space: nowrap;
-    }
-    td {
-      padding: 12px;
-      border-bottom: 1px solid #edf1f3;
-      vertical-align: top;
-      line-height: 1.55;
-    }
-    tr:last-child td { border-bottom: 0; }
-    td span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 3px;
-    }
-    .positive { color: var(--teal); font-weight: 800; }
-    .negative { color: var(--rose); font-weight: 800; }
-    .muted { color: var(--muted); }
-    .figure-grid {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-    figure {
-      margin: 0;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-      overflow: hidden;
-    }
-    figure img {
-      display: block;
-      width: 100%;
-      height: auto;
-      background: #f5f8fa;
-    }
-    figcaption {
-      padding: 10px 12px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.55;
-      border-top: 1px solid var(--line);
-    }
-    .delta-panel {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
-      background: #fbfdfe;
-    }
-    .delta-row {
-      display: grid;
-      grid-template-columns: 82px minmax(150px, 1fr) 80px;
-      gap: 10px;
-      align-items: center;
-      margin: 12px 0;
-      font-size: 13px;
-    }
-    .delta-track {
-      position: relative;
-      height: 10px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #f2d7df 0 50%, #dcefeb 50% 100%);
-      overflow: hidden;
-    }
-    .delta-track::after {
-      content: "";
-      position: absolute;
-      top: -4px;
-      bottom: -4px;
-      left: 50%;
-      width: 1px;
-      background: rgba(23, 37, 44, 0.34);
-    }
-    .delta-track i {
-      position: absolute;
-      top: 2px;
-      height: 6px;
-      border-radius: 999px;
-      transform: translateX(-50%);
-      background: var(--teal);
-    }
-    .delta-track i.negative { background: var(--rose); }
-    .writing {
-      display: grid;
-      gap: 12px;
-    }
-    .writing article {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
-      background: #fbfdfe;
-    }
-    .writing h3 {
-      color: #21383f;
-      margin-bottom: 8px;
-    }
-    .writing p {
-      color: #41545b;
-      margin: 0;
-    }
-    .note-list {
-      margin: 12px 0 0;
-      padding-left: 20px;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-    code {
-      font-family: Consolas, "SFMono-Regular", monospace;
-      font-size: 0.95em;
-      color: #203a44;
-      background: #edf4f6;
-      border: 1px solid #d9e5e8;
-      padding: 1px 6px;
-      border-radius: 6px;
-    }
-    @media (max-width: 980px) {
-      .hero-grid, .grid.two, .grid.three, .figure-grid, .section-head {
-        grid-template-columns: 1fr;
-      }
+    .eyebrow { margin: 0 0 10px; font-size: 12px; line-height: 1.4; letter-spacing: .10em; text-transform: uppercase; color: var(--teal); font-weight: 800; }
+    .hero .eyebrow { color: rgba(249,252,251,.78); }
+    h1,h2,h3,h4 { margin: 0; letter-spacing: 0; }
+    h1 { max-width: 1040px; font-family: var(--serif); font-size: clamp(34px, 5vw, 58px); line-height: 1.06; }
+    h2 { font-family: var(--serif); font-size: clamp(25px, 3vw, 37px); line-height: 1.14; }
+    h3 { font-size: 18px; line-height: 1.28; }
+    h4 { font-size: 15px; margin: 10px 0 8px; }
+    p { margin: 10px 0 0; color: var(--muted); line-height: 1.85; font-size: 15px; }
+    .hero p { max-width: 1040px; color: rgba(249,252,251,.9); font-size: 17px; }
+    .hero-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 24px; }
+    .metric { min-height: 126px; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.10); border-radius: 8px; padding: 14px; }
+    .metric span { display:block; min-height: 30px; color: rgba(249,252,251,.75); font-size: 12px; line-height: 1.45; }
+    .metric strong { display:block; margin: 8px 0 6px; color: #fff; font-size: clamp(22px, 2.5vw, 34px); line-height: 1; overflow-wrap:anywhere; }
+    .metric em { display:block; font-style:normal; color: rgba(249,252,251,.82); font-size:12px; line-height:1.45; }
+    .nav { position: sticky; top: 0; z-index: 4; display:flex; flex-wrap:wrap; gap:8px; margin:14px 0; padding:10px; border:1px solid var(--line); border-radius:8px; background:rgba(247,249,251,.94); backdrop-filter:blur(12px); }
+    .nav a { text-decoration:none; padding:8px 10px; border-radius:8px; color:var(--muted); font-weight:800; font-size:13px; }
+    .nav a:hover { color:var(--teal); background:#e7f3f1; }
+    section.block { margin-top:14px; border:1px solid var(--line); background:var(--surface); border-radius:8px; box-shadow:0 10px 28px rgba(21,32,39,.06); padding:clamp(20px,3vw,30px); }
+    .section-head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:18px; align-items:start; margin-bottom:18px; }
+    .grid { display:grid; gap:12px; }
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .mini-card { border:1px solid var(--line); border-radius:8px; padding:16px; background:#fbfdfe; }
+    .mini-card strong.value { display:block; font-size:23px; line-height:1.1; margin-top:7px; }
+    .mini-card span,.muted { color: var(--muted); }
+    .callout { border-left:4px solid var(--teal); background:#f1f7f6; padding:14px 16px; border-radius:8px; color:#284247; line-height:1.85; }
+    .warn { border-left-color: var(--amber); background:#fff7ed; }
+    .formula-block { margin-top:10px; padding:12px; border-radius:8px; background:#edf4f6; border:1px solid #d9e5e8; font-family:Consolas, "SFMono-Regular", monospace; color:#203a44; line-height:1.7; overflow:auto; }
+    .tag-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .tag { display:inline-flex; align-items:center; min-height:30px; border:1px solid #cddae0; background:#f6fafb; color:#284247; border-radius:8px; padding:5px 9px; font-size:13px; }
+    .table-wrap { width:100%; overflow:auto; border:1px solid var(--line); border-radius:8px; background:#fff; }
+    .table-wrap.small { max-height: 360px; }
+    table { width:100%; min-width:760px; border-collapse:collapse; font-size:14px; }
+    .mini-card table { min-width: 0; }
+    th { text-align:left; padding:11px 12px; background:#edf4f6; color:#34484f; border-bottom:1px solid var(--line); white-space:nowrap; }
+    td { padding:12px; border-bottom:1px solid #edf1f3; vertical-align:top; line-height:1.55; }
+    tr:last-child td { border-bottom:0; }
+    td span { display:block; color:var(--muted); font-size:12px; margin-top:3px; }
+    .meta-row td { background:#f8fafb; color:#34484f; font-weight:800; }
+    .pos { color: var(--teal); font-weight: 800; }
+    .neg { color: var(--rose); font-weight: 800; }
+    figure { margin:0; border:1px solid var(--line); border-radius:8px; background:#fff; overflow:hidden; }
+    figure img { display:block; width:100%; height:auto; background:#f5f8fa; }
+    figcaption { padding:10px 12px; color:var(--muted); font-size:13px; line-height:1.55; border-top:1px solid var(--line); }
+    .figure-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:14px; }
+    .figure-grid.single { grid-template-columns: 1fr; }
+    .note-list { margin:12px 0 0; padding-left:20px; color:var(--muted); line-height:1.8; }
+    .writing { display:grid; gap:12px; }
+    .writing article { border:1px solid var(--line); border-radius:8px; padding:16px; background:#fbfdfe; }
+    code { font-family: Consolas, "SFMono-Regular", monospace; color:#203a44; background:#edf4f6; border:1px solid #d9e5e8; padding:1px 6px; border-radius:6px; }
+    @media (max-width: 1050px) {
+      .hero-grid,.two,.three,.four,.figure-grid,.section-head { grid-template-columns: 1fr; }
       .nav { position: static; }
     }
     @media (max-width: 560px) {
       .page { width: calc(100vw - 14px); padding-top: 8px; }
       .topbar { flex-direction: column; align-items: stretch; }
       .hero, section.block { padding: 18px; }
-      .delta-row { grid-template-columns: 76px 1fr; }
-      .delta-row strong { grid-column: 2; }
     }
   </style>
 </head>
@@ -388,513 +105,1091 @@
   <main class="page">
     <div class="topbar">
       <a href="../index.html">返回发布入口</a>
-      <div class="tag-row" aria-label="source links">
+      <div class="tag-row">
         <a href="../variable-group-deep-dive/index.html">模型决策页</a>
-        <a href="../bayes-analysis/index.html">Bayes</a>
-        <a href="../counterfactual-amr-agg/index.html">反事实</a>
-        <a href="../future-scenario-analysis/index.html">未来情景</a>
+        <a href="../counterfactual-amr-agg/index.html">反事实原页</a>
+        <a href="../future-scenario-analysis/index.html">未来情景原页</a>
       </div>
     </div>
 
     <header class="hero">
-      <div class="eyebrow">Final Paper Model Only</div>
-      <h1>SYS_08952 论文分析专页</h1>
+      <div class="eyebrow">Final Full Analysis · generated 2026-05-01 19:44:39</div>
+      <h1>SYS_08952 完整论文分析页</h1>
       <p>
-        本页只展示 <strong>SYS_08952 | Province: No / Year: Yes</strong>，并按论文写作顺序把
-        “模型选择 → 固定效应主结果 → Bayes 验证 → 反事实归因 → 未来情景 → 写作边界”
-        串成一条完整证据链。这里不再横向展开 12 个候选模型，避免最终论文分析被备选模型分散。
+        本页只服务最终论文写作：先做 SYS_08952 变量组的单因素探索，再呈现固定效应 Lancet 风格主表，
+        随后把 Bayesian SI、反事实推演和 Lancet ETS 未来情景分解补成可解释、可追溯、可写入论文的完整证据链。
       </p>
       <div class="hero-grid">
-        <div class="metric"><span>模型定位</span><strong>主模型</strong><em>12 模型归档第 1；全空间性能排名第 3</em></div>
-        <div class="metric"><span>固定效应解释力</span><strong>0.458</strong><em>R² model；Year FE 主规格</em></div>
-        <div class="metric"><span>Bayes 主气候效应</span><strong>+0.133</strong><em>R1xday 95% CrI [0.080, 0.190]</em></div>
-        <div class="metric"><span>反事实气候贡献</span><strong>+0.122</strong><em>全部气候变量恢复基准</em></div>
-        <div class="metric"><span>2050 高排放增量</span><strong>+1.487</strong><em>SSP5-8.5 相对 Lancet ETS baseline</em></div>
+        <div class="metric"><span>主模型</span><strong>SYS_08952</strong><em>Province: No / Year: Yes</em></div>
+        <div class="metric"><span>固定效应 R²</span><strong>0.458</strong><em>只保留 model R-squared</em></div>
+        <div class="metric"><span>Bayes 主效应</span><strong>+0.133</strong><em>R1xday year-only posterior mean</em></div>
+        <div class="metric"><span>反事实共同气候贡献</span><strong>+0.122</strong><em>R1xday + TA 恢复基准</em></div>
+        <div class="metric"><span>2050 SSP5-8.5</span><strong>+1.487</strong><em>Lancet ETS baseline delta</em></div>
       </div>
     </header>
 
-    <nav class="nav" aria-label="page sections">
-      <a href="#selection">模型选择</a>
+    <nav class="nav">
+      <a href="#univariate">单因素</a>
       <a href="#fe">固定效应</a>
-      <a href="#bayes">Bayes</a>
+      <a href="#bayes">Bayes SI</a>
       <a href="#counterfactual">反事实</a>
       <a href="#future">未来情景</a>
-      <a href="#writing">论文表述</a>
+      <a href="#writing">论文陈述</a>
       <a href="#limits">边界</a>
     </nav>
 
-    <section class="block" id="selection">
+    <section class="block" id="univariate">
       <div class="section-head">
         <div>
-          <div class="eyebrow">1. Model Choice</div>
-          <h2>为什么最终主模型可以选 SYS_08952</h2>
-          <p>选择它的核心理由不是单一指标最高，而是“统计信号、变量故事、后续推演可承接性”最均衡。</p>
+          <div class="eyebrow">1. Univariate Screening</div>
+          <h2>先看 8952 变量组与 AMR_AGG_z 的单因素关系</h2>
+          <p>单因素分析只回答“每个变量单独看时与综合耐药性指标是否同向变化”。它不控制其他变量，因此是探索和可视化，不是最终主结论。</p>
         </div>
       </div>
       <div class="callout">
-        <strong>一句话结论：</strong>SYS_08952 在 Year FE 口径下保留了 R1xday、抗菌药物使用强度、温度和污染代理的同向正效应，
-        同时变量组足够紧凑，能自然连接到 Bayes 放大效应、气候反事实和 2050 SSP 情景。
+        <strong>读图规则：</strong>主图改成与 <code>1 单因素分析/figs</code> 一致的相关矩阵风格：
+        下三角为原始量纲散点与分组趋势线，对角线为分布，上三角为总体 Pearson 相关和按 GDP 四分位分组的相关。
+        标准化不会改变 Pearson 相关系数，但会抹掉变量原始尺度，所以旧的标准化散点图确实不如相关矩阵直观。
       </div>
-      <div class="grid two" style="margin-top: 12px;">
-        <article class="mini-card">
-          <span>固定效应设定</span>
-          <strong>Province: No / Year: Yes</strong>
-          <p>Year FE 吸收每一年全国共同变化，例如宏观政策、检测体系、全国性医疗变化和共同时间冲击。没有加入 Province FE，意味着模型仍保留省际结构差异中与气候、AMC 和社会环境相关的解释信息。</p>
-        </article>
-        <article class="mini-card">
-          <span>论文里的解释口径</span>
-          <strong>年份共同冲击被控制后的关联</strong>
-          <p>它更适合写成“在控制年份共同变化后，极端降雨、抗菌药物使用强度和温度与 AMR 水平呈正相关”，而不是写成严格的单一因果效应。</p>
-        </article>
+      <div class="figure-grid single">
+        <figure><img src="assets/univariate_pairgrid_sys08952.png" alt="SYS_08952 单因素相关矩阵" loading="lazy" /><figcaption>SYS_08952 八个解释变量与 AMR_AGG_z 的原始尺度相关矩阵。H/UM/LM/L 按同一年内 GDP 四分位划分，用于观察社会经济分层后的相关性是否一致。</figcaption></figure>
       </div>
-      <div class="tag-row">
-        <span class="tag">R1xday</span><span class="tag">抗菌药物使用强度</span><span class="tag">TA（°C）</span><span class="tag">氮氧化物</span><span class="tag">医疗水平</span><span class="tag">人均日生活用水量(升)</span><span class="tag">牲畜饲养 - 猪年底头数</span><span class="tag">文盲比例</span>
+      <div class="figure-grid">
+        <figure><img src="assets/univariate_scatter_grid.png" alt="SYS_08952 标准化单因素散点图" loading="lazy" /><figcaption>标准化散点图保留作为辅助图：它适合读标准化 β，但视觉上不如原始尺度相关矩阵直观。</figcaption></figure>
+        <figure><img src="assets/univariate_forest.png" alt="SYS_08952 单因素森林图" loading="lazy" /><figcaption>标准化单因素 β 的森林图，方便横向比较哪个变量的单因素关联更强。</figcaption></figure>
       </div>
-      <div class="grid three" style="margin-top: 12px;">
-        <article class="mini-card"><span>论文平衡排名</span><strong>1</strong><p>在最终候选中作为正文主模型最顺畅。</p></article>
-        <article class="mini-card"><span>R² 排名</span><strong>1</strong><p>拟合表现是候选组内最强之一。</p></article>
-        <article class="mini-card"><span>最大标准化 VIF</span><strong>1.71</strong><p>没有出现明显破坏主线解释的共线性压力。</p></article>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead><tr><th>变量</th><th>标准化 β</th><th>95% CI</th><th>p 值</th><th>Pearson r</th><th>解释</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>氮氧化物</strong><span>污染环境</span></td>
+              <td class="pos">+0.278***</td>
+              <td>[0.219, 0.337]</td>
+              <td><0.0001</td>
+              <td>+0.469</td>
+              <td>单因素层面呈正向且达到统计显著；进入多变量模型后还需看混杂调整。</td>
+            </tr>
+            
+
+            <tr>
+              <td><strong>抗菌药物使用强度</strong><span>抗菌药物压力</span></td>
+              <td class="pos">+0.227***</td>
+              <td>[0.159, 0.296]</td>
+              <td><0.0001</td>
+              <td>+0.392</td>
+              <td>单因素层面呈正向且达到统计显著；进入多变量模型后还需看混杂调整。</td>
+            </tr>
+            
+
+            <tr>
+              <td><strong>R1xday</strong><span>气候：极端降雨</span></td>
+              <td class="pos">+0.173***</td>
+              <td>[0.109, 0.236]</td>
+              <td><0.0001</td>
+              <td>+0.292</td>
+              <td>单因素层面呈正向且达到统计显著；进入多变量模型后还需看混杂调整。</td>
+            </tr>
+            
+
+            <tr>
+              <td><strong>牲畜饲养 - 猪年底头数</strong><span>畜牧暴露</span></td>
+              <td class="pos">+0.134***</td>
+              <td>[0.069, 0.198]</td>
+              <td><0.0001</td>
+              <td>+0.226</td>
+              <td>单因素层面呈正向且达到统计显著；进入多变量模型后还需看混杂调整。</td>
+            </tr>
+            
+
+            <tr>
+              <td><strong>文盲比例</strong><span>社会经济结构</span></td>
+              <td class="neg">-0.098**</td>
+              <td>[-0.163, -0.032]</td>
+              <td>0.0038</td>
+              <td>-0.165</td>
+              <td>单因素层面呈负向且达到统计显著；进入多变量模型后还需看混杂调整。</td>
+            </tr>
+            
+
+            <tr>
+              <td><strong>人均日生活用水量(升)</strong><span>供水与生活条件</span></td>
+              <td class="neg">-0.052</td>
+              <td>[-0.119, 0.014]</td>
+              <td>0.1235</td>
+              <td>-0.088</td>
+              <td>单因素层面呈负向但证据不足；主要作为背景探索结果。</td>
+            </tr>
+            
+
+            <tr>
+              <td><strong>医疗水平</strong><span>医疗系统/检测代理</span></td>
+              <td class="neg">-0.042</td>
+              <td>[-0.109, 0.024]</td>
+              <td>0.2114</td>
+              <td>-0.072</td>
+              <td>单因素层面呈负向但证据不足；主要作为背景探索结果。</td>
+            </tr>
+            
+
+            <tr>
+              <td><strong>TA（°C）</strong><span>气候：温度</span></td>
+              <td class="neg">-0.016</td>
+              <td>[-0.083, 0.050]</td>
+              <td>0.6330</td>
+              <td>-0.027</td>
+              <td>单因素层面呈负向但证据不足；主要作为背景探索结果。</td>
+            </tr>
+            </tbody>
+        </table>
       </div>
+      <ul class="note-list">
+        <li>单因素结果用于筛选和描述，不应替代固定效应模型，因为它没有同时调整其他气候、污染和社会经济变量。</li>
+        <li>如果单因素与多变量方向不一致，论文中应优先以固定效应模型为主，并把单因素作为探索性补充。</li>
+      </ul>
     </section>
 
     <section class="block" id="fe">
       <div class="section-head">
         <div>
-          <div class="eyebrow">2. Fixed Effects Main Result</div>
-          <h2>固定效应主模型回答“哪些因素与 AMR 同向变化”</h2>
-          <p>这一层是论文主结果的骨架。系数可理解为当前标准化建模尺度下的条件关联方向和强度。</p>
+          <div class="eyebrow">2. Fixed Effects Main Table</div>
+          <h2>固定效应主模型：Lancet 风格结果表</h2>
+          <p>这里使用 SYS_08952 的 Year FE 主规格。按你的要求，R² 只保留 <strong>model R-squared</strong>，不再展示其他容易混淆的 R² 口径。</p>
         </div>
       </div>
       <div class="grid three">
-        <article class="mini-card"><span>R1xday</span><strong class="positive">+0.138</strong><p>p=0.0469，极端单日降雨主线成立。</p></article>
-        <article class="mini-card"><span>AMC</span><strong class="positive">+0.122</strong><p>p=0.0055，抗菌药物压力信号更强。</p></article>
-        <article class="mini-card"><span>温度代理</span><strong class="positive">+0.104</strong><p>TA（°C），p=0.0175。</p></article>
+        <article class="mini-card"><span>R1xday</span><strong class="value pos">+0.138*</strong><p>p=0.0469，极端单日降雨为正。</p></article>
+        <article class="mini-card"><span>AMC</span><strong class="value pos">+0.122**</strong><p>p=0.0055，抗菌药物压力为正。</p></article>
+        <article class="mini-card"><span>TA</span><strong class="value pos">+0.104*</strong><p>p=0.0175，温度通道为正。</p></article>
       </div>
-      <div class="table-wrap" style="margin-top: 14px;">
+      <div class="table-wrap" style="margin-top:14px;">
         <table>
-          <thead>
-            <tr>
-              <th>变量</th>
-              <th>系数</th>
-              <th>95% CI</th>
-              <th>p 值</th>
-              <th>论文解释</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Predictor</th><th>Coefficient</th><th>95% CI</th><th>p value</th></tr></thead>
           <tbody>
-            
             <tr>
-              <td><strong>R1xday</strong><span>核心变量</span></td>
-              <td class="positive">+0.138</td>
-              <td>[0.002, 0.274]</td>
+              <td><strong>R1xday</strong></td>
+              <td class="pos">0.1379*</td>
+              <td>(0.0019, 0.2738)</td>
               <td>0.0469</td>
-              <td>极端单日降雨越高，AMR 指标越高；这是主气候暴露。</td>
             </tr>
             
 
             <tr>
-              <td><strong>抗菌药物使用强度</strong><span>核心变量</span></td>
-              <td class="positive">+0.122</td>
-              <td>[0.036, 0.207]</td>
+              <td><strong>抗菌药物使用强度</strong></td>
+              <td class="pos">0.1215**</td>
+              <td>(0.0359, 0.2071)</td>
               <td>0.0055</td>
-              <td>抗菌药物使用越强，AMR 指标越高；这是核心人类压力变量。</td>
             </tr>
             
 
             <tr>
-              <td><strong>TA（°C）</strong><span>显著控制项</span></td>
-              <td class="positive">+0.104</td>
-              <td>[0.018, 0.190]</td>
+              <td><strong>TA（°C）</strong></td>
+              <td class="pos">0.104*</td>
+              <td>(0.0183, 0.1896)</td>
               <td>0.0175</td>
-              <td>温度通道为正且显著，是反事实和未来情景里最主要的气候贡献来源。</td>
             </tr>
             
 
             <tr>
-              <td><strong>氮氧化物</strong><span>显著控制项</span></td>
-              <td class="positive">+0.183</td>
-              <td>[0.010, 0.356]</td>
+              <td><strong>氮氧化物</strong></td>
+              <td class="pos">0.183*</td>
+              <td>(0.0099, 0.3560)</td>
               <td>0.0383</td>
-              <td>污染代理为正且显著，提示城市/工业环境压力与 AMR 同向。</td>
             </tr>
             
 
             <tr>
-              <td><strong>医疗水平</strong><span>显著控制项</span></td>
-              <td class="positive">+0.298</td>
-              <td>[0.104, 0.492]</td>
+              <td><strong>医疗水平</strong></td>
+              <td class="pos">0.298**</td>
+              <td>(0.1042, 0.4918)</td>
               <td>0.0027</td>
-              <td>医疗系统暴露或检测能力代理为正，论文中宜作为调整变量解释。</td>
             </tr>
             
 
             <tr>
-              <td><strong>人均日生活用水量(升)</strong><span>控制项</span></td>
-              <td class="negative">-0.027</td>
-              <td>[-0.150, 0.096]</td>
+              <td><strong>人均日生活用水量(升)</strong></td>
+              <td class="neg">-0.0272</td>
+              <td>(-0.1504, 0.0961)</td>
               <td>0.6648</td>
-              <td>负向但证据不足，主要承担控制混杂的作用。</td>
             </tr>
             
 
             <tr>
-              <td><strong>牲畜饲养 - 猪年底头数</strong><span>控制项</span></td>
-              <td class="positive">+0.119</td>
-              <td>[-0.021, 0.260]</td>
+              <td><strong>牲畜饲养 - 猪年底头数</strong></td>
+              <td class="pos">0.1194</td>
+              <td>(-0.0215, 0.2602)</td>
               <td>0.0964</td>
-              <td>正向但证据不足，主要承担控制混杂的作用。</td>
             </tr>
             
 
             <tr>
-              <td><strong>文盲比例</strong><span>控制项</span></td>
-              <td class="positive">+0.091</td>
-              <td>[-0.047, 0.228]</td>
-              <td>0.1950</td>
-              <td>正向但证据不足，主要承担控制混杂的作用。</td>
+              <td><strong>文盲比例</strong></td>
+              <td class="pos">0.0906</td>
+              <td>(-0.0466, 0.2277)</td>
+              <td>0.195</td>
             </tr>
             
-          </tbody>
+
+                <tr class="meta-row">
+                  <td>Province</td>
+                  <td>No</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                
+
+                <tr class="meta-row">
+                  <td>Year</td>
+                  <td>Yes</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                
+
+                <tr class="meta-row">
+                  <td>R-squared (model)</td>
+                  <td>0.458</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                
+
+                <tr class="meta-row">
+                  <td>Total number of observations</td>
+                  <td>307</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                </tbody>
         </table>
       </div>
       <ul class="note-list">
-        <li>R1xday、AMC、TA 和氮氧化物均为正且达到常用显著性阈值，这让主模型具备清晰的“气候暴露 + 抗菌药物压力 + 环境压力”叙事。</li>
-        <li>医疗水平为正且显著，论文中更适合解释为医疗接触、检测能力或医疗系统暴露的控制代理，而不是简单写成医疗水平导致 AMR 升高。</li>
-        <li>人均生活用水量、猪年底头数、文盲比例在该规格中更多承担调整混杂作用，不宜把它们写成强结论。</li>
+        <li>R1xday、AMC、TA、氮氧化物、医疗水平均为正且达到常用显著性阈值，构成“极端降雨 + 温度 + 抗菌药物压力 + 环境压力”的主叙事。</li>
+        <li>Year FE 控制每一年全国共同冲击；没有 Province FE，因此模型仍保留省际结构差异，这一点要在论文方法和局限中说清楚。</li>
       </ul>
     </section>
 
     <section class="block" id="bayes">
       <div class="section-head">
         <div>
-          <div class="eyebrow">3. Bayesian Bridge</div>
-          <h2>Bayes 层检验“主效应是否稳、放大效应是否够强”</h2>
-          <p>Bayes 不是替代固定效应，而是把主模型换成概率语言：看后验均值、可信区间和大于 0 的概率。</p>
+          <div class="eyebrow">3. Bayesian Analysis for SI</div>
+          <h2>Bayes 分析到底在做什么，以及如何判断稳不稳</h2>
+          <p>Bayes 分析建议放 SI。它不是另建一个主模型替代固定效应，而是把同一组变量放进概率模型，检查主效应方向、可信区间、交互项和 MCMC 收敛诊断。</p>
         </div>
       </div>
-      <div class="grid three">
-        <article class="mini-card"><span>Year-only R1xday</span><strong class="positive">+0.133</strong><p>95% CrI [0.080, 0.190]，P(&gt;0) 100.0%。</p></article>
-        <article class="mini-card"><span>Year-only AMC</span><strong class="positive">+0.103</strong><p>95% CrI [0.050, 0.155]，P(&gt;0) 100.0%。</p></article>
-        <article class="mini-card"><span>R1xday × AMC</span><strong class="positive">+0.017</strong><p>95% CrI [-0.034, 0.068]，方向为正但跨 0。</p></article>
+      <div class="grid four">
+        <article class="mini-card"><span>第一步</span><strong class="value">定义后验</strong><p>把每个系数看作一个有不确定性的分布，而不是单一估计值。</p></article>
+        <article class="mini-card"><span>第二步</span><strong class="value">看方向</strong><p>P(β&gt;0) 越接近 100%，说明正向证据越强。</p></article>
+        <article class="mini-card"><span>第三步</span><strong class="value">看 CrI</strong><p>95% CrI 不跨 0，可作为较稳健的方向证据。</p></article>
+        <article class="mini-card"><span>第四步</span><strong class="value">看诊断</strong><p>R-hat 接近 1 且 ESS 充足，说明采样结果可信。</p></article>
       </div>
-      <div class="table-wrap" style="margin-top: 14px;">
+      <div class="grid four" style="margin-top:12px;">
+        <article class="mini-card"><span>Year-only R1xday</span><strong class="value pos">+0.133</strong><p>95% CrI [0.080, 0.190]；P(β&gt;0) 100.0%。</p></article>
+        <article class="mini-card"><span>Year-only AMC</span><strong class="value pos">+0.103</strong><p>95% CrI [0.050, 0.155]；P(β&gt;0) 100.0%。</p></article>
+        <article class="mini-card"><span>Year-only TA</span><strong class="value pos">+0.076</strong><p>95% CrI [0.003, 0.147]；P(β&gt;0) 98.0%。</p></article>
+        <article class="mini-card"><span>R1xday × AMC</span><strong class="value pos">+0.017</strong><p>95% CrI [-0.034, 0.068]；跨 0，所以不是强确定性结论。</p></article>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
         <table>
-          <thead>
-            <tr>
-              <th>Bayes 规格</th>
-              <th>R1xday 后验</th>
-              <th>AMC 后验</th>
-              <th>交互项后验</th>
-              <th>论文读法</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Bayes 规格</th><th>R1xday</th><th>AMC</th><th>TA</th><th>交互项</th><th>判断依据</th><th>诊断</th></tr></thead>
           <tbody>
-            
             <tr>
               <td><strong>Year-only 主效应</strong><span>year_only_additive</span></td>
-              <td><strong>+0.133</strong><span>95% CrI [0.080, 0.190]</span><span>P(&gt;0) 100.0%</span></td>
-              <td><strong>+0.103</strong><span>95% CrI [0.050, 0.155]</span><span>P(&gt;0) 100.0%</span></td>
-              <td><span class="muted">未设该项</span></td>
-              <td>与主模型 Year FE 口径最贴近；R1xday 与 AMC 的可信区间均在 0 以上。</td>
+              <td><strong class="pos">+0.133</strong><span>95% CrI [0.080, 0.190]</span><span>P(β&gt;0) 100.0%</span></td>
+              <td><strong class="pos">+0.103</strong><span>95% CrI [0.050, 0.155]</span><span>P(β&gt;0) 100.0%</span></td>
+              <td><strong class="pos">+0.076</strong><span>95% CrI [0.003, 0.147]</span><span>P(β&gt;0) 98.0%</span></td>
+              <td><span class="muted">该规格未包含</span></td>
+              <td>与正文主模型最一致；R1xday、AMC 与 TA 的 95% CrI 均高于 0，是主效应的核心 Bayes 支持。</td>
+              <td>R-hat max 1.00<span>ESS bulk min 2684</span></td>
             </tr>
             
 
             <tr>
               <td><strong>Year-only 放大效应</strong><span>year_only_amplification</span></td>
-              <td><strong>+0.129</strong><span>95% CrI [0.071, 0.188]</span><span>P(&gt;0) 100.0%</span></td>
-              <td><strong>+0.106</strong><span>95% CrI [0.054, 0.162]</span><span>P(&gt;0) 100.0%</span></td>
-              <td><strong>+0.017</strong><span>95% CrI [-0.034, 0.068]</span><span>P(&gt;0) 75.4%</span></td>
-              <td>主效应仍稳健；交互项均值为正，但可信区间跨 0，适合作方向性支持。</td>
+              <td><strong class="pos">+0.129</strong><span>95% CrI [0.071, 0.188]</span><span>P(β&gt;0) 100.0%</span></td>
+              <td><strong class="pos">+0.106</strong><span>95% CrI [0.054, 0.162]</span><span>P(β&gt;0) 100.0%</span></td>
+              <td><strong class="pos">+0.079</strong><span>95% CrI [0.008, 0.149]</span><span>P(β&gt;0) 98.6%</span></td>
+              <td><strong class="pos">+0.017</strong><span>95% CrI [-0.034, 0.068]</span><span>P(β&gt;0) 75.4%</span></td>
+              <td>R1xday、AMC、TA 主效应仍以正向为主；交互项均值为正但 CrI 跨 0，因此只能写方向性放大。</td>
+              <td>R-hat max 1.00<span>ESS bulk min 3161</span></td>
             </tr>
             
 
             <tr>
               <td><strong>Province-only 主效应</strong><span>province_only_additive</span></td>
-              <td><strong>+0.011</strong><span>95% CrI [-0.030, 0.051]</span><span>P(&gt;0) 70.4%</span></td>
-              <td><strong>+0.007</strong><span>95% CrI [-0.028, 0.042]</span><span>P(&gt;0) 64.6%</span></td>
-              <td><span class="muted">未设该项</span></td>
-              <td>吸收省际长期差异后主效应减弱；交互项方向可作为稳健性参考。</td>
+              <td><strong class="pos">+0.011</strong><span>95% CrI [-0.030, 0.051]</span><span>P(β&gt;0) 70.4%</span></td>
+              <td><strong class="pos">+0.007</strong><span>95% CrI [-0.028, 0.042]</span><span>P(β&gt;0) 64.6%</span></td>
+              <td><strong class="pos">+0.003</strong><span>95% CrI [-0.032, 0.036]</span><span>P(β&gt;0) 57.1%</span></td>
+              <td><span class="muted">该规格未包含</span></td>
+              <td>吸收省际长期差异后主效应减弱，提示省际结构差异是主叙事的一部分。</td>
+              <td>R-hat max 1.01<span>ESS bulk min 552</span></td>
             </tr>
             
 
             <tr>
               <td><strong>Province-only 放大效应</strong><span>province_only_amplification</span></td>
-              <td><strong>-0.003</strong><span>95% CrI [-0.046, 0.042]</span><span>P(&gt;0) 43.6%</span></td>
-              <td><strong>+0.013</strong><span>95% CrI [-0.023, 0.049]</span><span>P(&gt;0) 76.3%</span></td>
-              <td><strong>+0.030</strong><span>95% CrI [-0.003, 0.062]</span><span>P(&gt;0) 96.3%</span></td>
-              <td>吸收省际长期差异后主效应减弱；交互项方向可作为稳健性参考。</td>
+              <td><strong class="neg">-0.003</strong><span>95% CrI [-0.046, 0.042]</span><span>P(β&gt;0) 43.6%</span></td>
+              <td><strong class="pos">+0.013</strong><span>95% CrI [-0.023, 0.049]</span><span>P(β&gt;0) 76.3%</span></td>
+              <td><strong class="pos">+0.005</strong><span>95% CrI [-0.027, 0.037]</span><span>P(β&gt;0) 62.5%</span></td>
+              <td><strong class="pos">+0.030</strong><span>95% CrI [-0.003, 0.062]</span><span>P(β&gt;0) 96.3%</span></td>
+              <td>吸收省际长期差异后主效应减弱，提示省际结构差异是主叙事的一部分。</td>
+              <td>R-hat max 1.01<span>ESS bulk min 558</span></td>
             </tr>
             
 
             <tr>
               <td><strong>Province + Year 主效应</strong><span>province_year_additive</span></td>
-              <td><strong>+0.005</strong><span>95% CrI [-0.034, 0.043]</span><span>P(&gt;0) 61.1%</span></td>
-              <td><strong>+0.008</strong><span>95% CrI [-0.022, 0.038]</span><span>P(&gt;0) 69.4%</span></td>
-              <td><span class="muted">未设该项</span></td>
-              <td>双重控制后主效应明显收缩，说明信号很大部分来自年份控制后的跨省/结构差异。</td>
+              <td><strong class="pos">+0.005</strong><span>95% CrI [-0.034, 0.043]</span><span>P(β&gt;0) 61.1%</span></td>
+              <td><strong class="pos">+0.008</strong><span>95% CrI [-0.022, 0.038]</span><span>P(β&gt;0) 69.4%</span></td>
+              <td><strong class="pos">+0.023</strong><span>95% CrI [-0.012, 0.058]</span><span>P(β&gt;0) 90.2%</span></td>
+              <td><span class="muted">该规格未包含</span></td>
+              <td>双重固定效应后效应明显收缩，说明核心信号依赖 Year FE 主识别口径，适合放在 SI 作为保守检验。</td>
+              <td>R-hat max 1.00<span>ESS bulk min 959</span></td>
             </tr>
             
 
             <tr>
               <td><strong>Province + Year 放大效应</strong><span>province_year_amplification</span></td>
-              <td><strong>-0.004</strong><span>95% CrI [-0.044, 0.035]</span><span>P(&gt;0) 41.2%</span></td>
-              <td><strong>+0.012</strong><span>95% CrI [-0.020, 0.043]</span><span>P(&gt;0) 76.8%</span></td>
-              <td><strong>+0.018</strong><span>95% CrI [-0.010, 0.046]</span><span>P(&gt;0) 89.6%</span></td>
-              <td>双重控制后主效应明显收缩，说明信号很大部分来自年份控制后的跨省/结构差异。</td>
+              <td><strong class="neg">-0.004</strong><span>95% CrI [-0.044, 0.035]</span><span>P(β&gt;0) 41.2%</span></td>
+              <td><strong class="pos">+0.012</strong><span>95% CrI [-0.020, 0.043]</span><span>P(β&gt;0) 76.8%</span></td>
+              <td><strong class="pos">+0.024</strong><span>95% CrI [-0.011, 0.060]</span><span>P(β&gt;0) 90.1%</span></td>
+              <td><strong class="pos">+0.018</strong><span>95% CrI [-0.010, 0.046]</span><span>P(β&gt;0) 89.6%</span></td>
+              <td>双重固定效应后效应明显收缩，说明核心信号依赖 Year FE 主识别口径，适合放在 SI 作为保守检验。</td>
+              <td>R-hat max 1.01<span>ESS bulk min 904</span></td>
             </tr>
-            
-          </tbody>
+            </tbody>
         </table>
       </div>
-      <div class="callout" style="margin-top: 14px;">
-        <strong>建议写法：</strong>Bayesian year-only model reproduced the positive R1xday and AMC main effects.
-        The R1xday × AMC interaction was positive on average but its 95% credible interval crossed zero; therefore,
-        amplification should be described as directionally supported rather than a strong confirmatory result.
+      <h3 style="margin-top:18px;">新增交互探索：TA × AMC 与 R1xday × TA × AMC</h3>
+      <div class="callout">
+        <strong>为什么单列：</strong>这两项是后加的机制探索，不改变正文主模型。三重交互按层级原则同时放入三个二阶项，
+        因此三重项解释为“极端降雨和温度是否会共同改变 AMC 与 AMR 的关联”。
       </div>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead><tr><th>新增规格</th><th>TA × AMC</th><th>R1xday × TA</th><th>R1xday × TA × AMC</th><th>判断</th><th>诊断</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Year-only TA × AMC</strong><span>year_only_ta_amc_amplification</span></td>
+              <td><strong class="neg">-0.027</strong><span>95% CrI [-0.078, 0.025]</span><span>P(β&gt;0) 16.1%</span><span>负向但 CrI 跨 0</span></td>
+              <td><span class="muted">该规格未包含</span><span>未估计</span></td>
+              <td><span class="muted">该规格未包含</span><span>未估计</span></td>
+              <td>只检验温度是否放大 AMC；结果不支持 TA × AMC 放大。</td>
+              <td>R-hat max 1.00<span>ESS bulk min 3686</span></td>
+            </tr>
+            
+
+            <tr>
+              <td><strong>Year-only 层级三重交互</strong><span>year_only_climate_amc_triple</span></td>
+              <td><strong class="neg">-0.041</strong><span>95% CrI [-0.097, 0.014]</span><span>P(β&gt;0) 7.7%</span><span>负向但 CrI 跨 0</span></td>
+              <td><strong class="pos">+0.078</strong><span>95% CrI [0.029, 0.126]</span><span>P(β&gt;0) 100.0%</span><span>正向且 CrI 不跨 0</span></td>
+              <td><strong class="pos">+0.015</strong><span>95% CrI [-0.042, 0.076]</span><span>P(β&gt;0) 68.5%</span><span>正向但 CrI 跨 0</span></td>
+              <td>三重项 CrI 跨 0，不能写三者共同放大；但 R1xday × TA 二阶项为正且不跨 0。</td>
+              <td>R-hat max 1.00<span>ESS bulk min 3476</span></td>
+            </tr>
+            </tbody>
+        </table>
+      </div>
+      <div class="callout warn" style="margin-top:14px;">
+        <strong>SI 推荐写法：</strong>Bayesian year-only models support positive R1xday, AMC, and TA main effects, because their posterior means are positive and their 95% credible intervals are above zero.
+        The R1xday × AMC amplification term is positive on average, but its credible interval crosses zero, so it should be described as suggestive rather than confirmatory.
+        Additional TA × AMC and R1xday × TA × AMC tests did not show robust amplification through AMC.
+      </div>
+      <ul class="note-list">
+        <li>正向/负向：后验均值大于 0 表示正向，小于 0 表示负向；P(β&gt;0) 是方向概率。</li>
+        <li>稳健：Year-only 下 R1xday、AMC 和 TA 主效应均为正；加入 Province 或 Province+Year 后主效应收缩，说明省际结构差异是主模型信号的重要来源。</li>
+        <li>诊断：SYS_08952 的 Bayes 诊断 R-hat 基本为 1.00–1.01，未见 diagnostic flag，可放 SI 支撑模型收敛。</li>
+      </ul>
     </section>
 
     <section class="block" id="counterfactual">
       <div class="section-head">
         <div>
-          <div class="eyebrow">4. Counterfactual Attribution</div>
-          <h2>反事实层回答“如果气候暴露回到基准期，AMR 会低多少”</h2>
-          <p><code>actual - counterfactual</code> 为正，表示当前气候暴露相对于基准期抬高了模型预测的 AMR 指标。</p>
+          <div class="eyebrow">4. Counterfactual Simulation</div>
+          <h2>反事实推演：如果 R1xday 和 TA 回到基准期，AMR 会低多少</h2>
+          <p>反事实不是重新回归，而是固定 SYS_08952 系数，把气候变量替换成基准期水平，再比较实际预测值与反事实预测值。</p>
         </div>
       </div>
-      <div class="table-wrap">
+      <div class="callout">
+        <strong>核心公式：</strong><code>Actual - Counterfactual &gt; 0</code> 表示当前气候轨迹对应更高的预测 AMR。
+        对 SYS_08952 来说，“所有气候变量恢复基准”就是 <code>R1xday + TA</code> 共同恢复基准。
+      </div>
+      <div class="grid two" style="margin-top:12px;">
+        <article class="mini-card">
+          <h3>固定效应预测方程</h3>
+          <div class="formula-block">ŷ_it = Σ_k β̂_k · X_kit^(z) + γ̂_t</div>
+          <p>这里 <code>i</code> 是省份，<code>t</code> 是年份；SYS_08952 是 Year FE，所以保留年份固定效应 <code>γ_t</code>，解释变量进入模型前按历史样本标准化。</p>
+        </article>
+        <article class="mini-card">
+          <h3>反事实替换方程</h3>
+          <div class="formula-block">ŷ_it^cf(s) = Σ_(k∉S_s) β̂_k · X_kit,actual^(z) + Σ_(k∈S_s) β̂_k · X_ki,2014^(z) + γ̂_t</div>
+          <p><code>S_s</code> 是情景中被回拨的气候变量集合。R1xday-only 只替换 R1xday；TA-only 只替换 TA；joint 情景同时替换 R1xday 和 TA。</p>
+        </article>
+        <article class="mini-card">
+          <h3>归因差值</h3>
+          <div class="formula-block">Δ_it^(s) = ŷ_it^actual - ŷ_it^cf(s)</div>
+          <p><code>Δ &gt; 0</code> 表示实际气候轨迹相对于基准气候世界提高了预测 AMR；<code>Δ &lt; 0</code> 表示实际气候轨迹相对于基准情景降低了预测 AMR。</p>
+        </article>
+        <article class="mini-card">
+          <h3>汇总方式</h3>
+          <div class="formula-block">全国年度平均: Δ̄_t = (1/N_t) Σ_i Δ_it<br/>分省长期平均: Δ̄_i = (1/T_i) Σ_t Δ_it</div>
+          <p>网页中的全国曲线、全国平均、地区表和省级地图，都是先在省份-年份层面得到 <code>Δ_it</code>，再按相应维度汇总。</p>
+        </article>
+      </div>
+      <div class="grid three" style="margin-top:12px;">
+        <article class="mini-card"><span>R1xday + TA</span><strong class="value pos">+0.122</strong><p>相对变化 42.0%，总体气候贡献。</p></article>
+        <article class="mini-card"><span>仅 TA</span><strong class="value pos">+0.103</strong><p>相对变化 32.5%，温度通道占主体。</p></article>
+        <article class="mini-card"><span>仅 R1xday</span><strong class="value pos">+0.020</strong><p>相对变化 3.2%，方向一致但量级较小。</p></article>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
         <table>
-          <thead>
-            <tr>
-              <th>反事实设定</th>
-              <th>Actual - Counterfactual</th>
-              <th>相对变化</th>
-              <th>解释</th>
-            </tr>
-          </thead>
+          <thead><tr><th>反事实情景</th><th>Actual - Counterfactual</th><th>相对变化</th><th>解释</th></tr></thead>
           <tbody>
+            <tr>
+              <td><strong>R1xday + TA 共同恢复基准</strong><span>all_climate_to_baseline</span></td>
+              <td class="pos">+0.122</td>
+              <td>42.0%</td>
+              <td>综合气候归因结果；本模型气候变量只有 R1xday 与 TA，因此这就是二者共同影响。</td>
+            </tr>
             
-        <tr>
-          <td><strong>所有气候变量恢复基准</strong><span>all_climate_to_baseline</span></td>
-          <td class="positive">+0.122</td>
-          <td>42.0%</td>
-          <td>主气候归因结果：当前气候暴露相对基准期抬高 AMR 指标。</td>
-        </tr>
-        
 
-        <tr>
-          <td><strong>仅温度变量恢复基准</strong><span>temperature_to_baseline</span></td>
-          <td class="positive">+0.103</td>
-          <td>32.5%</td>
-          <td>温度贡献最大，是气候通道中最强的组成部分。</td>
-        </tr>
-        
+            <tr>
+              <td><strong>仅温度变量恢复基准</strong><span>temperature_to_baseline</span></td>
+              <td class="pos">+0.103</td>
+              <td>32.5%</td>
+              <td>温度通道贡献最大，是反事实结果的主体。</td>
+            </tr>
+            
 
-        <tr>
-          <td><strong>仅 R1xday 恢复基准</strong><span>r1xday_to_baseline</span></td>
-          <td class="positive">+0.020</td>
-          <td>3.2%</td>
-          <td>极端降雨贡献较小但方向一致，支撑 R1xday 主线。</td>
-        </tr>
-        
-          </tbody>
+            <tr>
+              <td><strong>仅 R1xday 恢复基准</strong><span>r1xday_to_baseline</span></td>
+              <td class="pos">+0.020</td>
+              <td>3.2%</td>
+              <td>极端降雨贡献较小，但方向与 FE 和 Bayes 主效应一致。</td>
+            </tr>
+            </tbody>
         </table>
       </div>
       <div class="figure-grid">
-        <figure>
-          <img src="../counterfactual-amr-agg/figures/national_yearly_main_model.png" alt="SYS_08952 反事实全国年度轨迹" loading="lazy" />
-          <figcaption>主模型全国年度反事实轨迹。它用于展示实际预测与气候变量回拨情景之间的距离。</figcaption>
-        </figure>
-        <div class="grid">
-          <article class="mini-card"><span>全部气候变量恢复基准</span><strong class="positive">+0.122</strong><p>这是论文最适合报告的总体气候归因数字。</p></article>
-          <article class="mini-card"><span>仅温度恢复基准</span><strong class="positive">+0.103</strong><p>温度贡献约占主体，说明未来情景里温度通道不能被忽略。</p></article>
-          <article class="mini-card"><span>仅 R1xday 恢复基准</span><strong class="positive">+0.020</strong><p>R1xday 的边际贡献较小，但方向与 FE/Bayes 一致。</p></article>
-        </div>
+        <figure><img src="assets/counterfactual_sys08952_national.png" alt="SYS_08952 反事实全国结果" loading="lazy" /><figcaption>只保留已选定 SYS_08952 主模型：左图为年度 <code>Actual - Counterfactual</code>，右图为三个回拨情景的全国平均差值。</figcaption></figure>
+        <figure><img src="assets/counterfactual_china_map_sys08952_signedlog.png" alt="SYS_08952 反事实完整中国地图" loading="lazy" /><figcaption>省级差值地图使用 signed log1p 色阶：因为最新年省级差值存在一个负值且正值跨度约 6 倍，signed log1p 能保留正负方向并压缩极端值。港澳台、南沙群岛/南海诸岛无观测值，灰色显示。</figcaption></figure>
+      </div>
+      <div class="grid two" style="margin-top:14px;">
+        <article class="mini-card">
+          <h3>长期平均省级异质性：R1xday + TA</h3>
+          <h4>贡献最高</h4><div class="table-wrap small"><table><thead><tr><th>省份</th><th>差值</th><th>相对变化</th></tr></thead><tbody>
+<tr><td>上海</td><td class="pos">+0.343</td><td>128.7%</td></tr>
+<tr><td>新疆</td><td class="pos">+0.319</td><td>41.4%</td></tr>
+<tr><td>江苏</td><td class="pos">+0.224</td><td>92.2%</td></tr>
+<tr><td>浙江</td><td class="pos">+0.180</td><td>71.6%</td></tr>
+<tr><td>湖北</td><td class="pos">+0.178</td><td>63.1%</td></tr>
+<tr><td>天津</td><td class="pos">+0.175</td><td>98.0%</td></tr>
+<tr><td>广东</td><td class="pos">+0.168</td><td>62.9%</td></tr>
+<tr><td>江西</td><td class="pos">+0.160</td><td>33.6%</td></tr>
+</tbody></table></div>
+<h4>贡献最低</h4><div class="table-wrap small"><table><thead><tr><th>省份</th><th>差值</th><th>相对变化</th></tr></thead><tbody>
+<tr><td>海南</td><td class="neg">-0.190</td><td>-100.0%</td></tr>
+<tr><td>云南</td><td class="neg">-0.007</td><td>-13.1%</td></tr>
+<tr><td>内蒙古</td><td class="pos">+0.002</td><td>-12.9%</td></tr>
+<tr><td>山西</td><td class="pos">+0.073</td><td>35.3%</td></tr>
+<tr><td>西藏</td><td class="pos">+0.075</td><td>11.3%</td></tr>
+<tr><td>辽宁</td><td class="pos">+0.087</td><td>51.4%</td></tr>
+<tr><td>河北</td><td class="pos">+0.088</td><td>43.2%</td></tr>
+<tr><td>宁夏</td><td class="pos">+0.092</td><td>23.9%</td></tr>
+</tbody></table></div>
+        </article>
+        <article class="mini-card">
+          <h3>地区平均：R1xday + TA</h3>
+          <div class="table-wrap small"><table><thead><tr><th>地区</th><th>省份数</th><th>差值</th><th>相对变化</th></tr></thead><tbody>
+        <tr>
+          <td>华东</td>
+          <td>7</td>
+          <td class="pos">+0.182</td>
+          <td>65.9%</td>
+        </tr>
+        
+
+        <tr>
+          <td>西北</td>
+          <td>5</td>
+          <td class="pos">+0.149</td>
+          <td>30.2%</td>
+        </tr>
+        
+
+        <tr>
+          <td>华中</td>
+          <td>3</td>
+          <td class="pos">+0.141</td>
+          <td>91.3%</td>
+        </tr>
+        
+
+        <tr>
+          <td>东北</td>
+          <td>3</td>
+          <td class="pos">+0.113</td>
+          <td>49.3%</td>
+        </tr>
+        
+
+        <tr>
+          <td>华北</td>
+          <td>5</td>
+          <td class="pos">+0.096</td>
+          <td>38.1%</td>
+        </tr>
+        
+
+        <tr>
+          <td>西南</td>
+          <td>5</td>
+          <td class="pos">+0.084</td>
+          <td>19.5%</td>
+        </tr>
+        
+
+        <tr>
+          <td>华南</td>
+          <td>3</td>
+          <td class="pos">+0.032</td>
+          <td>4.5%</td>
+        </tr>
+        </tbody></table></div>
+        </article>
       </div>
       <ul class="note-list">
-        <li>这里的反事实不是随机试验，而是基于已选模型系数的情景替换：固定其他变量，把气候变量替换到基准期水平。</li>
-        <li>总体贡献约等于温度贡献加 R1xday 贡献，说明 SYS_08952 的气候归因主要由温度驱动，R1xday 提供额外但较小的极端降雨通道。</li>
+        <li>正文建议优先报告绝对差值，而不是百分比，因为 <code>AMR_AGG_z</code> 是标准化综合指标，百分比更适合作辅助说明。</li>
+        <li>结果显示温度通道是主要贡献，R1xday 是较小但方向一致的补充通道；这与固定效应和 Bayes 主效应可形成连贯叙事。</li>
       </ul>
     </section>
 
     <section class="block" id="future">
       <div class="section-head">
         <div>
-          <div class="eyebrow">5. Future Scenario Projection</div>
-          <h2>未来情景层回答“不同 SSP 路径会把 2050 AMR 推向哪里”</h2>
-          <p>两个 baseline 口径影响绝对水平；气候情景增量则来自同一组气候路径和 SYS_08952 系数，因此两种 baseline 下的 SSP 增量一致。</p>
+          <div class="eyebrow">5. Future Scenario · Lancet ETS Outcome Baseline</div>
+          <h2>未来情景模拟：只采用 outcome ETS / Lancet ETS 这组作为主分析</h2>
+          <p>Lancet ETS 的含义是：先用 AMR 自身历史序列生成未来 baseline，再把不同 SSP 下的 R1xday 和 TA 气候增量叠加到 baseline 上。</p>
         </div>
       </div>
-      <div class="grid three">
-        <article class="mini-card"><span>Lancet ETS 2050 baseline</span><strong>27.21</strong><p>SSP5-8.5 预测值 28.70；SSP1-1.9 预测值 26.32。</p></article>
-        <article class="mini-card"><span>X-driven 2050 baseline</span><strong>33.52</strong><p>SSP5-8.5 预测值 35.01；SSP1-1.9 预测值 32.63。</p></article>
-        <article class="mini-card"><span>SSP5-8.5 与 SSP1-1.9 spread</span><strong class="positive">+2.378</strong><p>高排放与低排放路径在 2050 的气候增量差距。</p></article>
+      <div class="callout">
+        <strong>分解公式：</strong><code>Δ scenario = β_R1xday × (ΔR1xday / historical SD) + β_TA × (ΔTA / historical SD)</code>。
+        当前未来情景模块使用标准化投影系数：R1xday β=0.868，
+        TA β=0.551；历史 SD 分别为
+        R1xday 29.153、TA 0.278。
       </div>
-      <div class="grid two" style="margin-top: 14px;">
-        <div>
-          <h3>Lancet ETS baseline</h3>
-          <div class="table-wrap" style="margin-top: 8px;">
-            <table>
-              <thead><tr><th>情景</th><th>Baseline</th><th>Δ vs baseline</th><th>Scenario pred</th><th>R1xday</th></tr></thead>
-              <tbody>
-      <tr>
-        <td><strong>SSP1-1.9</strong><span>SSP1-1.9（climate）</span></td>
-        <td>27.21</td>
-        <td class="negative">-0.890</td>
-        <td>26.32</td>
-        <td>41.82</td>
-      </tr>
+      
+      <div class="grid three" style="margin-top:12px;">
+        <article class="mini-card">
+          <span>R1xday 单独分析</span>
+          <strong class="value pos">+0.282</strong>
+          <p>SSP5-8.5 下 R1xday 单独贡献为 +0.282；五个 SSP 中最大为 SSP5-8.5（+0.282）。</p>
+        </article>
+        <article class="mini-card">
+          <span>TA 单独分析</span>
+          <strong class="value pos">+1.205</strong>
+          <p>SSP5-8.5 下 TA 单独贡献为 +1.205；五个 SSP 中最大为 SSP5-8.5（+1.205）。</p>
+        </article>
+        <article class="mini-card">
+          <span>R1xday + TA 共同作用</span>
+          <strong class="value pos">+1.487</strong>
+          <p>共同作用最高为 SSP5-8.5（+1.487），最低为 SSP1-1.9（-0.890）。</p>
+        </article>
+      </div>
     
-
-      <tr>
-        <td><strong>SSP1-2.6</strong><span>SSP1-2.6（climate）</span></td>
-        <td>27.21</td>
-        <td class="negative">-0.196</td>
-        <td>27.01</td>
-        <td>43.86</td>
-      </tr>
-    
-
-      <tr>
-        <td><strong>SSP2-4.5</strong><span>SSP2-4.5（climate）</span></td>
-        <td>27.21</td>
-        <td class="positive">+0.517</td>
-        <td>27.73</td>
-        <td>45.51</td>
-      </tr>
-    
-
-      <tr>
-        <td><strong>SSP3-7.0</strong><span>SSP3-7.0（climate）</span></td>
-        <td>27.21</td>
-        <td class="positive">+0.144</td>
-        <td>27.35</td>
-        <td>44.23</td>
-      </tr>
-    
-
-      <tr>
-        <td><strong>SSP5-8.5</strong><span>SSP5-8.5（climate）</span></td>
-        <td>27.21</td>
-        <td class="positive">+1.487</td>
-        <td>28.70</td>
-        <td>46.16</td>
-      </tr>
-    </tbody>
-            </table>
-          </div>
-        </div>
-        <div>
-          <h3>X-driven baseline</h3>
-          <div class="table-wrap" style="margin-top: 8px;">
-            <table>
-              <thead><tr><th>情景</th><th>Baseline</th><th>Δ vs baseline</th><th>Scenario pred</th><th>R1xday</th></tr></thead>
-              <tbody>
-      <tr>
-        <td><strong>SSP1-1.9</strong><span>SSP1-1.9（climate）</span></td>
-        <td>33.52</td>
-        <td class="negative">-0.890</td>
-        <td>32.63</td>
-        <td>41.82</td>
-      </tr>
-    
-
-      <tr>
-        <td><strong>SSP1-2.6</strong><span>SSP1-2.6（climate）</span></td>
-        <td>33.52</td>
-        <td class="negative">-0.196</td>
-        <td>33.33</td>
-        <td>43.86</td>
-      </tr>
-    
-
-      <tr>
-        <td><strong>SSP2-4.5</strong><span>SSP2-4.5（climate）</span></td>
-        <td>33.52</td>
-        <td class="positive">+0.517</td>
-        <td>34.04</td>
-        <td>45.51</td>
-      </tr>
-    
-
-      <tr>
-        <td><strong>SSP3-7.0</strong><span>SSP3-7.0（climate）</span></td>
-        <td>33.52</td>
-        <td class="positive">+0.144</td>
-        <td>33.67</td>
-        <td>44.23</td>
-      </tr>
-    
-
-      <tr>
-        <td><strong>SSP5-8.5</strong><span>SSP5-8.5（climate）</span></td>
-        <td>33.52</td>
-        <td class="positive">+1.487</td>
-        <td>35.01</td>
-        <td>46.16</td>
-      </tr>
-    </tbody>
-            </table>
-          </div>
-        </div>
+      <div class="grid three" style="margin-top:12px;">
+        <article class="mini-card"><span>2050 baseline</span><strong class="value">27.21</strong><p>Lancet ETS 主模型全国 baseline。</p></article>
+        <article class="mini-card"><span>SSP5-8.5 joint delta</span><strong class="value pos">+1.487</strong><p>R1xday +0.282 + TA +1.205。</p></article>
+        <article class="mini-card"><span>SSP1-1.9 joint delta</span><strong class="value neg">-0.890</strong><p>低排放路径下气候增量为负，表示低于 baseline。</p></article>
       </div>
       <div class="figure-grid">
-        <figure>
-          <img src="../future-scenario-analysis/results/lancet_ets/figures/figure5_style_main.png" alt="SYS_08952 Lancet ETS 未来情景主图" loading="lazy" />
-          <figcaption>Lancet ETS 口径下的主模型未来情景图。Baseline 更贴近既有 AMR 历史趋势外推。</figcaption>
-        </figure>
-        <div class="delta-panel">
-          <h3>2050 SSP 气候增量</h3>
-          <p>以 Lancet ETS 口径展示，X-driven 下的增量相同。</p>
-          
-            <div class="delta-row">
-              <span>SSP1-1.9</span>
-              <div class="delta-track">
-                <i style="left:0.00%; width:27.54%;" class="negative"></i>
-              </div>
-              <strong class="negative">-0.890</strong>
-            </div>
+        <figure><img src="assets/future_lancet_decomposition.png" alt="Lancet ETS 未来情景贡献分解" loading="lazy" /><figcaption>2050 各 SSP 下 R1xday 单独贡献、TA 单独贡献和二者共同贡献分开展示。</figcaption></figure>
+        <figure><img src="assets/future_component_trajectories_ssp585.png" alt="SSP5-8.5 未来情景分通道轨迹" loading="lazy" /><figcaption>SSP5-8.5 下，R1xday、TA、共同作用三条轨迹随时间的变化。</figcaption></figure>
+      </div>
+      <div class="figure-grid single">
+        <figure><img src="assets/future_component_maps_ssp585.png" alt="SSP5-8.5 分通道完整中国地图" loading="lazy" /><figcaption>SSP5-8.5 省级分通道地图：左为 R1xday，中为 TA，右为共同作用。港澳台、南沙群岛/南海诸岛无观测值，以灰色保留在完整中国地图中。</figcaption></figure>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead><tr><th>情景</th><th>Baseline</th><th>R1xday 单独贡献</th><th>TA 单独贡献</th><th>共同贡献</th><th>不确定性 p10-p90</th><th>Scenario pred</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>SSP1-1.9</strong><span>SSP1-1.9（climate）</span></td>
+              <td>27.21</td>
+              <td class="pos">+0.153</td>
+              <td class="neg">-1.043</td>
+              <td class="neg">-0.890</td>
+              <td>[-0.994, -0.372]</td>
+              <td>26.32</td>
+            </tr>
             
 
-            <div class="delta-row">
-              <span>SSP1-2.6</span>
-              <div class="delta-track">
-                <i style="left:29.21%; width:6.06%;" class="negative"></i>
-              </div>
-              <strong class="negative">-0.196</strong>
-            </div>
+            <tr>
+              <td><strong>SSP1-2.6</strong><span>SSP1-2.6（climate）</span></td>
+              <td>27.21</td>
+              <td class="pos">+0.213</td>
+              <td class="neg">-0.409</td>
+              <td class="neg">-0.196</td>
+              <td>[-0.642, 0.929]</td>
+              <td>27.01</td>
+            </tr>
             
 
-            <div class="delta-row">
-              <span>SSP2-4.5</span>
-              <div class="delta-track">
-                <i style="left:59.21%; width:16.00%;" class="positive"></i>
-              </div>
-              <strong class="positive">+0.517</strong>
-            </div>
+            <tr>
+              <td><strong>SSP2-4.5</strong><span>SSP2-4.5（climate）</span></td>
+              <td>27.21</td>
+              <td class="pos">+0.263</td>
+              <td class="pos">+0.255</td>
+              <td class="pos">+0.517</td>
+              <td>[-0.283, 1.220]</td>
+              <td>27.73</td>
+            </tr>
             
 
-            <div class="delta-row">
-              <span>SSP3-7.0</span>
-              <div class="delta-track">
-                <i style="left:43.50%; width:4.45%;" class="positive"></i>
-              </div>
-              <strong class="positive">+0.144</strong>
-            </div>
+            <tr>
+              <td><strong>SSP3-7.0</strong><span>SSP3-7.0（climate）</span></td>
+              <td>27.21</td>
+              <td class="pos">+0.224</td>
+              <td class="neg">-0.080</td>
+              <td class="pos">+0.144</td>
+              <td>[-0.238, 1.732]</td>
+              <td>27.35</td>
+            </tr>
             
 
-            <div class="delta-row">
-              <span>SSP5-8.5</span>
-              <div class="delta-track">
-                <i style="left:100.00%; width:46.00%;" class="positive"></i>
-              </div>
-              <strong class="positive">+1.487</strong>
-            </div>
-            
-        </div>
+            <tr>
+              <td><strong>SSP5-8.5</strong><span>SSP5-8.5（climate）</span></td>
+              <td>27.21</td>
+              <td class="pos">+0.282</td>
+              <td class="pos">+1.205</td>
+              <td class="pos">+1.487</td>
+              <td>[0.763, 2.679]</td>
+              <td>28.70</td>
+            </tr>
+            </tbody>
+        </table>
+      </div>
+      <div class="figure-grid">
+        <figure><img src="../future-scenario-analysis/results/lancet_ets/regional_figures/regional_figure5_grid.png" alt="Lancet ETS 地区未来轨迹" loading="lazy" /><figcaption>七大区未来情景轨迹。地区结果帮助说明全国平均背后的空间分布。</figcaption></figure>
+        <figure><img src="../future-scenario-analysis/results/lancet_ets/regional_figures/regional_delta_2050_heatmap.png" alt="Lancet ETS 地区 2050 热图" loading="lazy" /><figcaption>2050 地区情景增量热图，展示不同地区对 SSP5-8.5 的响应强弱。</figcaption></figure>
+      </div>
+      <h3 style="margin-top:14px;">地区层面：SSP5-8.5 的 R1xday、TA 和共同影响</h3>
+      <div class="table-wrap" style="margin-top:8px;">
+        <table>
+          <thead><tr><th>地区</th><th>省份数</th><th>R1xday</th><th>TA</th><th>共同影响</th><th>2050 pred</th></tr></thead>
+          <tbody>
+        <tr>
+          <td><strong>华南</strong><span>South China</span></td>
+          <td>3</td>
+          <td class="pos">+1.605</td>
+          <td class="pos">+1.095</td>
+          <td class="pos">+2.701</td>
+          <td>31.99</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>华东</strong><span>East China</span></td>
+          <td>7</td>
+          <td class="pos">+0.578</td>
+          <td class="pos">+1.579</td>
+          <td class="pos">+2.157</td>
+          <td>26.59</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>西北</strong><span>Northwest China</span></td>
+          <td>5</td>
+          <td class="pos">+0.071</td>
+          <td class="pos">+1.722</td>
+          <td class="pos">+1.793</td>
+          <td>29.11</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>东北</strong><span>Northeast China</span></td>
+          <td>3</td>
+          <td class="neg">-0.094</td>
+          <td class="pos">+1.718</td>
+          <td class="pos">+1.624</td>
+          <td>27.59</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>华北</strong><span>North China</span></td>
+          <td>5</td>
+          <td class="pos">+0.111</td>
+          <td class="pos">+1.493</td>
+          <td class="pos">+1.604</td>
+          <td>32.16</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>西南</strong><span>Southwest China</span></td>
+          <td>5</td>
+          <td class="pos">+0.231</td>
+          <td class="pos">+1.004</td>
+          <td class="pos">+1.235</td>
+          <td>28.51</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>华中</strong><span>Central China</span></td>
+          <td>3</td>
+          <td class="neg">-0.634</td>
+          <td class="neg">-1.076</td>
+          <td class="neg">-1.710</td>
+          <td>25.27</td>
+        </tr>
+        </tbody>
+        </table>
+      </div>
+      <div class="figure-grid">
+        <figure><img src="../future-scenario-analysis/results/lancet_ets/provincial_figures/provincial_future_scenario_panel.png" alt="Lancet ETS 省级未来情景" loading="lazy" /><figcaption>省级未来情景面板：展示 31 个省在不同 SSP 下的 2050 差异。</figcaption></figure>
+        <figure><img src="../future-scenario-analysis/results/lancet_ets/dual_scenario_figures/dual_scenario_compare_ssp119_vs_ssp585_delta.png" alt="SSP1-1.9 与 SSP5-8.5 省级比较" loading="lazy" /><figcaption>低排放与高排放的省级差异，有助于写“气候缓解”叙事。</figcaption></figure>
+      </div>
+      <div class="grid two" style="margin-top:14px;"><article class="mini-card"><h3>SSP5-8.5 增量最高省份</h3><table><tbody>
+<tr><td>浙江</td><td class="pos">+4.634</td><td><span>R1 +2.28 / TA +2.35</span></td></tr>
+<tr><td>西藏</td><td class="pos">+4.496</td><td><span>R1 +0.30 / TA +4.20</span></td></tr>
+<tr><td>青海</td><td class="pos">+4.413</td><td><span>R1 +0.09 / TA +4.33</span></td></tr>
+<tr><td>广东</td><td class="pos">+4.127</td><td><span>R1 +2.18 / TA +1.94</span></td></tr>
+<tr><td>安徽</td><td class="pos">+3.197</td><td><span>R1 +1.65 / TA +1.55</span></td></tr>
+<tr><td>海南</td><td class="pos">+3.179</td><td><span>R1 +1.30 / TA +1.88</span></td></tr>
+</tbody></table></article>
+<article class="mini-card"><h3>SSP5-8.5 增量最低省份</h3><table><tbody>
+<tr><td>河南</td><td class="neg">-3.320</td><td><span>R1 -2.48 / TA -0.84</span></td></tr>
+<tr><td>湖北</td><td class="neg">-1.074</td><td><span>R1 +0.32 / TA -1.40</span></td></tr>
+<tr><td>新疆</td><td class="neg">-0.848</td><td><span>R1 -0.00 / TA -0.85</span></td></tr>
+<tr><td>湖南</td><td class="neg">-0.735</td><td><span>R1 +0.26 / TA -0.99</span></td></tr>
+<tr><td>重庆</td><td class="neg">-0.350</td><td><span>R1 +0.21 / TA -0.56</span></td></tr>
+<tr><td>贵州</td><td class="neg">-0.282</td><td><span>R1 +0.15 / TA -0.43</span></td></tr>
+</tbody></table></article></div>
+      <h3 style="margin-top:14px;">省级完整表：SSP5-8.5</h3>
+      <div class="table-wrap small" style="margin-top:8px;">
+        <table>
+          <thead><tr><th>省份</th><th>Baseline</th><th>R1xday</th><th>TA</th><th>共同影响</th><th>2050 pred</th></tr></thead>
+          <tbody>
+        <tr>
+          <td><strong>浙江</strong></td>
+          <td>20.42</td>
+          <td class="pos">+2.281</td>
+          <td class="pos">+2.352</td>
+          <td class="pos">+4.634</td>
+          <td>25.05</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>西藏</strong></td>
+          <td>28.20</td>
+          <td class="pos">+0.299</td>
+          <td class="pos">+4.198</td>
+          <td class="pos">+4.496</td>
+          <td>32.69</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>青海</strong></td>
+          <td>25.12</td>
+          <td class="pos">+0.085</td>
+          <td class="pos">+4.328</td>
+          <td class="pos">+4.413</td>
+          <td>29.54</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>广东</strong></td>
+          <td>30.23</td>
+          <td class="pos">+2.182</td>
+          <td class="pos">+1.945</td>
+          <td class="pos">+4.127</td>
+          <td>34.35</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>安徽</strong></td>
+          <td>19.92</td>
+          <td class="pos">+1.648</td>
+          <td class="pos">+1.549</td>
+          <td class="pos">+3.197</td>
+          <td>23.12</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>海南</strong></td>
+          <td>27.21</td>
+          <td class="pos">+1.297</td>
+          <td class="pos">+1.882</td>
+          <td class="pos">+3.179</td>
+          <td>30.39</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>天津</strong></td>
+          <td>28.86</td>
+          <td class="pos">+1.654</td>
+          <td class="pos">+1.045</td>
+          <td class="pos">+2.699</td>
+          <td>31.55</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>福建</strong></td>
+          <td>21.88</td>
+          <td class="pos">+0.657</td>
+          <td class="pos">+2.039</td>
+          <td class="pos">+2.695</td>
+          <td>24.58</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>黑龙江</strong></td>
+          <td>28.70</td>
+          <td class="neg">-0.000</td>
+          <td class="pos">+2.642</td>
+          <td class="pos">+2.641</td>
+          <td>31.35</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>宁夏</strong></td>
+          <td>25.51</td>
+          <td class="pos">+0.256</td>
+          <td class="pos">+2.329</td>
+          <td class="pos">+2.584</td>
+          <td>28.10</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>内蒙古</strong></td>
+          <td>29.98</td>
+          <td class="neg">-0.009</td>
+          <td class="pos">+2.580</td>
+          <td class="pos">+2.571</td>
+          <td>32.55</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>甘肃</strong></td>
+          <td>28.76</td>
+          <td class="pos">+0.068</td>
+          <td class="pos">+1.759</td>
+          <td class="pos">+1.827</td>
+          <td>30.59</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>上海</strong></td>
+          <td>28.63</td>
+          <td class="neg">-0.459</td>
+          <td class="pos">+2.073</td>
+          <td class="pos">+1.615</td>
+          <td>30.24</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>四川</strong></td>
+          <td>29.17</td>
+          <td class="pos">+0.232</td>
+          <td class="pos">+1.279</td>
+          <td class="pos">+1.511</td>
+          <td>30.69</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>北京</strong></td>
+          <td>35.76</td>
+          <td class="neg">-0.127</td>
+          <td class="pos">+1.523</td>
+          <td class="pos">+1.396</td>
+          <td>37.16</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>江苏</strong></td>
+          <td>24.48</td>
+          <td class="pos">+0.061</td>
+          <td class="pos">+1.324</td>
+          <td class="pos">+1.385</td>
+          <td>25.87</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>辽宁</strong></td>
+          <td>18.82</td>
+          <td class="neg">-0.179</td>
+          <td class="pos">+1.554</td>
+          <td class="pos">+1.375</td>
+          <td>20.19</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>山西</strong></td>
+          <td>29.55</td>
+          <td class="pos">+0.123</td>
+          <td class="pos">+1.174</td>
+          <td class="pos">+1.297</td>
+          <td>30.85</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>江西</strong></td>
+          <td>29.67</td>
+          <td class="pos">+0.088</td>
+          <td class="pos">+1.048</td>
+          <td class="pos">+1.136</td>
+          <td>30.81</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>陕西</strong></td>
+          <td>31.85</td>
+          <td class="neg">-0.053</td>
+          <td class="pos">+1.041</td>
+          <td class="pos">+0.988</td>
+          <td>32.84</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>吉林</strong></td>
+          <td>30.38</td>
+          <td class="neg">-0.102</td>
+          <td class="pos">+0.957</td>
+          <td class="pos">+0.855</td>
+          <td>31.24</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>云南</strong></td>
+          <td>29.92</td>
+          <td class="pos">+0.267</td>
+          <td class="pos">+0.533</td>
+          <td class="pos">+0.800</td>
+          <td>30.72</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>广西</strong></td>
+          <td>30.43</td>
+          <td class="pos">+1.337</td>
+          <td class="neg">-0.540</td>
+          <td class="pos">+0.797</td>
+          <td>31.23</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>山东</strong></td>
+          <td>26.05</td>
+          <td class="neg">-0.233</td>
+          <td class="pos">+0.672</td>
+          <td class="pos">+0.439</td>
+          <td>26.49</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>河北</strong></td>
+          <td>28.62</td>
+          <td class="neg">-1.085</td>
+          <td class="pos">+1.144</td>
+          <td class="pos">+0.059</td>
+          <td>28.68</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>贵州</strong></td>
+          <td>19.38</td>
+          <td class="pos">+0.150</td>
+          <td class="neg">-0.432</td>
+          <td class="neg">-0.282</td>
+          <td>19.10</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>重庆</strong></td>
+          <td>29.71</td>
+          <td class="pos">+0.206</td>
+          <td class="neg">-0.556</td>
+          <td class="neg">-0.350</td>
+          <td>29.36</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>湖南</strong></td>
+          <td>30.38</td>
+          <td class="pos">+0.258</td>
+          <td class="neg">-0.992</td>
+          <td class="neg">-0.735</td>
+          <td>29.65</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>新疆</strong></td>
+          <td>25.32</td>
+          <td class="neg">-0.001</td>
+          <td class="neg">-0.847</td>
+          <td class="neg">-0.848</td>
+          <td>24.48</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>湖北</strong></td>
+          <td>29.81</td>
+          <td class="pos">+0.325</td>
+          <td class="neg">-1.399</td>
+          <td class="neg">-1.074</td>
+          <td>28.73</td>
+        </tr>
+        
+
+        <tr>
+          <td><strong>河南</strong></td>
+          <td>20.76</td>
+          <td class="neg">-2.484</td>
+          <td class="neg">-0.836</td>
+          <td class="neg">-3.320</td>
+          <td>17.44</td>
+        </tr>
+        </tbody>
+        </table>
       </div>
       <ul class="note-list">
-        <li>SSP5-8.5 相对 baseline 增加 +1.487，SSP1-1.9 相对 baseline 为 -0.890。</li>
-        <li>SSP3-7.0 不一定高于 SSP2-4.5，说明当前未来情景的排序由省级 R1xday 路径和模型系数共同决定，不宜机械写成排放越高必然单调越高。</li>
+        <li>未来情景主文建议使用 Lancet ETS/outcome ETS baseline，因为它更贴近“先外推结果变量自身历史趋势，再叠加气候增量”的文献写法。</li>
+        <li>SSP5-8.5 相对 baseline 增加 +1.487；SSP1-1.9 为 -0.890。两者差距说明低排放路径具有潜在缓解意义。</li>
+        <li>R1xday 和 TA 的“单独贡献”已经按历史标准差换算到模型实际使用的标准化尺度；两项相加等于共同气候贡献，残差仅为四舍五入误差。</li>
+        <li>R1xday 与 TA 的贡献方向可能在不同 SSP 下相互抵消，所以共同影响不应机械理解为单调随排放等级上升。</li>
       </ul>
     </section>
 
@@ -902,62 +1197,29 @@
       <div class="section-head">
         <div>
           <div class="eyebrow">6. Paper Narrative</div>
-          <h2>可直接转化为论文段落的论文陈述逻辑</h2>
-          <p>下面按结果章节的自然顺序组织，重点是让读者理解每一层分析为什么接在上一层之后。</p>
+          <h2>可以直接转成正文和 SI 的论文陈述逻辑</h2>
         </div>
       </div>
       <div class="writing">
-        <article>
-          <h3>模型选择段</h3>
-          <p>在系统穷举模型中，SYS_08952 在 Year fixed effects 设定下表现为兼具拟合度和解释一致性的主模型。该模型同时纳入 R1xday、抗菌药物使用强度、TA、氮氧化物以及医疗、用水、畜牧和教育相关控制变量，能够在保留核心气候暴露与抗菌药物压力变量的同时，对主要社会环境混杂因素进行调整。因此，后续 Bayesian 验证、反事实推演和未来情景预测均以 SYS_08952 作为正文主模型。</p>
-        </article>
-        <article>
-          <h3>固定效应结果段</h3>
-          <p>在控制年份共同冲击后，R1xday 与 AMR 指标呈正相关（β=+0.138, p=0.0469），抗菌药物使用强度同样呈显著正相关（β=+0.122, p=0.0055）。温度代理 TA（β=+0.104, p=0.0175）和污染代理氮氧化物（β=+0.183, p=0.0383）也保持正向显著，提示 AMR 变化可能受到极端降雨、热环境、抗菌药物压力和城市环境压力的共同影响。</p>
-        </article>
-        <article>
-          <h3>Bayes 验证段</h3>
-          <p>Bayesian year-only additive model 对主效应提供了概率层面的支持：R1xday 的后验均值为 0.133，95% CrI 为 [0.080, 0.190]；抗菌药物使用强度的后验均值为 0.103，95% CrI 为 [0.050, 0.155]。在包含 R1xday × AMC 的 amplification model 中，交互项后验均值为 +0.017，但可信区间跨 0，因此论文中应将放大效应表述为方向性支持，而非强确定性结论。</p>
-        </article>
-        <article>
-          <h3>反事实段</h3>
-          <p>基于 SYS_08952 的反事实推演显示，当所有气候变量恢复至基准期水平时，全国平均 AMR 指标相对于实际情景下降 0.122。分解来看，温度变量恢复基准对应的差值为 0.103，仅 R1xday 恢复基准对应的差值为 0.020。这说明在当前主模型下，温度通道贡献较大，极端降雨通道较小但方向一致。</p>
-        </article>
-        <article>
-          <h3>未来情景段</h3>
-          <p>在 2050 年 Lancet ETS baseline 下，SYS_08952 的 baseline 为 27.21。相对于该 baseline，SSP5-8.5 的气候增量为 +1.487，SSP1-1.9 为 -0.890。在 X-driven baseline 下，2050 baseline 为 33.52，但各 SSP 的气候增量保持一致，表明两种 baseline 主要改变未来 AMR 的绝对水平，而不改变气候情景增量的方向判断。</p>
-        </article>
+        <article><h3>正文主结果</h3><p>在 Year FE 主规格 SYS_08952 中，R1xday、AMC、TA 和氮氧化物均呈正向关联，其中 R1xday β=+0.138，AMC β=+0.122，TA β=+0.104。这说明在控制年份共同冲击后，极端降雨、温度和抗菌药物压力与综合 AMR 水平具有同向变化。</p></article>
+        <article><h3>SI Bayes 段</h3><p>Bayesian models were used as a probabilistic bridge to examine whether the main effects remained positive under alternative random/fixed-effect structures. The year-only additive model reproduced positive R1xday, AMC, and TA effects, whereas the R1xday × AMC interaction was positive on average but crossed zero. Additional TA × AMC and R1xday × TA × AMC tests also crossed zero, while R1xday × TA was positive in the hierarchical model. Therefore, AMC-related amplification should be interpreted as exploratory rather than confirmatory.</p></article>
+        <article><h3>反事实段</h3><p>Counterfactual rollback of R1xday and TA to baseline levels lowered the national AMR signal by 0.122 on average. The temperature-only rollback contributed 0.103, while the R1xday-only rollback contributed 0.020, indicating that temperature dominated the modeled climate burden while R1xday provided a smaller but directionally consistent pathway.</p></article>
+        <article><h3>未来情景段</h3><p>Under the Lancet ETS baseline, the 2050 national baseline was 27.21. SSP5-8.5 increased the projected AMR level by +1.487, while SSP1-1.9 decreased it by -0.890 relative to baseline. This supports reporting high-emission climate pathways as an additional future AMR burden.</p></article>
       </div>
     </section>
 
     <section class="block" id="limits">
       <div class="section-head">
         <div>
-          <div class="eyebrow">7. Boundary Conditions</div>
-          <h2>论文中需要主动说明的边界</h2>
+          <div class="eyebrow">7. Interpretation Boundaries</div>
+          <h2>最后论文里必须说清楚的边界</h2>
         </div>
       </div>
       <div class="grid two">
-        <article class="mini-card">
-          <span>不是随机因果识别</span>
-          <strong>用“关联”和“情景归因”更稳妥</strong>
-          <p>固定效应、Bayes 和反事实构成的是一致性证据链，但不能等同于随机试验或自然实验意义上的因果效应。</p>
-        </article>
-        <article class="mini-card">
-          <span>交互项不宜过度写强</span>
-          <strong>方向支持，不作强结论</strong>
-          <p>R1xday × AMC 后验均值为正，但 95% CrI 跨 0；正文可写为“suggestive amplification”。</p>
-        </article>
-        <article class="mini-card">
-          <span>Year FE 的含义要讲清楚</span>
-          <strong>保留省际结构信息</strong>
-          <p>主模型没有 Province FE，因此解释重点是控制年份共同冲击后的省份间和省份年差异，不是严格的省内变化估计。</p>
-        </article>
-        <article class="mini-card">
-          <span>未来情景看增量也看 baseline</span>
-          <strong>两种 baseline 服务不同问题</strong>
-          <p>Lancet ETS 更适合与文献口径对齐；X-driven 更适合展示未来协变量路径如何推开绝对水平。</p>
-        </article>
+        <article class="mini-card"><span>单因素不是最终结论</span><strong class="value">探索性</strong><p>单因素图帮助理解变量方向，但不控制混杂，最终判断以后续固定效应和推演为准。</p></article>
+        <article class="mini-card"><span>Year FE 的识别含义</span><strong class="value">控制年份共同冲击</strong><p>没有 Province FE，说明省际结构差异仍参与解释，论文不宜写成严格省内因果效应。</p></article>
+        <article class="mini-card"><span>Bayes 交互项</span><strong class="value">谨慎解释</strong><p>R1xday × AMC、TA × AMC 和三重交互均 CrI 跨 0；R1xday × TA 可作为气候协同的探索性发现。</p></article>
+        <article class="mini-card"><span>未来情景</span><strong class="value">选择 Lancet ETS</strong><p>主文采用 outcome ETS/Lancet ETS；X-driven 可作为补充敏感性说明，不混入本页主线。</p></article>
       </div>
     </section>
   </main>

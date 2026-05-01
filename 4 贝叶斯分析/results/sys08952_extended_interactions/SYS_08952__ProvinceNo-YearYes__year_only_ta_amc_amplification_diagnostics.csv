@@ -1,0 +1,14 @@
+﻿parameter,mean,sd,hdi_2.5%,hdi_97.5%,mcse_mean,mcse_sd,ess_bulk,ess_tail,r_hat,effect_scope,variable,variant_id,variant_label,model_id,scheme_id,scheme_source,fe_label
+alpha,0.008,0.024,-0.036,0.058,0.0,0.0,5606.0,2777.0,1.0,global,,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[R1xday],0.132,0.028,0.076,0.185,0.0,0.0,3852.0,2831.0,1.0,main,R1xday,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[抗菌药物使用强度],0.094,0.028,0.038,0.146,0.0,0.0,4259.0,3168.0,1.0,main,抗菌药物使用强度,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[TA（°C）],0.076,0.036,0.006,0.144,0.001,0.001,4270.0,2805.0,1.0,main,TA（°C）,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[氮氧化物],0.169,0.031,0.109,0.228,0.001,0.0,3865.0,3279.0,1.0,main,氮氧化物,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[医疗水平],0.283,0.035,0.212,0.35,0.001,0.001,3686.0,2844.0,1.0,main,医疗水平,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[人均日生活用水量(升)],-0.036,0.026,-0.091,0.01,0.0,0.0,4360.0,2952.0,1.0,main,人均日生活用水量(升),year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+"beta_main[牲畜饲养
+-猪年底头数]",0.128,0.027,0.077,0.183,0.0,0.0,4526.0,3374.0,1.0,main,"牲畜饲养
+-猪年底头数",year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[文盲比例],-0.035,0.03,-0.093,0.023,0.0,0.0,3997.0,2969.0,1.0,main,文盲比例,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_interaction[TA（°C） × 抗菌药物使用强度],-0.027,0.027,-0.078,0.025,0.0,0.0,3995.0,3084.0,1.0,interaction,TA（°C） × 抗菌药物使用强度,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+sigma_residual,0.4,0.017,0.365,0.432,0.0,0.0,5169.0,3129.0,1.0,global,,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes

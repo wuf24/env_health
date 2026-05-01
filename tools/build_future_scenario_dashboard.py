@@ -37,6 +37,12 @@ SCENARIO_META = [
     {"id": "ssp245", "short_label": "SSP2-4.5", "label": "SSP2-4.5（rx1day）", "family": "rx1day_ssp"},
     {"id": "ssp370", "short_label": "SSP3-7.0", "label": "SSP3-7.0（rx1day）", "family": "rx1day_ssp"},
     {"id": "ssp585", "short_label": "SSP5-8.5", "label": "SSP5-8.5（rx1day）", "family": "rx1day_ssp"},
+    {
+        "id": "amc_reduce_50",
+        "short_label": "AMC -50%",
+        "label": "AMC reduces 50% by 2050",
+        "family": "amc_intervention",
+    },
 ]
 
 
@@ -329,6 +335,8 @@ def build_data() -> dict[str, object]:
             "Year",
             "scenario_pred_mean",
             "delta_vs_baseline_mean",
+            "amc_scenario_mean",
+            "amc_delta_mean",
         ],
     )
     scenario_summary = pick_rows(
@@ -346,6 +354,8 @@ def build_data() -> dict[str, object]:
             "delta_vs_baseline_mean",
             "delta_vs_last_observed",
             "rx1day_scenario_mean",
+            "amc_scenario_mean",
+            "amc_delta_mean",
         ],
     )
     regional_summary_raw = read_csv(RESULTS_DIR / "lancet_ets" / "regional_outputs" / "region_summary_2050.csv")
@@ -365,6 +375,9 @@ def build_data() -> dict[str, object]:
             "delta_vs_baseline_mean",
             "rx1day_baseline_mean",
             "rx1day_scenario_mean",
+            "amc_baseline_mean",
+            "amc_scenario_mean",
+            "amc_delta_mean",
         ],
     )
 
@@ -381,6 +394,7 @@ def build_data() -> dict[str, object]:
                 "scenario_pred",
                 "delta_vs_baseline",
                 "rx1day_delta",
+                "amc_delta",
                 "baseline_mode",
             ],
         ),
@@ -1461,7 +1475,8 @@ def build_script_intro(data_json: str) -> str:
       ssp126: "#0891b2",
       ssp245: "#4f46e5",
       ssp370: "#d97706",
-      ssp585: "#b91c1c"
+      ssp585: "#b91c1c",
+      amc_reduce_50: "#7c3aed"
     }};
 
     const metricMeta = [
@@ -1751,7 +1766,7 @@ def build_script_renderers() -> str:
         { label: "Outcome", value: escapeHtml(DATA.outcome_label), hint: escapeHtml(DATA.outcome_note) },
         { label: "Projection Window", value: `${DATA.start_year}-${DATA.end_year}`, hint: `${DATA.province_count} 省份，${DATA.region_count} 大区` },
         { label: "Model Roles", value: String(DATA.role_count), hint: "当前归档纳入的模型角色数量" },
-        { label: "Scenario Space", value: String(DATA.scenario_count), hint: "SSP 情景；每个情景含 median / p10 / p90" }
+        { label: "Scenario Space", value: String(DATA.scenario_count), hint: "SSP + AMC intervention; SSP includes median / p10 / p90" }
       ].map(item => `
         <div class="stat">
           <div class="k">${item.label}</div>
@@ -1880,6 +1895,7 @@ def build_script_renderers() -> str:
               <th>Uncertainty</th>
               <th>Δ vs last observed</th>
               <th>rx1day 2050</th>
+              <th>AMC 2050</th>
             </tr>
           </thead>
           <tbody>
@@ -1896,6 +1912,7 @@ def build_script_renderers() -> str:
                   <td>${range}</td>
                   <td>${fmtSigned(num(item.median.delta_vs_last_observed), 2)}</td>
                   <td>${fmt(num(item.median.rx1day_scenario_mean), 2)}</td>
+                  <td>${fmt(num(item.median.amc_scenario_mean), 2)}</td>
                 </tr>
               `;
             }).join("")}
@@ -1929,6 +1946,7 @@ def build_script_renderers() -> str:
               <th>Δ vs baseline</th>
               <th>rx1day baseline</th>
               <th>rx1day scenario</th>
+              <th>AMC scenario</th>
             </tr>
           </thead>
           <tbody>
@@ -1943,6 +1961,7 @@ def build_script_renderers() -> str:
                   <td class="${delta >= 0 ? "delta-up" : "delta-down"}">${fmtSigned(delta, 2)}</td>
                   <td>${fmt(num(row.rx1day_baseline_mean), 2)}</td>
                   <td>${fmt(num(row.rx1day_scenario_mean), 2)}</td>
+                  <td>${fmt(num(row.amc_scenario_mean), 2)}</td>
                 </tr>
               `;
             }).join("")}
@@ -1972,6 +1991,7 @@ def build_script_renderers() -> str:
               <th>2050 predicted</th>
               <th>Δ vs baseline</th>
               <th>rx1day delta</th>
+              <th>AMC delta</th>
             </tr>
           </thead>
           <tbody>
@@ -1984,6 +2004,7 @@ def build_script_renderers() -> str:
                   <td>${fmt(num(row.scenario_pred), 2)}</td>
                   <td class="${delta >= 0 ? "delta-up" : "delta-down"}">${fmtSigned(delta, 2)}</td>
                   <td>${fmtSigned(num(row.rx1day_delta), 2)}</td>
+                  <td>${fmtSigned(num(row.amc_delta), 2)}</td>
                 </tr>
               `;
             }).join("")}

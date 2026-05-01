@@ -1,0 +1,39 @@
+{
+  "outcome": "AMR_AGG_RAW",
+  "mapping_path": "E:\\MALA\\Code_health\\6 未来情景分析\\data_processed\\province_to_region_7zones.csv",
+  "baseline_modes": [
+    "lancet_ets",
+    "x_driven"
+  ],
+  "end_year": 2050,
+  "metric_family": "temperature",
+  "role_id": "main_model",
+  "temperature_proxy_variable": "TA（°C）",
+  "mode_outputs": {
+    "lancet_ets": {
+      "regional_historical": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\regional_outputs\\regional_historical_temperature_ta_main_model.csv",
+      "regional_yearly": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\regional_outputs\\regional_yearly_temperature_ta_main_model.csv",
+      "region_summary_2050": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\regional_outputs\\region_summary_2050_temperature_ta_main_model.csv",
+      "regional_figure5_grid": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\regional_figures\\regional_figure5_grid_temperature_ta_main_model.png",
+      "regional_delta_heatmap": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\lancet_ets\\regional_figures\\regional_delta_2050_heatmap_temperature_ta_main_model.png",
+      "metric_family": "temperature",
+      "role_id": "main_model",
+      "role_label": "主模型",
+      "temperature_proxy_variable": "TA（°C）"
+    },
+    "x_driven": {
+      "regional_historical": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\regional_outputs\\regional_historical_temperature_ta_main_model.csv",
+      "regional_yearly": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\regional_outputs\\regional_yearly_temperature_ta_main_model.csv",
+      "region_summary_2050": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\regional_outputs\\region_summary_2050_temperature_ta_main_model.csv",
+      "regional_figure5_grid": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\regional_figures\\regional_figure5_grid_temperature_ta_main_model.png",
+      "regional_delta_heatmap": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\x_driven\\regional_figures\\regional_delta_2050_heatmap_temperature_ta_main_model.png",
+      "metric_family": "temperature",
+      "role_id": "main_model",
+      "role_label": "主模型",
+      "temperature_proxy_variable": "TA（°C）"
+    }
+  },
+  "compare_summary": "E:\\MALA\\Code_health\\6 未来情景分析\\results\\baseline_mode_compare\\regional_summary_2050_compare_temperature_ta_main_model.csv",
+  "log_path": "E:\\MALA\\Code_health\\6 未来情景分析\\logs\\run_regional_future_figure5_20260429_164330.log",
+  "region_count": 7
+}

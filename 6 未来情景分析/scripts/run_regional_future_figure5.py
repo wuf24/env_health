@@ -13,10 +13,10 @@ from config_future_scenario_projection import (
     DEFAULT_BASELINE_MODES,
     DEFAULT_OUTCOME,
     DEFAULT_SINGLE_OUTCOME_SCALE,
+    FUTURE_SCENARIO_IDS,
     LAST_OBSERVED_YEAR,
     RESULTS_DIR,
     RX1DAY_MAIN_STATISTIC,
-    RX1DAY_SCENARIOS,
     SCENARIO_LABELS,
     resolve_results_output_dir,
 )
@@ -27,6 +27,14 @@ SECTION_DIR = Path(__file__).resolve().parents[1]
 REGION_MAPPING_PATH = SECTION_DIR / "data_processed" / "province_to_region_7zones.csv"
 TA_COL = "TA（°C）"
 PROVINCE_TAS_COL = "省平均气温"
+SCENARIO_PALETTE = {
+    "ssp119": "#1b9e77",
+    "ssp126": "#4daf4a",
+    "ssp245": "#377eb8",
+    "ssp370": "#ff7f00",
+    "ssp585": "#d7301f",
+    "amc_reduce_50": "#7c3aed",
+}
 
 
 sns.set_theme(style="whitegrid", font="Microsoft YaHei", rc={"axes.unicode_minus": False})
@@ -259,6 +267,9 @@ def aggregate_projection_to_region(
             temperature_baseline_mean=("temperature_baseline", "mean"),
             temperature_scenario_mean=("temperature_scenario", "mean"),
             temperature_delta_mean=("temperature_delta", "mean"),
+            amc_baseline_mean=("amc_baseline", "mean"),
+            amc_scenario_mean=("amc_scenario", "mean"),
+            amc_delta_mean=("amc_delta", "mean"),
         )
         .reset_index()
         .sort_values(["region_order", "role_id", "scenario_id", "statistic", "Year"])
@@ -294,13 +305,7 @@ def plot_regional_figure5_grid(
         .reset_index(drop=True)
     )
 
-    palette = {
-        "ssp119": "#1b9e77",
-        "ssp126": "#4daf4a",
-        "ssp245": "#377eb8",
-        "ssp370": "#ff7f00",
-        "ssp585": "#d7301f",
-    }
+    scenario_ids = [scenario_id for scenario_id in FUTURE_SCENARIO_IDS if scenario_id in set(plot_df["scenario_id"])]
 
     fig, axes = plt.subplots(4, 2, figsize=(15, 16), sharex=True, sharey=False)
     axes_flat = axes.flatten()
@@ -340,13 +345,14 @@ def plot_regional_figure5_grid(
         history_prefix = hist_sub[["Year", hist_col]].rename(
             columns={hist_col: metric_meta["scenario_col"]}
         )
-        for scenario_id in RX1DAY_SCENARIOS:
+        for scenario_id in scenario_ids:
             median = plot_sub[
                 plot_sub["scenario_id"].eq(scenario_id) & plot_sub["statistic"].eq(RX1DAY_MAIN_STATISTIC)
             ].sort_values("Year")
             if median.empty:
                 continue
 
+            color = SCENARIO_PALETTE.get(scenario_id, "#4b5563")
             p10 = plot_sub[
                 plot_sub["scenario_id"].eq(scenario_id) & plot_sub["statistic"].eq("p10")
             ].sort_values("Year")
@@ -371,15 +377,15 @@ def plot_regional_figure5_grid(
                     p10_full["Year"],
                     p10_full[metric_meta["scenario_col"]],
                     p90_full[metric_meta["scenario_col"]],
-                    color=palette[scenario_id],
+                    color=color,
                     alpha=0.12,
                 )
             ax.plot(
                 median_full["Year"],
                 median_full[metric_meta["scenario_col"]],
-                color=palette[scenario_id],
+                color=color,
                 linewidth=1.9,
-                label=SCENARIO_LABELS[scenario_id],
+                label=SCENARIO_LABELS.get(scenario_id, scenario_id),
             )
 
         ax.axvline(LAST_OBSERVED_YEAR, color="#666666", linestyle=":", linewidth=1.0)
@@ -429,6 +435,7 @@ def plot_regional_delta_heatmap(
         & regional_yearly["statistic"].eq(RX1DAY_MAIN_STATISTIC)
         & ~regional_yearly["scenario_id"].eq("baseline_ets")
     ].copy()
+    scenario_ids = [scenario_id for scenario_id in FUTURE_SCENARIO_IDS if scenario_id in set(plot_df["scenario_id"])]
 
     heatmap_data = (
         plot_df.pivot_table(
@@ -437,13 +444,14 @@ def plot_regional_delta_heatmap(
             values=metric_meta["delta_col"],
             aggfunc="mean",
         )
-        .reindex(columns=RX1DAY_SCENARIOS)
+        .reindex(columns=scenario_ids)
         .sort_index(level=0)
     )
     heatmap_data.index = [region for _, region in heatmap_data.index]
-    heatmap_data.columns = [SCENARIO_LABELS[item] for item in heatmap_data.columns]
+    heatmap_data.columns = [SCENARIO_LABELS.get(item, item) for item in heatmap_data.columns]
 
-    fig, ax = plt.subplots(figsize=(10.5, 6))
+    fig_width = max(10.5, 1.35 * max(len(scenario_ids), 1) + 4.5)
+    fig, ax = plt.subplots(figsize=(fig_width, 6))
     sns.heatmap(
         heatmap_data,
         annot=True,

@@ -27,7 +27,8 @@
     "ssp126",
     "ssp245",
     "ssp370",
-    "ssp585"
+    "ssp585",
+    "amc_reduce_50"
   ],
   "rx1day_scenarios": [
     "ssp119",
@@ -44,7 +45,8 @@
   "controlled_future_variables": [
     "R1xday",
     "TA（°C）",
-    "省平均气温"
+    "省平均气温",
+    "抗菌药物使用强度"
   ],
   "province_map_size": 34,
   "outputs": {

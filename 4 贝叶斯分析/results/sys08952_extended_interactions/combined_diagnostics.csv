@@ -1,0 +1,30 @@
+﻿parameter,mean,sd,hdi_2.5%,hdi_97.5%,mcse_mean,mcse_sd,ess_bulk,ess_tail,r_hat,effect_scope,variable,variant_id,variant_label,model_id,scheme_id,scheme_source,fe_label
+alpha,0.01,0.023,-0.035,0.055,0.0,0.0,6422.0,2895.0,1.0,global,,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+sigma_residual,0.395,0.017,0.364,0.429,0.0,0.0,5042.0,2807.0,1.0,global,,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_interaction[R1xday × TA（°C） × 抗菌药物使用强度],0.015,0.03,-0.043,0.075,0.0,0.0,4434.0,3511.0,1.0,interaction,R1xday × TA（°C） × 抗菌药物使用强度,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_interaction[R1xday × TA（°C）],0.078,0.025,0.03,0.127,0.0,0.0,6074.0,2705.0,1.0,interaction,R1xday × TA（°C）,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_interaction[R1xday × 抗菌药物使用强度],0.031,0.028,-0.021,0.088,0.0,0.0,4004.0,3062.0,1.0,interaction,R1xday × 抗菌药物使用强度,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_interaction[TA（°C） × 抗菌药物使用强度],-0.041,0.028,-0.095,0.016,0.0,0.0,3476.0,2697.0,1.0,interaction,TA（°C） × 抗菌药物使用强度,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[R1xday],0.141,0.028,0.083,0.194,0.0,0.0,4630.0,2828.0,1.0,main,R1xday,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[TA（°C）],0.09,0.036,0.021,0.158,0.001,0.001,4998.0,3308.0,1.0,main,TA（°C）,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[人均日生活用水量(升)],-0.033,0.026,-0.085,0.017,0.0,0.0,5130.0,3358.0,1.0,main,人均日生活用水量(升),year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[医疗水平],0.257,0.037,0.188,0.331,0.001,0.001,4702.0,3104.0,1.0,main,医疗水平,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[抗菌药物使用强度],0.1,0.029,0.045,0.156,0.0,0.0,4064.0,2757.0,1.0,main,抗菌药物使用强度,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[文盲比例],-0.042,0.03,-0.098,0.017,0.0,0.0,5333.0,3133.0,1.0,main,文盲比例,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[氮氧化物],0.16,0.03,0.101,0.219,0.0,0.0,4071.0,3294.0,1.0,main,氮氧化物,year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+"beta_main[牲畜饲养
+-猪年底头数]",0.126,0.027,0.073,0.177,0.0,0.0,4778.0,3215.0,1.0,main,"牲畜饲养
+-猪年底头数",year_only_climate_amc_triple,Year-only R1xday x TA x AMC interaction,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+alpha,0.008,0.024,-0.036,0.058,0.0,0.0,5606.0,2777.0,1.0,global,,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+sigma_residual,0.4,0.017,0.365,0.432,0.0,0.0,5169.0,3129.0,1.0,global,,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_interaction[TA（°C） × 抗菌药物使用强度],-0.027,0.027,-0.078,0.025,0.0,0.0,3995.0,3084.0,1.0,interaction,TA（°C） × 抗菌药物使用强度,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[R1xday],0.132,0.028,0.076,0.185,0.0,0.0,3852.0,2831.0,1.0,main,R1xday,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[TA（°C）],0.076,0.036,0.006,0.144,0.001,0.001,4270.0,2805.0,1.0,main,TA（°C）,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[人均日生活用水量(升)],-0.036,0.026,-0.091,0.01,0.0,0.0,4360.0,2952.0,1.0,main,人均日生活用水量(升),year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[医疗水平],0.283,0.035,0.212,0.35,0.001,0.001,3686.0,2844.0,1.0,main,医疗水平,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[抗菌药物使用强度],0.094,0.028,0.038,0.146,0.0,0.0,4259.0,3168.0,1.0,main,抗菌药物使用强度,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[文盲比例],-0.035,0.03,-0.093,0.023,0.0,0.0,3997.0,2969.0,1.0,main,文盲比例,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+beta_main[氮氧化物],0.169,0.031,0.109,0.228,0.001,0.0,3865.0,3279.0,1.0,main,氮氧化物,year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes
+"beta_main[牲畜饲养
+-猪年底头数]",0.128,0.027,0.077,0.183,0.0,0.0,4526.0,3374.0,1.0,main,"牲畜饲养
+-猪年底头数",year_only_ta_amc_amplification,Year-only TA x AMC amplification,SYS_08952 | Province: No / Year: Yes,SYS_08952,systematic,Province: No / Year: Yes

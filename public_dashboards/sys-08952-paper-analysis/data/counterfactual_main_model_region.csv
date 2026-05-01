@@ -1,0 +1,22 @@
+﻿scenario_id,scenario_label,region,province_n,actual_minus_counterfactual_mean,relative_change_pct_mean
+all_climate_to_baseline,所有气候变量恢复基准,东北,3,0.1130910576,49.3390432201
+all_climate_to_baseline,所有气候变量恢复基准,华东,7,0.1822381208,65.9436323173
+all_climate_to_baseline,所有气候变量恢复基准,华中,3,0.1410399035,91.3332185432
+all_climate_to_baseline,所有气候变量恢复基准,华北,5,0.0960542437,38.0746844825
+all_climate_to_baseline,所有气候变量恢复基准,华南,3,0.0321995632,4.4670591033
+all_climate_to_baseline,所有气候变量恢复基准,西北,5,0.1490356464,30.204668113
+all_climate_to_baseline,所有气候变量恢复基准,西南,5,0.0839781412,19.5178806507
+r1xday_to_baseline,仅 R1xday 恢复基准,东北,3,0.0592120024,25.4657448487
+r1xday_to_baseline,仅 R1xday 恢复基准,华东,7,0.0501514635,26.5679856921
+r1xday_to_baseline,仅 R1xday 恢复基准,华中,3,0.0201590605,4.8579527329
+r1xday_to_baseline,仅 R1xday 恢复基准,华北,5,0.0853973598,28.0247142469
+r1xday_to_baseline,仅 R1xday 恢复基准,华南,3,-0.1107464989,-83.0235423385
+r1xday_to_baseline,仅 R1xday 恢复基准,西北,5,0.0064870226,2.4788397524
+r1xday_to_baseline,仅 R1xday 恢复基准,西南,5,-0.0234934819,-9.3247547369
+temperature_to_baseline,仅温度变量恢复基准,东北,3,0.0538790551,17.1504219553
+temperature_to_baseline,仅温度变量恢复基准,华东,7,0.1320866573,51.1569757115
+temperature_to_baseline,仅温度变量恢复基准,华中,3,0.120880843,68.7710783983
+temperature_to_baseline,仅温度变量恢复基准,华北,5,0.0106568839,2.7569856146
+temperature_to_baseline,仅温度变量恢复基准,华南,3,0.1429460621,43.2981185776
+temperature_to_baseline,仅温度变量恢复基准,西北,5,0.1425486238,27.2301999012
+temperature_to_baseline,仅温度变量恢复基准,西南,5,0.1074716231,25.6048332321

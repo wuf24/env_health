@@ -1,0 +1,4 @@
+﻿role_id,role_label,model_id,scheme_id,fe_label,scenario_id,scenario_label,province_n,year_n,outcome_actual_mean,actual_pred_mean,counterfactual_pred_mean,actual_minus_counterfactual_mean,relative_change_pct_mean
+main_model,主模型,SYS_08952 | Province: No / Year: Yes,SYS_08952,Province: No / Year: Yes,all_climate_to_baseline,所有气候变量恢复基准,31,10,-9.33531e-05,-9.33531e-05,-0.1224881327,0.1223947796,41.9559816443
+main_model,主模型,SYS_08952 | Province: No / Year: Yes,SYS_08952,Province: No / Year: Yes,r1xday_to_baseline,仅 R1xday 恢复基准,31,10,-9.33531e-05,-9.33531e-05,-0.0197122674,0.0196189143,3.1966117205
+main_model,主模型,SYS_08952 | Province: No / Year: Yes,SYS_08952,Province: No / Year: Yes,temperature_to_baseline,仅温度变量恢复基准,31,10,-9.33531e-05,-9.33531e-05,-0.1028692185,0.1027758654,32.5398768698

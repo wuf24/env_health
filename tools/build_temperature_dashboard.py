@@ -31,7 +31,7 @@ HISTORICAL_START_YEAR = 2014
 HISTORICAL_END_YEAR = 2023
 FUTURE_END_YEAR = 2050
 EXCLUDE_PROVINCES = {"全国", "μ", "σ"}
-SCENARIO_ORDER = ["ssp119", "ssp126", "ssp245", "ssp370", "ssp585"]
+SCENARIO_ORDER = ["ssp119", "ssp126", "ssp245", "ssp370", "ssp585", "amc_reduce_50"]
 MODE_ORDER = ["lancet_ets", "x_driven"]
 
 SCENARIO_META = [
@@ -40,6 +40,7 @@ SCENARIO_META = [
     {"id": "ssp245", "label": "SSP2-4.5", "color": "#C4932E"},
     {"id": "ssp370", "label": "SSP3-7.0", "color": "#C96C32"},
     {"id": "ssp585", "label": "SSP5-8.5", "color": "#B54A3A"},
+    {"id": "amc_reduce_50", "label": "AMC -50% by 2050", "color": "#7C5AC7"},
 ]
 
 MODE_META = [
@@ -657,7 +658,7 @@ def save_contribution_figure(
     finish_figure(
         fig,
         output_path,
-        note="Lines show median temperature-only ΔAMR by SSP; shaded ribbons show p10-p90 and the horizontal axis marks zero contribution.",
+        note="Lines show median temperature-only ΔAMR by future scenario; shaded ribbons show p10-p90 for SSP scenarios, while AMC intervention is a single median path.",
     )
 
 
@@ -700,8 +701,10 @@ def save_vertical_bar_figure(
         zorder=3,
     )
     if lower_col and upper_col and lower_col in rows.columns and upper_col in rows.columns:
-        lower = np.clip(heights - rows[lower_col].astype(float).to_numpy(), a_min=0, a_max=None)
-        upper = np.clip(rows[upper_col].astype(float).to_numpy() - heights, a_min=0, a_max=None)
+        lower_values = rows[lower_col].astype(float).to_numpy()
+        upper_values = rows[upper_col].astype(float).to_numpy()
+        lower = np.nan_to_num(np.clip(heights - lower_values, a_min=0, a_max=None), nan=0.0)
+        upper = np.nan_to_num(np.clip(upper_values - heights, a_min=0, a_max=None), nan=0.0)
         ax.errorbar(
             x_values,
             heights,
@@ -1014,14 +1017,14 @@ def build_figure_manifest(data: dict[str, object]) -> dict[str, object]:
                 x_col="scenario_label",
                 y_col="median",
                 title="2050 scenario deltas from the temperature channel",
-                x_label="SSP scenario",
+                x_label="Future scenario",
                 y_label="Temperature-only ΔAMR in 2050 (percentage points)",
                 output_path=national_delta_path,
                 color_lookup=scenario_color_map,
                 color_key="scenario_id",
                 lower_col="p10",
                 upper_col="p90",
-                note=f"{role_label_map.get(role_id, role_id)} | {mode_label_map.get(mode, mode)} | whiskers show p10-p90 across scenario statistics.",
+                note=f"{role_label_map.get(role_id, role_id)} | {mode_label_map.get(mode, mode)} | whiskers show p10-p90 for SSP scenarios; AMC intervention has a single median path.",
             )
             manifest["national_delta"][mode][role_id] = rel(national_delta_path)
 

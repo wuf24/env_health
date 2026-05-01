@@ -3,8 +3,8 @@
   "slug": "variable-group-deep-dive",
   "description": "Final paper-facing decision page for the 12 candidate models: 8 strict high-correlation models plus 4 hand-picked Year FE models, integrated with FE, Bayesian, counterfactual, and future-scenario evidence.",
   "scope_note": "Published as an independent entry for final model selection without touching the existing FE, Bayesian, counterfactual, or future dashboards.",
-  "generated_at": "2026-04-28 00:52:30",
-  "release_tag": "20260428-005230",
+  "generated_at": "2026-04-30 18:36:34",
+  "release_tag": "20260430-183634",
   "source_dir": "public_dashboards/variable-group-deep-dive",
   "builder_script": "tools/build_variable_group_deep_dive_dashboard.py",
   "files": {

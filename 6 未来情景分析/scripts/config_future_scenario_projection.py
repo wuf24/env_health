@@ -55,14 +55,19 @@ EXTERNAL_ALIGNMENT_MIN_OVERLAP = 3
 RX1DAY_VARIABLE_NAME = "R1xday"
 TA_VARIABLE_NAME = "TA（°C）"
 PROVINCE_TAS_VARIABLE_NAME = "省平均气温"
+AMC_VARIABLE_NAME = "抗菌药物使用强度"
 CONTROLLED_FUTURE_VARIABLES = [
     RX1DAY_VARIABLE_NAME,
     TA_VARIABLE_NAME,
     PROVINCE_TAS_VARIABLE_NAME,
+    AMC_VARIABLE_NAME,
 ]
 RX1DAY_SCENARIOS = ["ssp119", "ssp126", "ssp245", "ssp370", "ssp585"]
 RX1DAY_STATISTICS = ["median", "p10", "p90"]
 RX1DAY_MAIN_STATISTIC = "median"
+AMC_REDUCTION_SCENARIO_ID = "amc_reduce_50"
+AMC_REDUCTION_TARGET_YEAR = FUTURE_END_YEAR
+AMC_REDUCTION_TARGET_SCALE = 0.5
 
 SCENARIO_LABELS = {
     "ssp119": "SSP1-1.9",
@@ -70,6 +75,7 @@ SCENARIO_LABELS = {
     "ssp245": "SSP2-4.5",
     "ssp370": "SSP3-7.0",
     "ssp585": "SSP5-8.5",
+    AMC_REDUCTION_SCENARIO_ID: "AMC -50% by 2050",
 }
 
 BASELINE_SCENARIO = {
@@ -95,8 +101,30 @@ CLIMATE_SCENARIOS = [
     for scenario_id in RX1DAY_SCENARIOS
 ]
 
-ACTIVE_SCENARIOS = [BASELINE_SCENARIO, *CLIMATE_SCENARIOS]
+AMC_REDUCTION_SCENARIO = {
+    "scenario_id": AMC_REDUCTION_SCENARIO_ID,
+    "scenario_label": "AMC reduces 50% by 2050",
+    "scenario_family": "amc_intervention",
+    "description": (
+        "Hold climate and other covariates on their baseline paths, while scaling AMC "
+        "down linearly each year until it reaches 50% of the baseline path in 2050."
+    ),
+    "rx1day_source_scenario": None,
+    "tas_source_scenario": None,
+    "adjustments": {
+        AMC_VARIABLE_NAME: {
+            "mode": "linear_scale",
+            "start_year": FUTURE_START_YEAR,
+            "target_year": AMC_REDUCTION_TARGET_YEAR,
+            "start_scale": 1.0,
+            "target_scale": AMC_REDUCTION_TARGET_SCALE,
+        },
+    },
+}
+
+ACTIVE_SCENARIOS = [BASELINE_SCENARIO, *CLIMATE_SCENARIOS, AMC_REDUCTION_SCENARIO]
 ACTIVE_SCENARIO_IDS = [item["scenario_id"] for item in ACTIVE_SCENARIOS]
+FUTURE_SCENARIO_IDS = [item["scenario_id"] for item in ACTIVE_SCENARIOS if item["scenario_id"] != "baseline_ets"]
 
 # 论文中的死亡负担模块需要额外的感染死亡数和 RR 输入；当前仓库中尚未提供，
 # 因此这里只保留可扩展接口，默认不启用。

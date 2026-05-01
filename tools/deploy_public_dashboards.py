@@ -223,7 +223,7 @@ SYS08952_PAPER_BUNDLE = DashboardBundle(
         BundleLink(label="Open paper analysis", target="index.html", tone="primary"),
         BundleLink(label="Payload JSON", target="data/sys08952_paper_payload.json", tone="ghost"),
     ),
-    copy_paths=("data",),
+    copy_paths=("assets", "data"),
 )
 
 ALL_BUNDLES: tuple[DashboardBundle, ...] = (

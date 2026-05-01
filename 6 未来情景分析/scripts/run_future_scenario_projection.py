@@ -10,6 +10,7 @@ import seaborn as sns
 
 from config_future_scenario_projection import (
     ACTIVE_SCENARIOS,
+    AMC_VARIABLE_NAME,
     BASELINE_MODE_DESCRIPTIONS,
     BASELINE_MODE_LABELS,
     CCKP_PROVINCE_TO_CN,
@@ -25,6 +26,7 @@ from config_future_scenario_projection import (
     MORTALITY_MODULE,
     PROVINCE_TAS_VARIABLE_NAME,
     RESULTS_DIR,
+    FUTURE_SCENARIO_IDS,
     RX1DAY_MAIN_STATISTIC,
     RX1DAY_SCENARIOS,
     RX1DAY_STATISTICS,
@@ -54,6 +56,14 @@ from future_scenario_common import (
 sns.set_theme(style="whitegrid", font="Microsoft YaHei", rc={"axes.unicode_minus": False})
 
 TEMPERATURE_VARS = {"主要城市平均气温", PROVINCE_TAS_VARIABLE_NAME, TA_VARIABLE_NAME}
+SCENARIO_PALETTE = {
+    "ssp119": "#1b9e77",
+    "ssp126": "#4daf4a",
+    "ssp245": "#377eb8",
+    "ssp370": "#ff7f00",
+    "ssp585": "#d7301f",
+    "amc_reduce_50": "#7c3aed",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -139,6 +149,28 @@ def apply_scenario_overrides(baseline_path: pd.Series, override: dict[str, objec
         return baseline_path.copy()
 
     mode = str(override.get("mode", "")).lower().strip()
+    if mode == "linear_scale":
+        start_year = int(override.get("start_year", FUTURE_START_YEAR))
+        target_year = int(override.get("target_year", FUTURE_END_YEAR))
+        start_scale = float(override.get("start_scale", 1.0))
+        target_scale = float(override.get("target_scale", override.get("value", 1.0)))
+
+        years = pd.Series(
+            baseline_path.index.get_level_values("Year").astype(float),
+            index=baseline_path.index,
+            dtype=float,
+        )
+        if target_year == start_year:
+            scale_values = pd.Series(target_scale, index=baseline_path.index, dtype=float)
+        else:
+            progress = ((years - start_year) / (target_year - start_year)).clip(lower=0.0, upper=1.0)
+            scale_values = pd.Series(
+                start_scale + (target_scale - start_scale) * progress,
+                index=baseline_path.index,
+                dtype=float,
+            )
+        return baseline_path * scale_values
+
     value = override.get("value")
     if value is None:
         return baseline_path.copy()
@@ -166,6 +198,21 @@ def build_external_series_lookup(
     return lookup
 
 
+def scenario_statistics(scenario_id: str, scenario_meta: dict[str, object]) -> list[str]:
+    if scenario_id == "baseline_ets":
+        return ["baseline"]
+    if scenario_meta.get("rx1day_source_scenario") or scenario_meta.get("tas_source_scenario"):
+        return list(RX1DAY_STATISTICS)
+    return [RX1DAY_MAIN_STATISTIC]
+
+
+def ordered_future_scenario_ids(data: pd.DataFrame) -> list[str]:
+    present = set(data["scenario_id"].dropna().astype(str))
+    ordered = [scenario_id for scenario_id in FUTURE_SCENARIO_IDS if scenario_id in present]
+    ordered.extend(sorted(present.difference({"baseline_ets", *ordered})))
+    return ordered
+
+
 def simulate_future_scenarios(
     fit_bundle: dict[str, object],
     baseline_outcome_future: pd.Series,
@@ -183,7 +230,7 @@ def simulate_future_scenarios(
     base_index = baseline_outcome_future.index
 
     for scenario_id, scenario_meta in scenario_lookup.items():
-        statistics = ["baseline"] if scenario_id == "baseline_ets" else list(RX1DAY_STATISTICS)
+        statistics = scenario_statistics(scenario_id, scenario_meta)
         for statistic in statistics:
             delta_total = pd.Series(0.0, index=base_index, dtype=float)
             rx1day_baseline = None
@@ -191,6 +238,8 @@ def simulate_future_scenarios(
             temperature_baseline = None
             temperature_scenario = None
             temperature_variable = None
+            amc_baseline = None
+            amc_scenario = None
 
             for variable in selected_model.variables:
                 baseline_path = baseline_covariate_forecasts[variable].reindex(base_index)
@@ -234,6 +283,9 @@ def simulate_future_scenarios(
                     temperature_baseline = baseline_path
                     temperature_scenario = scenario_path
                     temperature_variable = variable
+                if variable == AMC_VARIABLE_NAME:
+                    amc_baseline = baseline_path
+                    amc_scenario = scenario_path
 
             scenario_pred = baseline_outcome_future.add(delta_total, fill_value=0.0)
             out = pd.DataFrame(index=base_index).reset_index()
@@ -269,6 +321,14 @@ def simulate_future_scenarios(
                 out["temperature_baseline"] = pd.NA
                 out["temperature_scenario"] = pd.NA
                 out["temperature_delta"] = pd.NA
+            if amc_baseline is not None:
+                out["amc_baseline"] = amc_baseline.reindex(base_index).values
+                out["amc_scenario"] = amc_scenario.reindex(base_index).values
+                out["amc_delta"] = out["amc_scenario"] - out["amc_baseline"]
+            else:
+                out["amc_baseline"] = pd.NA
+                out["amc_scenario"] = pd.NA
+                out["amc_delta"] = pd.NA
             rows.append(out)
 
     projection_panel = pd.concat(rows, ignore_index=True)
@@ -321,6 +381,13 @@ def summarize_future_projection(
             delta_vs_baseline_mean=("delta_vs_baseline", "mean"),
             rx1day_baseline_mean=("rx1day_baseline", "mean"),
             rx1day_scenario_mean=("rx1day_scenario", "mean"),
+            rx1day_delta_mean=("rx1day_delta", "mean"),
+            temperature_baseline_mean=("temperature_baseline", "mean"),
+            temperature_scenario_mean=("temperature_scenario", "mean"),
+            temperature_delta_mean=("temperature_delta", "mean"),
+            amc_baseline_mean=("amc_baseline", "mean"),
+            amc_scenario_mean=("amc_scenario", "mean"),
+            amc_delta_mean=("amc_delta", "mean"),
         )
         .reset_index()
     )
@@ -367,15 +434,7 @@ def plot_national_yearly_main_model(
         label=baseline_label,
     )
 
-    palette = {
-        "ssp119": "#1b9e77",
-        "ssp126": "#4daf4a",
-        "ssp245": "#377eb8",
-        "ssp370": "#ff7f00",
-        "ssp585": "#d7301f",
-    }
-
-    for scenario_id in RX1DAY_SCENARIOS:
+    for scenario_id in ordered_future_scenario_ids(plot_df):
         median = plot_df[
             plot_df["scenario_id"].eq(scenario_id) & plot_df["statistic"].eq(RX1DAY_MAIN_STATISTIC)
         ].sort_values("Year")
@@ -389,7 +448,7 @@ def plot_national_yearly_main_model(
             plot_df["scenario_id"].eq(scenario_id) & plot_df["statistic"].eq("p90")
         ].sort_values("Year")
 
-        color = palette[scenario_id]
+        color = SCENARIO_PALETTE.get(scenario_id, "#4b5563")
         history_prefix = hist[["Year", "outcome_actual_mean"]].rename(columns={"outcome_actual_mean": "scenario_pred_mean"})
         median_full = pd.concat([history_prefix, median[["Year", "scenario_pred_mean"]]], ignore_index=True)
         if not p10.empty and not p90.empty:
@@ -407,7 +466,7 @@ def plot_national_yearly_main_model(
             median_full["scenario_pred_mean"],
             color=color,
             linewidth=2.0,
-            label=SCENARIO_LABELS[scenario_id],
+            label=SCENARIO_LABELS.get(scenario_id, scenario_id),
         )
 
     ax.axvline(last_observed_year, color="#666666", linestyle=":", linewidth=1.2)
@@ -468,15 +527,6 @@ def plot_figure5_style_main(
     plot_df = national_yearly[national_yearly["role_id"].eq("main_model")].copy()
     hist = historical_national.sort_values("Year")
 
-    palette = {
-        "baseline_ets": "#111111",
-        "ssp119": "#1b9e77",
-        "ssp126": "#4daf4a",
-        "ssp245": "#377eb8",
-        "ssp370": "#ff7f00",
-        "ssp585": "#d7301f",
-    }
-
     fig, axes = plt.subplots(2, 1, figsize=(12, 9), gridspec_kw={"height_ratios": [3.2, 1.4]})
     ax_top, ax_bottom = axes
 
@@ -493,13 +543,13 @@ def plot_figure5_style_main(
     ax_top.plot(
         baseline_full["Year"],
         baseline_full["scenario_pred_mean"],
-        color=palette["baseline_ets"],
+        color="#111111",
         linestyle="--",
         linewidth=2.0,
         label=baseline_label,
     )
 
-    for scenario_id in RX1DAY_SCENARIOS:
+    for scenario_id in ordered_future_scenario_ids(plot_df):
         median = plot_df[
             plot_df["scenario_id"].eq(scenario_id) & plot_df["statistic"].eq(RX1DAY_MAIN_STATISTIC)
         ].sort_values("Year")
@@ -514,22 +564,23 @@ def plot_figure5_style_main(
 
         history_prefix = hist[["Year", "outcome_actual_mean"]].rename(columns={"outcome_actual_mean": "scenario_pred_mean"})
         median_full = pd.concat([history_prefix, median[["Year", "scenario_pred_mean"]]], ignore_index=True)
-        p10_full = pd.concat([history_prefix, p10[["Year", "scenario_pred_mean"]]], ignore_index=True)
-        p90_full = pd.concat([history_prefix, p90[["Year", "scenario_pred_mean"]]], ignore_index=True)
-
-        ax_top.fill_between(
-            p10_full["Year"],
-            p10_full["scenario_pred_mean"],
-            p90_full["scenario_pred_mean"],
-            color=palette[scenario_id],
-            alpha=0.12,
-        )
+        color = SCENARIO_PALETTE.get(scenario_id, "#4b5563")
+        if not p10.empty and not p90.empty:
+            p10_full = pd.concat([history_prefix, p10[["Year", "scenario_pred_mean"]]], ignore_index=True)
+            p90_full = pd.concat([history_prefix, p90[["Year", "scenario_pred_mean"]]], ignore_index=True)
+            ax_top.fill_between(
+                p10_full["Year"],
+                p10_full["scenario_pred_mean"],
+                p90_full["scenario_pred_mean"],
+                color=color,
+                alpha=0.12,
+            )
         ax_top.plot(
             median_full["Year"],
             median_full["scenario_pred_mean"],
-            color=palette[scenario_id],
+            color=color,
             linewidth=2.0,
-            label=SCENARIO_LABELS[scenario_id],
+            label=SCENARIO_LABELS.get(scenario_id, scenario_id),
         )
 
     ax_top.axvline(last_observed_year, color="#666666", linestyle=":", linewidth=1.2)
@@ -617,8 +668,8 @@ def write_projection_notes(
         f"- model source: `5 ?????/results/{model_source_outcome}/model_screening/selected_models.csv`",
         f"- projection window: `{start_year}-{end_year}`",
         f"- roles: `{roles_text}`",
-        "- external scenario variables: `R1xday`, plus `TA（°C）` / `省平均气温` when present in the model",
-        "- climate scenarios: annual CCKP `rx1day` and `tas` for `ssp119 / ssp126 / ssp245 / ssp370 / ssp585`",
+        "- external scenario variables: `R1xday`, plus `TA（°C）` / `省平均气温` when present in the model; `抗菌药物使用强度` can be reduced by intervention scenario.",
+        "- climate scenarios: annual CCKP `rx1day` and `tas` for `ssp119 / ssp126 / ssp245 / ssp370 / ssp585`; intervention scenario: `amc_reduce_50` linearly reaches 50% of baseline AMC by 2050.",
         "- uncertainty paths: `median / p10 / p90`",
         "- national result rule: project province-level AMR first, then take arithmetic mean across provinces without weighting.",
         "",
@@ -626,7 +677,7 @@ def write_projection_notes(
         "",
         "1. Reuse the selected historical province-year models from `5 ?????`.",
         "2. Re-estimate the historical panel coefficients and keep the historical scaling of covariates.",
-        "3. Let supported climate variables (`R1xday`, `TA（°C）`, `省平均气温`) vary by future scenario when present; all other covariates follow baseline paths.",
+        "3. Let supported climate variables (`R1xday`, `TA（°C）`, `省平均气温`) vary by future scenario when present; in `amc_reduce_50`, AMC declines linearly to 50% of baseline by 2050.",
         "4. Project AMR province by province, then average across provinces to obtain national trajectories and Figure-5-style outputs.",
         "",
         "## Formula",
@@ -812,8 +863,8 @@ def write_projection_notes_current(
         f"- projection window: `{start_year}-{end_year}`",
         f"- roles: `{roles_text}`",
         "- current scope: reuse the current 12-model archive instead of discussing only `main_model`",
-        "- external scenario variables: `R1xday`, plus `TA（°C）` / `省平均气温` when present in the model",
-        "- climate scenarios: annual CCKP `rx1day` and `tas` for `ssp119 / ssp126 / ssp245 / ssp370 / ssp585`",
+        "- external scenario variables: `R1xday`, plus `TA（°C）` / `省平均气温` when present in the model; `抗菌药物使用强度` can be reduced by intervention scenario.",
+        "- climate scenarios: annual CCKP `rx1day` and `tas` for `ssp119 / ssp126 / ssp245 / ssp370 / ssp585`; intervention scenario: `amc_reduce_50` linearly reaches 50% of baseline AMC by 2050.",
         "- uncertainty paths: `median / p10 / p90`",
         "- national result rule: project province-level AMR first, then take arithmetic mean across provinces without weighting.",
         "",
@@ -941,7 +992,7 @@ def write_baseline_comparison_notes(
         "## Current scope",
         "",
         f"- projection window: `{start_year}-{end_year}`",
-        "- future scenarios now vary `R1xday`, and also `TA（°C）` / `省平均气温` when those variables are present in a model",
+        "- future scenarios now vary `R1xday`, and also `TA（°C）` / `省平均气温` when those variables are present in a model; `amc_reduce_50` additionally reduces AMC linearly to 50% of baseline by 2050",
         "- comparison should no longer be limited to `main_model`; use `model_role_2050_compare.csv` for the 12-role digest",
         "- national results remain arithmetic means across province-level AMR projections",
         "- the x-driven version is still a simplified Nature-like baseline rather than the full spatiotemporal Bayesian model",

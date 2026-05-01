@@ -29,11 +29,22 @@ AMR_COLUMNS = [
 ]
 CORE_VARIABLES = {"R1xday", "抗菌药物使用强度"}
 INTERACTION_VARIABLE = "R1xday × 抗菌药物使用强度"
-FOCUS_VARIABLES = CORE_VARIABLES | {INTERACTION_VARIABLE}
+TA_AMC_INTERACTION_VARIABLE = "TA（°C） × 抗菌药物使用强度"
+R1_TA_INTERACTION_VARIABLE = "R1xday × TA（°C）"
+R1_TA_AMC_INTERACTION_VARIABLE = "R1xday × TA（°C） × 抗菌药物使用强度"
+FOCUS_VARIABLES = CORE_VARIABLES | {
+    INTERACTION_VARIABLE,
+    TA_AMC_INTERACTION_VARIABLE,
+    R1_TA_INTERACTION_VARIABLE,
+    R1_TA_AMC_INTERACTION_VARIABLE,
+}
 CORE_ALIASES = {
     "R1xday": "R1xday",
     "抗菌药物使用强度": "AMC",
     INTERACTION_VARIABLE: "R1xday_x_AMC",
+    TA_AMC_INTERACTION_VARIABLE: "TA_x_AMC",
+    R1_TA_INTERACTION_VARIABLE: "R1xday_x_TA",
+    R1_TA_AMC_INTERACTION_VARIABLE: "R1xday_x_TA_x_AMC",
 }
 
 
@@ -57,6 +68,7 @@ class SelectionConfig:
 class ModelGridConfig:
     variant_ids: list[str]
     interaction_pairs: list[tuple[str, str]]
+    interaction_terms: list[tuple[str, ...]]
 
 
 @dataclass(frozen=True)
@@ -96,6 +108,24 @@ VARIANT_LIBRARY: dict[str, VariantSpec] = {
         use_mundlak=False,
         include_interaction=True,
         rationale="Mirror Year FE only and directly test whether R1xday amplifies AMC.",
+    ),
+    "year_only_ta_amc_amplification": VariantSpec(
+        variant_id="year_only_ta_amc_amplification",
+        label="Year-only TA x AMC amplification",
+        include_year=True,
+        include_province=False,
+        use_mundlak=False,
+        include_interaction=True,
+        rationale="Mirror Year FE only and test whether temperature amplifies AMC.",
+    ),
+    "year_only_climate_amc_triple": VariantSpec(
+        variant_id="year_only_climate_amc_triple",
+        label="Year-only R1xday x TA x AMC interaction",
+        include_year=True,
+        include_province=False,
+        use_mundlak=False,
+        include_interaction=True,
+        rationale="Mirror Year FE only and test the hierarchical climate-by-AMC three-way interaction.",
     ),
     "province_only_additive": VariantSpec(
         variant_id="province_only_additive",
@@ -161,6 +191,18 @@ DEFAULT_VARIANTS = [
     "province_year_additive",
     "province_year_amplification",
 ]
+
+VARIANT_INTERACTION_TERMS: dict[str, list[tuple[str, ...]]] = {
+    "year_only_ta_amc_amplification": [
+        ("TA（°C）", "抗菌药物使用强度"),
+    ],
+    "year_only_climate_amc_triple": [
+        ("R1xday", "抗菌药物使用强度"),
+        ("TA（°C）", "抗菌药物使用强度"),
+        ("R1xday", "TA（°C）"),
+        ("R1xday", "TA（°C）", "抗菌药物使用强度"),
+    ],
+}
 
 
 def repo_root() -> Path:
@@ -422,9 +464,11 @@ def load_selection_config(path: Path) -> SelectionConfig:
 
 def load_model_grid_config(path: Path) -> ModelGridConfig:
     if not path.exists():
+        interaction_pairs = [("R1xday", "抗菌药物使用强度")]
         return ModelGridConfig(
             variant_ids=DEFAULT_VARIANTS.copy(),
-            interaction_pairs=[("R1xday", "抗菌药物使用强度")],
+            interaction_pairs=interaction_pairs,
+            interaction_terms=[tuple(pair) for pair in interaction_pairs],
         )
 
     raw = tomllib.loads(path.read_text(encoding="utf-8"))
@@ -436,6 +480,16 @@ def load_model_grid_config(path: Path) -> ModelGridConfig:
             raise ValueError("Each interaction pair must contain exactly two variable names.")
         interaction_pairs.append((str(pair[0]), str(pair[1])))
 
+    interaction_terms: list[tuple[str, ...]] = []
+    raw_terms = grid.get("interaction_terms")
+    if raw_terms is None:
+        interaction_terms = [tuple(pair) for pair in interaction_pairs]
+    else:
+        for term in raw_terms:
+            if not isinstance(term, (list, tuple)) or len(term) < 2:
+                raise ValueError("Each interaction term must contain at least two variable names.")
+            interaction_terms.append(tuple(str(item) for item in term))
+
     unknown = [variant_id for variant_id in variant_ids if variant_id not in VARIANT_LIBRARY]
     if unknown:
         raise ValueError(f"Unknown variant_ids in model grid: {unknown}")
@@ -443,6 +497,7 @@ def load_model_grid_config(path: Path) -> ModelGridConfig:
     return ModelGridConfig(
         variant_ids=variant_ids,
         interaction_pairs=interaction_pairs,
+        interaction_terms=interaction_terms,
     )
 
 
@@ -567,31 +622,39 @@ def build_interaction_blocks(
         definitions = [("interaction", "interaction")]
 
     blocks: list[TermBlock] = []
-    metadata_pairs: list[dict[str, str]] = []
+    metadata_terms: list[dict[str, object]] = []
     term_maps: dict[str, dict[str, str]] = {}
+    interaction_terms = VARIANT_INTERACTION_TERMS.get(variant.variant_id, grid_config.interaction_terms)
 
     for block_name, source_name in definitions:
         labels: list[str] = []
         cols: list[str] = []
-        for left, right in grid_config.interaction_pairs:
-            if left not in source_map[source_name] or right not in source_map[source_name]:
+        for term in interaction_terms:
+            if any(item not in source_map[source_name] for item in term):
                 continue
-            label = f"{left} × {right}"
-            raw = df[source_map[source_name][left]] * df[source_map[source_name][right]]
+            label = " × ".join(term)
+            raw = pd.Series(1.0, index=df.index)
+            for item in term:
+                raw = raw * df[source_map[source_name][item]]
             standardized, _ = z_standardize(raw, f"{block_name} `{label}`")
-            col = f"{block_name}__{normalize_name(left)}×{normalize_name(right)}"
+            col = f"{block_name}__{'×'.join(normalize_name(item) for item in term)}"
             df[col] = standardized
             labels.append(label)
             cols.append(col)
             term_maps.setdefault(block_name, {})[label] = col
-            metadata_pairs.append({"left": left, "right": right, "label": label})
+            metadata_terms.append({"terms": list(term), "order": len(term), "label": label})
 
         if labels:
             blocks.append(TermBlock(name=block_name, labels=labels, cols=cols, prior_sigma=0.35))
 
     metadata = {
-        "interaction_pairs": metadata_pairs,
-        **{f"{block_name}_terms": mapping for block_name, mapping in term_maps.items()},
+        "interaction_pairs": [
+            {"left": item["terms"][0], "right": item["terms"][1], "label": item["label"]}
+            for item in metadata_terms
+            if item["order"] == 2
+        ],
+        "interaction_term_definitions": metadata_terms,
+        **{f"{block_name}_term_columns": mapping for block_name, mapping in term_maps.items()},
     }
     return df, blocks, metadata
 
@@ -964,6 +1027,7 @@ def main() -> None:
         grid_config = ModelGridConfig(
             variant_ids=args.variant_ids,
             interaction_pairs=grid_config.interaction_pairs,
+            interaction_terms=grid_config.interaction_terms,
         )
     candidates = apply_selection(all_candidates, selection_config, args.model_ids)
 
@@ -978,7 +1042,7 @@ def main() -> None:
     print(f"Loaded merged frame with {len(merged)} rows and {merged['Province'].nunique()} provinces.")
     print(f"Preparing {len(candidates)} candidate combinations across {len(grid_config.variant_ids)} Bayesian variants.")
     print(f"Variants: {grid_config.variant_ids}")
-    print(f"Interaction pairs: {grid_config.interaction_pairs}")
+    print(f"Interaction terms: {grid_config.interaction_terms}")
     print("Selection source:", args.selection_file if not args.model_ids else "CLI --model-ids override")
 
     posterior_tables: list[pd.DataFrame] = []
