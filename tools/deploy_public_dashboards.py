@@ -35,6 +35,7 @@ class DashboardBundle:
     builder_script: Path
     files: dict[str, str]
     links: tuple[BundleLink, ...]
+    required_builder_inputs: tuple[Path, ...] = ()
     copy_paths: tuple[str, ...] = ()
     write_metadata_file: bool = True
 
@@ -223,6 +224,7 @@ SYS08952_PAPER_BUNDLE = DashboardBundle(
         BundleLink(label="Open paper analysis", target="index.html", tone="primary"),
         BundleLink(label="Payload JSON", target="data/sys08952_paper_payload.json", tone="ghost"),
     ),
+    required_builder_inputs=(ROOT / "amr_rate.csv", ROOT / "climate_social_eco.csv"),
     copy_paths=("assets", "data"),
 )
 
@@ -307,6 +309,28 @@ def run_builder(script_path: Path) -> None:
         cwd=ROOT,
         check=True,
     )
+
+
+def run_bundle_builder(bundle: DashboardBundle) -> None:
+    missing_inputs = [path for path in bundle.required_builder_inputs if not path.exists()]
+    if missing_inputs:
+        try:
+            ensure_sources(bundle)
+        except FileNotFoundError as exc:
+            formatted = ", ".join(rel(path) for path in missing_inputs)
+            raise FileNotFoundError(
+                f"Cannot rebuild {bundle.slug}; missing required input(s): {formatted}. "
+                f"The committed snapshot is also incomplete: {exc}"
+            ) from exc
+
+        formatted = ", ".join(rel(path) for path in missing_inputs)
+        print(
+            f"Skipped rebuild for {bundle.slug}; missing local-only input(s): {formatted}. "
+            "Publishing the committed static snapshot instead."
+        )
+        return
+
+    run_builder(bundle.builder_script)
 
 
 def same_path(source: Path, target: Path) -> bool:
@@ -1048,7 +1072,7 @@ def main() -> None:
         for bundle in bundles:
             if bundle.builder_script in built_scripts:
                 continue
-            run_builder(bundle.builder_script)
+            run_bundle_builder(bundle)
             built_scripts.add(bundle.builder_script)
 
     for bundle in bundles:
